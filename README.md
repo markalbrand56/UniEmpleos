@@ -12,5 +12,4 @@ Ingeniería de Software I: Proyecto Semestral.
 - [Google Drive](https://docs.google.com/document/d/1bZ_D6-jxHqZlXLhaNH35PPa5RHcib3fngrrhZWa_l70/edit?usp=sharing)
 - [PDF](https://github.com/markalbrand56/IS-Proyecto/blob/main/Informe/Proyecto%201.%20Corte%201.%20G5.pdf)
 
-<br>
 > Los informes de la gestión de tiempo de cada miembro del grupo se encuentra dentro de el informe.
