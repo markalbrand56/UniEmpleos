@@ -1,0 +1,33 @@
+.logInCointainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f1f1f1;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
+.logInCointainer > div {
+  z-index: 1;
+  border-radius: 5px;
+  width: 300px;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  background-color: #FFF;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  padding: 40px 20px;
+}
+
+.logInCointainer svg {
+  width: 100vw;
+  z-index: 0;
+  position: absolute;
+  bottom: 0px;
+}
+
+.logInCointainer div a {
+  text-decoration: none;
+  color: #333131;
+}
