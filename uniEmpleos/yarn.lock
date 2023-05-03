@@ -6751,6 +6751,11 @@ store2@^2.14.2:
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.14.2.tgz#56138d200f9fe5f582ad63bc2704dbc0e4a45068"
   integrity sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==
 
+storeon@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/storeon/-/storeon-3.1.5.tgz#b64c829d45a4746dee4aa31d646cfcb54597d70a"
+  integrity sha512-VuW4GQr3LGQr+gqscqsOz2c9asK9N+B+8+sWs7Pj4OqU7bngYIqsPF3IYpkbmccKNWjs7wwxUAlR+gtL9cEMEg==
+
 storybook@^7.0.7:
   version "7.0.7"
   resolved "https://registry.yarnpkg.com/storybook/-/storybook-7.0.7.tgz#f489c241aee6a5e2b2bfb5cef46ddbda45aa6138"
