@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"backend/controller"
+	"backend/controllers"
 	"github.com/gin-gonic/gin"
 )
 
 func Routes(router *gin.Engine) {
-	router.POST("/upload", controller.UploadFile())
+	router.POST("/upload", controllers.UploadFile())
 }

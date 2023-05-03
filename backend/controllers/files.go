@@ -1,7 +1,7 @@
-package controller
+package controllers
 
 import (
-	"fmt"
+	"backend/responses"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -20,6 +20,6 @@ func UploadFile() gin.HandlerFunc {
 			return
 		}
 
-		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+		c.JSON(http.StatusOK, responses.StandardResponse{Status: http.StatusOK, Message: "File uploaded successfully", Data: nil})
 	}
 }
