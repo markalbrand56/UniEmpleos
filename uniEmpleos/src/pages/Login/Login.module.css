@@ -35,3 +35,12 @@
   text-decoration: none;
   color: #333131;
 }
+
+.logInCointainer div a span {
+  color: #a08ae5;
+}
+
+.logInCointainer div a span:hover {
+  text-decoration: underline;
+  color: #977de7;
+}
