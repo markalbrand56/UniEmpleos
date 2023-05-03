@@ -10,7 +10,7 @@
 .inputContainer input {
   padding: 10px 5px;
   font-size: 16px;
-  border: 2px solid #97b33b;
+  border: 2px solid #ccc;
   border-radius: 5px;
   background-color: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -18,7 +18,7 @@
 }
 
 .inputContainer input:hover {
-  border-color: #b0e212;
+  border-color: #666;
 }
 
 .inputContainer input:focus {
