@@ -8,6 +8,10 @@
   height: 100vh;
 }
 
+.logInCointainer > h1 {
+  color: #a08ae5;
+}
+
 .logInCointainer > div {
   z-index: 1;
   border-radius: 5px;
