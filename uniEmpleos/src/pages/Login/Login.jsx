@@ -19,7 +19,9 @@ function LogIn() {
           placeholder="Ingrese su contraseña"
         />
         <Button label="Iniciar sesión" />
-        <a href="/registro">¿Eres nuevo? Únete al equipo</a>
+        <a href="/registro">
+          ¿Eres nuevo? <span> Únete al equipo </span>
+        </a>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
         <path
