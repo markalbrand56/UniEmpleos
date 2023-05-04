@@ -15,6 +15,7 @@ type RegisterInput struct {
 func Register(c *gin.Context) {
 	var input RegisterInput
 
+	// En esta línea se hace el binding del JSON que viene en el body del request a la variable input
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(400, responses.StandardResponse{Status: 400, Message: "Invalid input", Data: nil})
 		return
@@ -26,7 +27,8 @@ func Register(c *gin.Context) {
 		Suspendido: false,
 	}
 
-	err := configs.DB.Create(&u).Error
+	err := configs.DB.Create(&u).Error // Create() ingresa la variable u en la tabla usuario, dado que sabe de qué tipo es la variable u
+
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{Status: 400, Message: "Error creating user", Data: nil})
 		return
