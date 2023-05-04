@@ -1,0 +1,40 @@
+.tipoUsuario {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-content: center;
+  background-color: transparent;
+}
+
+.tipoUsuario button {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 0px 100px;
+  justify-content: center;
+  align-content: center;
+  background-color: #fff;
+  border: 2px solid #a08ae5;
+  border-radius: 5px;
+}
+
+.tipoUsuario button:focus {
+  transition: all 0.3s ease-in-out;
+  border-color: #674faf;
+  background-color: #a08ae5;
+  outline: none;
+}
+  
+.tipoUsuario button img {
+  width: 150px;
+  height: 150px;
+  padding: 0px;
+}
+
+.tipoUsuario button span {
+  align-self: center;
+  padding: 15px 0px;
+}
