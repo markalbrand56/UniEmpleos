@@ -7,20 +7,23 @@ import (
 )
 
 func Routes(router *gin.Engine) {
-	router.POST("/register", controllers.Register)
-	router.POST("/login", controllers.Login)
+	// Rutas públicas
+	public := router.Group("/api")
+
+	public.POST("/register", controllers.Register)
+	public.POST("/login", controllers.Login)
 
 	router.POST("/upload", controllers.UploadFile())
 
 	// Rutas protegidas
 	// Mensajes
-	messages := router.Group("/messages")
+	messages := router.Group("api/messages")
 	messages.Use(middlewares.JwtAuthentication())
 
 	messages.POST("/send", controllers.SendMessage)
 
 	// Usuarios
-	users := router.Group("/users")
+	users := router.Group("api/users")
 	users.Use(middlewares.JwtAuthentication())
 
 	users.GET("/", controllers.CurrentUser)
