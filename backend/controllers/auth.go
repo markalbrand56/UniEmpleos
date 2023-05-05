@@ -117,5 +117,12 @@ func CurrentUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": u})
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  200,
+		Message: "User found",
+		Data: map[string]interface{}{
+			"usuario":    u.Usuario,
+			"suspendido": u.Suspendido,
+		},
+	})
 }
