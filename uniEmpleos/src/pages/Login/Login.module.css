@@ -8,6 +8,12 @@
   height: 100vh;
 }
 
+.inputsContainer div span {
+  display: flex;
+  justify-content: left;
+  color: #000;
+}
+
 .logInCointainer > h1 {
   color: #a08ae5;
 }
