@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"backend/configs"
 	"backend/models"
 	"backend/responses"
 	"github.com/gin-gonic/gin"
@@ -27,7 +26,7 @@ func Register(c *gin.Context) {
 		Suspendido: false,
 	}
 
-	err := configs.DB.Create(&u).Error // Create() ingresa la variable u en la tabla usuario, dado que sabe de qué tipo es la variable u
+	_, err := u.SaveUser()
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{Status: 400, Message: "Error creating user", Data: nil})
