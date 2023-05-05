@@ -7,6 +7,7 @@ create table usuario
 );
 
 alter table usuario alter column usuario type varchar(30);
+alter table usuario alter column contra type varchar(150);
 alter table usuario alter column suspendido set default false;
 
 create table empresa
