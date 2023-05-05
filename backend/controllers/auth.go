@@ -7,6 +7,7 @@ import (
 	"backend/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"net/http"
 )
 
 type RegisterInput struct {
@@ -57,7 +58,7 @@ func Login(c *gin.Context) {
 		Contra:  input.Contra,
 	}
 
-	token, err := login(u)
+	token, err := verifyLogin(u)
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
@@ -75,7 +76,7 @@ func Login(c *gin.Context) {
 	})
 }
 
-func login(usuario models.Usuario) (string, error) {
+func verifyLogin(usuario models.Usuario) (string, error) {
 	var err error
 
 	found := models.Usuario{}
@@ -98,4 +99,23 @@ func login(usuario models.Usuario) (string, error) {
 	}
 
 	return token, nil
+}
+
+func CurrentUser(c *gin.Context) {
+
+	username, err := utils.ExtractTokenUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	u, err := models.GetUserByUsername(username)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "success", "data": u})
 }

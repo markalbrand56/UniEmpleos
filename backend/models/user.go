@@ -2,6 +2,7 @@ package models
 
 import (
 	"backend/configs"
+	"errors"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"html"
@@ -43,4 +44,18 @@ func (u *Usuario) BeforeSave() error {
 	u.Usuario = html.EscapeString(strings.TrimSpace(u.Usuario))
 
 	return nil
+}
+
+func GetUserByUsername(username string) (Usuario, error) {
+	var user Usuario
+
+	err := configs.DB.Where("usuario = ?", username).First(&user).Error
+
+	if err != nil {
+		return Usuario{}, errors.New("user not found")
+	}
+
+	user.Contra = "" // no queremos que se devuelva la contraseña
+
+	return user, nil
 }
