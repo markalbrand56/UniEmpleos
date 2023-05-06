@@ -46,4 +46,22 @@ func Routes(router *gin.Engine) {
 	companies.Use(middlewares.JwtAuthentication())
 
 	companies.POST("/", controllers.NewCompany)
+
+	// Administradores
+	admins := router.Group("api/admins")
+	admins.Use(middlewares.JwtAuthentication())
+
+	admins.POST("/", controllers.NewAdmin)
+
+	// Ofertas
+	offers := router.Group("api/offers")
+	offers.Use(middlewares.JwtAuthentication())
+
+	offers.POST("/", controllers.NewOffer)
+
+	// Postulaciones
+	postulations := router.Group("api/postulations")
+	postulations.Use(middlewares.JwtAuthentication())
+
+	postulations.POST("/", controllers.NewPostulation)
 }
