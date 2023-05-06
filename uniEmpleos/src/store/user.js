@@ -1,16 +1,8 @@
-// src/store/user.js
 import { createStoreon } from "storeon"
 
-const userModule = (store) => {
-  store.on("@init", () => ({ user: { isLoggedIn: false, data: null } }))
-
-  store.on("user/login", (state, user) => ({
-    user: { isLoggedIn: true, data: user },
-  }))
-
-  store.on("user/logout", () => ({ user: { isLoggedIn: false, data: null } }))
+const user = (store) => {
+  store.on("@init", () => ({ user: { email: "", password: "" } }))
+  store.on("user/login", (_, { email }) => ({ user: { email } }))
 }
 
-const store = createStoreon([userModule])
-
-export default store
+export default user

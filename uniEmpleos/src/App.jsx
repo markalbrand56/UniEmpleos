@@ -22,4 +22,19 @@ function App() {
   )
 }
 
+function Navigation() {
+  const history = useHistory()
+
+  const { user } = useStoreon("user")
+
+  if (user.dpi == "") {
+    console.log("No hay usuario")
+    history.push("/login")
+    return null
+  }
+  console.log("Hay usuario")
+
+  return <h1>Nav</h1>
+}
+
 export default App
