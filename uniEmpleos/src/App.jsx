@@ -2,6 +2,7 @@ import React from "react"
 import { StoreContext, useStoreon } from "storeon/react"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import LogIn from "./pages/Login/Login"
+import SignUp from "./pages/SignUp/SignUp"
 import "./App.css"
 import store from "./store"
 

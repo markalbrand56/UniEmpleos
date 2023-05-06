@@ -36,5 +36,6 @@
 }
 .storybook-button--large {
   font-size: 16px;
-  padding: 12px 24px;
+  width: 150px;
+  height: 34px;
 }
