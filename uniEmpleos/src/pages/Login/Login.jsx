@@ -7,17 +7,23 @@ function LogIn() {
   return (
     <div className={styles.logInCointainer}>
       <h1>UniEmpleos</h1>
-      <div>
-        <ComponentInput
-          name="usuario"
-          type="text"
-          placeholder="Ingrese su usuario"
-        />
-        <ComponentInput
-          name="password"
-          type="password"
-          placeholder="Ingrese su contraseña"
-        />
+      <div className={styles.inputsContainer}>
+        <div className={styles.usuarioContainer}>
+          <span>Ingrese su correo</span>
+          <ComponentInput
+            name="correo"
+            type="text"
+            placeholder="jim@gmail.com"
+          />
+        </div>
+        <div className={styles.contrasenaContainer}>
+          <span>Ingrese su contraseña</span>
+          <ComponentInput
+            name="password"
+            type="password"
+            placeholder="micontraseña123"
+          />
+        </div>
         <Button label="Iniciar sesión" />
         <a href="/registro">
           ¿Eres nuevo? <span> Únete al equipo </span>
