@@ -26,7 +26,11 @@ func NewStudent(c *gin.Context) {
 	var input EstudianteInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error binding JSON: " + err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 
