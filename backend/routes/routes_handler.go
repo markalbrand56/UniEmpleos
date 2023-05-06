@@ -34,10 +34,9 @@ func Routes(router *gin.Engine) {
 
 	students.POST("/", controllers.NewStudent)
 
-	// Empresas
-	// Ale: Use "company" porque el mamark quería que fuera en inglés :)
-	companies := router.Group("api/companies")
-	companies.Use(middlewares.JwtAuthentication())
+	// Carreras
+	careers := router.Group("api/careers")
+	careers.Use(middlewares.JwtAuthentication())
 
-	companies.POST("/", controllers.NewCompany)
+	careers.POST("/", controllers.NewCarrer)
 }
