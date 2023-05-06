@@ -3,7 +3,6 @@ package models
 import (
 	"backend/configs"
 	"errors"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"html"
 	"strings"
@@ -37,8 +36,6 @@ func (u *Usuario) BeforeSave() error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(string(hashedPassword))
 
 	u.Contra = string(hashedPassword)
 	u.Usuario = html.EscapeString(strings.TrimSpace(u.Usuario))
