@@ -19,7 +19,7 @@ function LogIn() {
         />
       </div>
       <div className={styles.buttonContainer}>
-        <Button label="Iniciar sesión" size="large" textColor="#000" />
+        <Button label="Registrarse" size="large" textColor="#000" />
       </div>
     </div>
   )
