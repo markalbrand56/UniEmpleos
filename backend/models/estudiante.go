@@ -7,13 +7,13 @@ import (
 // Mensaje es la estructura de la tabla estudiante en la base de datos
 
 type estudiante struct {
-	IdEstudiante int       `json:"id_estudiante"`
+	IdEstudiante string    `json:"id_estudiante"`
 	Dpi          string    `json:"dpi"`
 	Nombre       string    `json:"nombre"`
 	Apellido     string    `json:"apellido"`
 	Nacimiento   time.Time `json:"nacimiento"`
 	Telefono     string    `json:"telefono"`
-	Carrera      string    `json:"carrera"`
+	Carrera      int       `json:"carrera"`
 	Semestre     int       `json:"semestre"`
 	CV           string    `json:"cv"`
 	Foto         string    `json:"foto"`
