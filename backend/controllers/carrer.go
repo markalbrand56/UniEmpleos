@@ -8,7 +8,6 @@ import (
 )
 
 type CarrerInput struct {
-	IdCarrera   string `json:"id_carrera"`
 	Nombre      string `json:"nombre"`
 	Descripcion string `json:"descripcion"`
 }
@@ -22,7 +21,6 @@ func NewCarrer(c *gin.Context) {
 	}
 
 	carrera := models.Carrera{
-		IdCarrera:   input.IdCarrera,
 		Nombre:      input.Nombre,
 		Descripcion: input.Descripcion,
 	}
@@ -37,5 +35,11 @@ func NewCarrer(c *gin.Context) {
 		})
 		return
 	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Carrera created successfully",
+		Data:    nil,
+	})
 
 }

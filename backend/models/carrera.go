@@ -1,7 +1,6 @@
 package models
 
 type Carrera struct {
-	IdCarrera   string `json:"id_carrera"`
 	Nombre      string `json:"nombre"`
 	Descripcion string `json:"descripcion"`
 }
