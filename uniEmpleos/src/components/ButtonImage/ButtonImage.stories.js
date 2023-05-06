@@ -14,6 +14,7 @@ export const asUser = {
     src: { user },
     alt: "user",
     text: "Para mí",
+    textColor: "#000",
   },
 }
 
@@ -22,5 +23,6 @@ export const asCorp = {
     src: { corp },
     alt: "corp",
     text: "Para mi empresa",
+    textColor: "#000",
   },
 }

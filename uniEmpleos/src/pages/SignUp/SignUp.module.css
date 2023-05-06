@@ -15,3 +15,9 @@
   width: fit-content;
   height: auto;
 }
+
+.buttonContainer {
+  width: fit-content;
+  height: fit-content;
+  margin: 35px 0 0 0;
+}
