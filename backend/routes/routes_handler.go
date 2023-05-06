@@ -46,4 +46,10 @@ func Routes(router *gin.Engine) {
 	companies.Use(middlewares.JwtAuthentication())
 
 	companies.POST("/", controllers.NewCompany)
+
+	// Administradores
+	admins := router.Group("api/admins")
+	admins.Use(middlewares.JwtAuthentication())
+
+	admins.POST("/", controllers.NewAdmin)
 }
