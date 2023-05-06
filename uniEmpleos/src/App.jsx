@@ -1,16 +1,9 @@
 import React from "react"
+import { StoreContext, useStoreon } from "storeon/react"
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import LogIn from "./pages/Login/Login"
 import "./App.css"
-import { StoreContext, useStoreon } from "storeon/react"
 import store from "./store"
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  useNavigate,
-  Outlet,
-  Routes,
-} from "react-router-dom"
 
 function App() {
   return (
@@ -26,21 +19,6 @@ function App() {
       </Router>
     </StoreContext.Provider>
   )
-}
-
-function Navigation() {
-  const history = useHistory()
-
-  const { user } = useStoreon("user")
-
-  if (user.dpi == "") {
-    console.log("No hay usuario")
-    history.push("/login")
-    return null
-  }
-  console.log("Hay usuario")
-
-  return <h1>Nav</h1>
 }
 
 export default App
