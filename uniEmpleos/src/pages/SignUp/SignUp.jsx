@@ -6,7 +6,7 @@ import ButtonImage from "../../components/ButtonImage/ButtonImage"
 import styles from "./SignUp.module.css"
 import Logo from "../../components/Logo/Logo"
 
-function LogIn() {
+const LogIn = () => {
   return (
     <div className={styles.signUpCointainer}>
       <div className={styles.logo}>
