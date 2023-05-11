@@ -1,5 +1,5 @@
 import Logo from "./Logo"
-import logo from "../../assets/Ue_1.svg"
+import logo from "/images/Ue_1.svg"
 
 export default {
   title: "Logo/Logo",

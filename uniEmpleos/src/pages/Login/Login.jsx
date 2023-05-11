@@ -1,6 +1,6 @@
 import React from "react"
 import ComponentInput from "../../components/Input/Input"
-import Button from "../../components/Boton/Button"
+import Button from "../../components/Button/Button"
 import styles from "./Login.module.css"
 
 function LogIn() {
