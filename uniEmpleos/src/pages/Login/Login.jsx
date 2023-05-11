@@ -3,7 +3,7 @@ import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import styles from "./Login.module.css"
 
-function LogIn() {
+const LogIn = () => {
   return (
     <div className={styles.logInCointainer}>
       <h1>UniEmpleos</h1>

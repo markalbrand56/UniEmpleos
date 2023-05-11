@@ -60,7 +60,7 @@ export const Header = ({
           {user ? (
             <>
               <span className="welcome">
-                Welcome, <b>{user.name}</b>!
+                Welcome, <b>{user.nombre}</b>!
               </span>
               <Button size="small" onClick={onLogout} label="Log out" />
             </>
@@ -84,7 +84,7 @@ export const Header = ({
 
 Header.propTypes = {
   user: PropTypes.shape({
-    name: PropTypes.string,
+    nombre: PropTypes.string,
   }),
   onLogin: PropTypes.func.isRequired,
   onLogout: PropTypes.func.isRequired,
