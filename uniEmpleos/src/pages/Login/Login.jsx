@@ -25,7 +25,7 @@ function LogIn() {
           />
         </div>
         <Button label="Iniciar sesión" />
-        <a href="/registro">
+        <a href="/signup">
           ¿Eres nuevo? <span> Únete al equipo </span>
         </a>
       </div>
