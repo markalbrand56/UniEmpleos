@@ -27,6 +27,13 @@
   background-color: #a08ae5;
   outline: none;
 }
+
+.tipoUsuario button:hover {
+  transition: all 0.3s ease-in-out;
+  border-color: #674faf;
+  background-color: #a08ae5;
+  outline: none;
+}
   
 .tipoUsuario button img {
   width: 150px;
