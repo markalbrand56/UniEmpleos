@@ -7,6 +7,11 @@
   justify-content: space-between;
 }
 
+.logo{
+  width: 80px;
+  height: 80px;
+}
+
 .headercontainer {
   display: flex;
   gap: 20px;
@@ -17,14 +22,17 @@
 .actions {
   display: flex;
   gap: 40px;
-  margin-left: 40px;
 }
 
 .actions a {
   text-decoration: none;
   color: #333;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
+}
+
+.actions a:hover {
+  color: #a08ae5;
 }
 
 svg {

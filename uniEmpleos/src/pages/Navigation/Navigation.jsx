@@ -3,6 +3,7 @@ import { StoreContext } from "storeon/react"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import LogIn from "../Login/Login"
 import SignUp from "../SignUp/SignUp"
+import Home from "../Home/Home"
 import store from "../../store"
 
 const Navigation = () => (
@@ -12,8 +13,8 @@ const Navigation = () => (
         <Route path="/">
           <Route index element={<h1>Home</h1>} />
           <Route path="login" element={<LogIn />} />
-          <Route path="/signin" element={<h1>Sign In</h1>} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="home" element={<Home />} />
+          <Route path="signup" element={<SignUp />} />
         </Route>
       </Routes>
     </Router>
