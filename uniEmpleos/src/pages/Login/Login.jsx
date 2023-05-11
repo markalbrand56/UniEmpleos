@@ -1,6 +1,6 @@
 import React from "react"
 import ComponentInput from "../../components/Input/Input"
-import Button from "../../components/Boton/Button"
+import Button from "../../components/Button/Button"
 import styles from "./Login.module.css"
 
 function LogIn() {
@@ -25,7 +25,7 @@ function LogIn() {
           />
         </div>
         <Button label="Iniciar sesión" />
-        <a href="/registro">
+        <a href="/signup">
           ¿Eres nuevo? <span> Únete al equipo </span>
         </a>
       </div>

@@ -1,6 +1,6 @@
 import ButtonImage from "./ButtonImage"
-import user from "../../assets/user.svg"
-import corp from "../../assets/corp.svg"
+import user from "/images/user.svg"
+import corp from "/images/corp.svg"
 
 export default {
   title: "ButtonImage",
@@ -9,18 +9,18 @@ export default {
   argTypes: {},
 }
 
-export const asUser = {
+export const AsUser = {
   args: {
-    src: { user },
+    src: user,
     alt: "user",
     text: "Para mí",
     textColor: "#000",
   },
 }
 
-export const asCorp = {
+export const AsCorp = {
   args: {
-    src: { corp },
+    src: corp,
     alt: "corp",
     text: "Para mi empresa",
     textColor: "#000",
