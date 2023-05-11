@@ -1,7 +1,7 @@
 import Input from "./Input"
 
 export default {
-  title: "Inputs/Input",
+  title: "Components/Input",
   component: Input,
   tags: ["autodocs"],
   argTypes: {},

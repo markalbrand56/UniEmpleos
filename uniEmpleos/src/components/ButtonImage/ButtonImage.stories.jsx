@@ -3,7 +3,7 @@ import user from "/images/user.svg"
 import corp from "/images/corp.svg"
 
 export default {
-  title: "ButtonImage",
+  title: "Components/ButtonImage",
   component: ButtonImage,
   tags: ["autodocs"],
   argTypes: {},
