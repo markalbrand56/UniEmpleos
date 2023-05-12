@@ -1624,6 +1624,11 @@
   resolved "https://registry.yarnpkg.com/@storeon/localstorage/-/localstorage-1.5.0.tgz#63ec7c22ea127654db6d4d86d46d679026aa8039"
   integrity sha512-FVosJE+DKjd4aYL407i4ZvBmYQ+43Uqud+RLjGlxMYjY3Lpe6MZZljc/1kSn4FFcjbthV/zDmAEjTGRFiThntw==
 
+"@storeon/router@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@storeon/router/-/router-2.0.1.tgz#e4ee63c5bcff122c142b02147bac4f5052c152f3"
+  integrity sha512-iukCYLSXs2+wmIqXHrFM7LPkJBJK2lg67cu4ito62AII1OeQQKb7l2SrVk+zn8Kbaaok5QolZbDm8TFWa9CUVQ==
+
 "@storybook/addon-actions@7.0.7":
   version "7.0.7"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-7.0.7.tgz#d35c77a0ae0127562da5b5c27dc68ebd72fdebf7"
