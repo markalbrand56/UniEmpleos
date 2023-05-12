@@ -16,7 +16,7 @@ func main() {
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
-			return origin == "http://localhost:3000" || origin == "http://localhost:8080"
+			return origin == "http://localhost:3000" || origin == "http://127.0.0.1:8080"
 		},
 	}))
 
