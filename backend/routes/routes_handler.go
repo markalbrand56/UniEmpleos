@@ -3,25 +3,16 @@ package routes
 import (
 	"backend/controllers"
 	"backend/middlewares"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func Routes(router *gin.Engine) {
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			for _, allowedOrigin := range []string{"http://localhost:3000", "http://localhost:8080"} {
-				if allowedOrigin == origin {
-					return true
-				}
-			}
-			return false
-		},
-	}))
+	router.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Next()
+	})
 	// Rutas públicas
 	public := router.Group("/api")
 
