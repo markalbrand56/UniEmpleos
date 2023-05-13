@@ -9,7 +9,6 @@ import waveup from "/images/waveup.svg"
 const Home = () => {
   return (
     <div className={styles.homeContainer}>
-      <Header userperson="student" />
       <div className={styles.homeContent}>
         <div className={styles.image}>
           <img src={Uniempleos} alt="Uniempleos" />

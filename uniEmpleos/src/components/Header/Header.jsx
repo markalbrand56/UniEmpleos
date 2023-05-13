@@ -4,6 +4,15 @@ import Logo from "../Logo/Logo"
 import Ue from "/images/Ue_1.svg"
 import Button from "../Button/Button"
 import "./header.css"
+import { navigate } from "../../store"
+
+const handleClick = () => {
+  navigate("/login")
+}
+
+const handleCreateAccount = () => {
+  navigate("/signup")
+}
 
 export const Header = ({
   user,
@@ -17,8 +26,7 @@ export const Header = ({
       case "student":
         return (
           <div className="actions">
-            <a href="/jobs">Vacantes</a>
-            <a href="/profile">Perfil</a>
+            <a href="/">Home</a>
           </div>
         )
       case "company":
@@ -66,12 +74,12 @@ export const Header = ({
             </>
           ) : (
             <>
-              <Button size="small" onClick={onLogin} label="Log in" />
+              <Button size="small" onClick={handleClick} label="Log in" />
               <Button
                 primary
                 backgroundColor="#6E51D9"
                 size="small"
-                onClick={onCreateAccount}
+                onClick={handleCreateAccount}
                 label="Sign up"
               />
             </>
