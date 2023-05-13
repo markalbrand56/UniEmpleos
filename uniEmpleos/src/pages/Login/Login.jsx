@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useStoreon } from "storeon/react"
+import { navigate } from "../../store"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import styles from "./Login.module.css"
@@ -11,7 +12,7 @@ const LogIn = () => {
   const [passInput, setPassInput] = useState("")
   const [warning, setWarning] = useState(false)
 
-  const { dispatch } = useStoreon("user")
+  const { dispatch, user } = useStoreon("user")
 
   // Teniendo el DPI y la contraseña,necesitamos que nos devuelva un objeto usuario
   const logIn = async () => {
@@ -22,7 +23,7 @@ const LogIn = () => {
       usuario: emailInput,
       contra: passInput,
     }
-    const response = await fetch(`${API_URL}login/`, {
+    const response = await fetch(`${API_URL}login`, {
       method: "POST",
       body: JSON.stringify(body),
       headers: {
@@ -35,7 +36,10 @@ const LogIn = () => {
     if (datos.status === 200) {
       // Estado global
       dispatch("user/login", { token: datos.data.token })
-      history.push("/")
+      console.log("token", datos.data.token)
+      console.log(user)
+      console.log("Credenciales correctas")
+      navigate("/")
     } else {
       console.log("Credenciales incorrectas")
       setWarning(() => true)
@@ -43,7 +47,7 @@ const LogIn = () => {
   }
 
   useEffect(() => {
-    dispatch("user/login", { token: null })
+    dispatch("user/login", { token: "" })
   }, [])
 
   return (
