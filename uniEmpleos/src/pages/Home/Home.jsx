@@ -5,8 +5,15 @@ import Uniempleos from "/images/Uniempleos.png"
 import Infocontainer from "../../components/Infocontainer/Infocontainer"
 import wave from "/images/wave.svg"
 import waveup from "/images/waveup.svg"
+import Button from "../../components/Button/Button"
+import { navigate } from "../../store"
 
 const Home = () => {
+  const handleNav = (path) => {
+    console.log("path", path)
+    navigate(path)
+  }
+
   return (
     <div className={styles.homeContainer}>
       <div className={styles.homeContent}>
@@ -25,18 +32,42 @@ const Home = () => {
             title="¿Cómo funciona?"
             text="Las empresas publican sus ofertas de trabajo y los estudiantes 
             pueden postular a ellas. Las empresas pueden ver los perfiles de los estudiantes y contactarlos."
-            backgroundColor="#B0E212"
+            backgroundColor="#94BD0F"
             textColor="#fff"
           />
         </div>
         <div className={styles.waveup}>
           <img src={waveup} alt="wave" />
         </div>
+        <div className={styles.infobutton}>
         <Infocontainer
           title="¿Qué esperas para encontrar tu oportunidad?"
           backgroundColor="transparent"
           textColor="#000"
         />
+        <div className={styles.button}>
+          <Button
+            primary
+            label="Iniciar Sesión"
+            backgroundColor="#A08AE5"
+            size="large"
+            onClick={(event) => {
+              event.preventDefault()
+              handleNav("/login")
+            }}
+          />
+          <Button
+            primary
+            label="Registrarse"
+            backgroundColor="#A08AE5"
+            size="large"
+            onClick={(event) => {
+              event.preventDefault()
+              handleNav("/signup")
+            }}
+          />
+        </div>
+        </div>
         <div className={styles.waveup}>
           <img src={wave} alt="waveup" />
         </div>
