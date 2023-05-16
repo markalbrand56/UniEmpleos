@@ -46,6 +46,14 @@ const LogIn = () => {
     }
   }
 
+  const handleCorreo = (event) => {
+    setEmailInput(event.target.value)
+  }
+
+  const handlePass = (event) => {
+    setPassInput(event.target.value)
+  }
+
   useEffect(() => {
     dispatch("user/login", { token: "" })
   }, [])
@@ -63,20 +71,20 @@ const LogIn = () => {
       <div className={styles.inputsContainer}>
         <div className={styles.usuarioContainer}>
           <span>Ingrese su correo</span>
-          <input
+          <ComponentInput
             name="correo"
             type="text"
-            placeholder="jim@gmail.com"
-            onChange={(e) => setEmailInput(e.target.value)}
+            placeholder="uni@gmail.com"
+            onChange={handleCorreo}
           />
         </div>
         <div className={styles.usuarioContainer}>
           <span>Ingrese su contraseña</span>
-          <input
+          <ComponentInput
             name="password"
             type="password"
             placeholder="micontraseña123"
-            onChange={(e) => setPassInput(e.target.value)}
+            onChange={handlePass}
           />
         </div>
         <Button
