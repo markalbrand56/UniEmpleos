@@ -20,6 +20,7 @@ type EstudianteInput struct {
 	Semestre     int    `json:"semestre"`
 	CV           string `json:"cv"`
 	Foto         string `json:"foto"`
+	Contra       string `json:"contra"`
 }
 
 func NewStudent(c *gin.Context) {
@@ -50,7 +51,13 @@ func NewStudent(c *gin.Context) {
 		Correo:       input.Correo,
 	}
 
+	u := models.Usuario{
+		Usuario: input.IdEstudiante,
+		Contra:  input.Contra,
+	}
+
 	err := configs.DB.Create(&e).Error // Se agrega el estudiante a la base de datos
+	err = configs.DB.Create(&u).Error  // Se agrega el usuario a la base de datos
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
