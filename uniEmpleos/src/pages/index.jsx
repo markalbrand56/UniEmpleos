@@ -4,6 +4,7 @@ import React from "react"
 import Login from "./Login/Login"
 import Signup from "./SignUp/SignUp"
 import Home from "./Home/Home"
+import PrincipalStudent from "./PrincipalStudent/PrincipalStudent"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
@@ -18,6 +19,9 @@ const Page = () => {
       break
     case "login":
       Component = <Login />
+      break
+    case "principalStudent":
+      Component = <PrincipalStudent />
       break
     default:
       Component = <h1>404 Error</h1>
