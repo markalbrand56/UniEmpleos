@@ -50,3 +50,15 @@
     height: 100%;
     object-fit: cover;
 }
+
+.infobutton{
+    width: 800px;
+}
+
+.button{
+    display: flex;
+    gap : 20px;
+    justify-content: space-around;
+    height: 60px;
+    background-color: transparent;
+}
