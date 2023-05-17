@@ -1,0 +1,25 @@
+.dropDownContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.dropDownContainer select {
+  width: 100%;
+  padding: 5px 5px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #000;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.dropDownContainer select:focus {
+  border-color: #a08ae5;
+  box-shadow: 0 0 0 3px rgba(160, 138, 229, 0.25);
+  outline: none;
+}
