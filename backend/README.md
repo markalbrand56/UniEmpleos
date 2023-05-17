@@ -176,8 +176,30 @@ Crea una carrera
 ``` json
 {
 	"Status":  "200",
-	Message: "Carrera created successfully",
-	"Data": "nil[
+	"Message": "Carrera created successfully",
+	"Data": "nil"
+}
+```
+
+### [POST] api/postulation
+Crea una postulacíon
+
+#### Params
+
+``` json
+{
+	"id_oferta"    	: "int" 
+	"id_estudiante"	: "string"
+	"estado" 	: "string"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Postulation created successfully",
+	"Data": "nil"
 }
 ```
 
