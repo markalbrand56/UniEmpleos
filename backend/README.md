@@ -67,8 +67,8 @@ Crea un estudiante
 #### Response
 ``` json
 {
-	Status:  200,
-	Message: "Student created successfully",
-	Data:    nil
+	"Status":  200,
+	"Message": "Student created successfully",
+	"Data":    "nil"
 }
 ```
