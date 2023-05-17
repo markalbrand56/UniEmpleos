@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import style from "./SignUpEmpresa.module.css"
 import Logo from "../../components/Logo/Logo"
 import ComponentInput from "../../components/Input/Input"
+import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import Button from "../../components/Button/Button"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
@@ -59,11 +60,11 @@ const SignUpEmpresa = () => {
             />
           </div>
           <div className={style.inputSubContainer}>
-            <span>Detalles</span>
+            <span>Contraseña</span>
             <ComponentInput
-              name="detalles"
-              type="text"
-              placeholder="Soy una empresa..."
+              name="password"
+              type="password"
+              placeholder="miContraseña"
             />
           </div>
           <div className={style.inputSubContainer}>
@@ -76,12 +77,14 @@ const SignUpEmpresa = () => {
             />
           </div>
           <div className={style.inputSubContainer}>
-            <span>Contraseña</span>
-            <ComponentInput
-              name="password"
-              type="password"
-              placeholder="micontraseña"
+            <span>Detalles</span>
+            <TextArea
+              name="detalles"
+              type="text"
+              placeholder="Detalles de la empresa"
               onChange={handleInputsValue}
+              min={1}
+              max={5}
             />
           </div>
         </div>
