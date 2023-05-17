@@ -41,8 +41,8 @@ func NewCompany(c *gin.Context) {
 		Contra:  input.Contra,
 	}
 
-	err := configs.DB.Create(&e).Error // Se agrega la empresa a la base de datos
-	err = configs.DB.Create(&u).Error  // Se agrega el usuario a la base de datos
+	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
+	err = configs.DB.Create(&e).Error  // Se agrega la empresa a la base de datos
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
