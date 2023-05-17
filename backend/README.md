@@ -136,3 +136,27 @@ Crea una compañia
 	"Data":    "nil"
 }
 ```
+
+### [POST] api/offers
+Crea una oferta de trabajo
+
+#### Params
+
+``` json
+{
+	"id_empresa"    : "string" 
+	"puesto"	: "string"
+	"descripcion"   : "string"
+	"requisitos"    : "string" 
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  200,
+	"Message": "Offer created successfully",
+	"Data":    "nil"
+}
+```
+
