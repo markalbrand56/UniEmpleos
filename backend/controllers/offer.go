@@ -38,7 +38,7 @@ func NewOffer(c *gin.Context) {
 
 	c.JSON(200, responses.StandardResponse{
 		Status:  200,
-		Message: "Oferta creada exitosamente",
+		Message: "Offer created successfully",
 		Data:    nil,
 	})
 
