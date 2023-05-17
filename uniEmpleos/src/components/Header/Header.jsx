@@ -27,6 +27,7 @@ export const Header = ({
         return (
           <div className="actions">
             <a href="/">Home</a>
+            <a href="/profile">Perfil</a>
           </div>
         )
       case "company":
@@ -65,25 +66,11 @@ export const Header = ({
           {renderActions()}
         </div>
         <div>
-          {user ? (
-            <>
-              <span className="welcome">
-                Welcome, <b>{user.nombre}</b>!
-              </span>
-              <Button size="small" onClick={onLogout} label="Log out" />
-            </>
-          ) : (
-            <>
-              <Button size="small" onClick={handleClick} label="Log in" />
-              <Button
-                primary
-                backgroundColor="#6E51D9"
-                size="small"
-                onClick={handleCreateAccount}
-                label="Sign up"
-              />
-            </>
-          )}
+          <Button
+            backgroundColor="#a08ae5"
+            label="Log Out"
+            onClick={handleClick}
+          />
         </div>
       </div>
     </header>

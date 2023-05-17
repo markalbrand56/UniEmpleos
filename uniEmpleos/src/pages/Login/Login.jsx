@@ -39,7 +39,7 @@ const LogIn = () => {
       console.log("token", datos.data.token)
       console.log(user)
       console.log("Credenciales correctas")
-      navigate("/")
+      navigate("/principalStudent")
     } else {
       console.log("Credenciales incorrectas")
       setWarning(() => true)

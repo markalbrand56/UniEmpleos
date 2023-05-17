@@ -4,6 +4,7 @@ import React from "react"
 import Login from "./Login/Login"
 import Signup from "./SignUp/SignUp"
 import Home from "./Home/Home"
+import PrincipalStudent from "./PrincipalStudent/PrincipalStudent"
 import SignUpEstudiante from "./SignUpEstudiante/SignUpEstudiante"
 import SignUpEmpresa from "./SignUpEmpresa/SignUpEmpresa"
 
@@ -21,6 +22,9 @@ const Page = () => {
     case "login":
       Component = <Login />
       break
+    case "principalStudent":
+      Component = <PrincipalStudent />
+       break
     case "signupestudiante":
       Component = <SignUpEstudiante />
       break
