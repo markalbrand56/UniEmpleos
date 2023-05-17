@@ -27,7 +27,7 @@ Login de usuario.
 ### [POST] api/register
 Registrar usuario.
 
-#### Request Body
+#### Params
 ``` json
 {
     "usuario": "ejemplo",
@@ -64,11 +64,51 @@ Obtener el usuario actual.
 ### [POST] api/students/
 Crea un estudiante
 
+#### Params
+
+``` json
+{
+	"dpi"	        : "string" 
+	"nombre"        : "string" 
+	"apellido"      : "string"
+	"nacimiento"    : "string" 
+	"correo"        : "string" 
+	"telefono"      : "string" 
+	"carrera"       : "int"    
+	"semestre"      : "int"    
+	"cv"            : "string" 
+	"foto"          : "string" 
+}
+```
+
 #### Response
 ``` json
 {
 	"Status":  200,
 	"Message": "Student created successfully",
+	"Data":    "nil"
+}
+```
+
+### [POST] api/messages
+Crea un mensaje
+
+#### Params
+
+``` json
+{
+	"id_postulacion"   : "int" 
+	"id_emisor"        : "string" 
+	"id_receptor"      : "string"
+	"mensaje"    	   : "string" 
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  200,
+	"Message": "Message sent successfully",
 	"Data":    "nil"
 }
 ```
