@@ -160,3 +160,27 @@ Crea una oferta de trabajo
 }
 ```
 
+### [POST] api/register
+Verifica que exista un usuario con su respectiva contraseña
+
+#### Params
+
+``` json
+{
+	"usuario"    : "string" 
+	"contra"	: "string"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Login successful",
+	"Data": "map[string]interface{}"{
+		"token": "token",
+		"role":  "role",
+	}
+}
+```
+
