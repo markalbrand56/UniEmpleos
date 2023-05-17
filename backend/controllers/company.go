@@ -8,12 +8,11 @@ import (
 )
 
 type EmpresaInput struct {
-	IdEmpresa string `json:"id_empresa"`
-	Nombre    string `json:"nombre"`
-	Detalles  string `json:"detalles"`
-	Correo    string `json:"correo"`
-	Telefono  string `json:"telefono"`
-	Contra    string `json:"contra"`
+	Nombre   string `json:"nombre"`
+	Detalles string `json:"detalles"`
+	Correo   string `json:"correo"`
+	Telefono string `json:"telefono"`
+	Contra   string `json:"contra"`
 }
 
 func NewCompany(c *gin.Context) {
@@ -29,7 +28,7 @@ func NewCompany(c *gin.Context) {
 	}
 
 	e := models.Empresa{
-		IdEmpresa: input.IdEmpresa,
+		IdEmpresa: input.Correo,
 		Nombre:    input.Nombre,
 		Detalles:  input.Detalles,
 		Correo:    input.Correo,
@@ -37,7 +36,7 @@ func NewCompany(c *gin.Context) {
 	}
 
 	u := models.Usuario{
-		Usuario: input.IdEmpresa,
+		Usuario: input.Correo,
 		Contra:  input.Contra,
 	}
 
