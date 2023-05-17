@@ -69,10 +69,24 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	role, err := role(u)
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Invalid credentials: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
 	c.JSON(200, responses.StandardResponse{
 		Status:  200,
 		Message: "Login successful",
-		Data:    map[string]interface{}{"token": token},
+		Data: map[string]interface{}{
+			"token": token,
+			"role":  role,
+		},
 	})
 }
 
@@ -99,6 +113,35 @@ func verifyLogin(usuario models.Usuario) (string, error) {
 	}
 
 	return token, nil
+}
+
+func role(usuario models.Usuario) (string, error) {
+	var err error
+	var role string
+
+	student := models.Estudiante{}
+	err = configs.DB.Where("id_estudiante = ?", usuario.Usuario).First(&student).Error
+	if err == nil {
+		role = "student"
+		return role, nil
+	}
+
+	enterprise := models.Empresa{}
+	err = configs.DB.Where("id_empresa = ?", usuario.Usuario).First(&enterprise).Error
+	if err == nil {
+		role = "enterprise"
+		return role, nil
+	}
+
+	admin := models.Administrador{}
+	err = configs.DB.Where("id_admin = ?", usuario.Usuario).First(&admin).Error
+	if err == nil {
+		role = "admin"
+		return role, nil
+	}
+
+	return "", err
+
 }
 
 func CurrentUser(c *gin.Context) {

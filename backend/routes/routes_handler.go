@@ -32,7 +32,7 @@ func Routes(router *gin.Engine) {
 	students := router.Group("api/students")
 	students.Use(middlewares.JwtAuthentication())
 
-	students.POST("/", controllers.NewStudent)
+	public.POST("/students", controllers.NewStudent)
 
 	// Carreras
 	careers := router.Group("api/careers")

@@ -9,17 +9,17 @@ import (
 )
 
 type EstudianteInput struct {
-	IdEstudiante string `json:"id_estudiante"`
-	Dpi          string `json:"dpi"`
-	Nombre       string `json:"nombre"`
-	Apellido     string `json:"apellido"`
-	Nacimiento   string `json:"nacimiento"`
-	Correo       string `json:"correo"`
-	Telefono     string `json:"telefono"`
-	Carrera      int    `json:"carrera"`
-	Semestre     int    `json:"semestre"`
-	CV           string `json:"cv"`
-	Foto         string `json:"foto"`
+	Dpi        string `json:"dpi"`
+	Nombre     string `json:"nombre"`
+	Apellido   string `json:"apellido"`
+	Nacimiento string `json:"nacimiento"`
+	Correo     string `json:"correo"`
+	Telefono   string `json:"telefono"`
+	Carrera    int    `json:"carrera"`
+	Semestre   int    `json:"semestre"`
+	CV         string `json:"cv"`
+	Foto       string `json:"foto"`
+	Contra     string `json:"contra"`
 }
 
 func NewStudent(c *gin.Context) {
@@ -37,7 +37,7 @@ func NewStudent(c *gin.Context) {
 	t, _ := time.Parse("2006-01-02", input.Nacimiento)
 
 	e := models.Estudiante{
-		IdEstudiante: input.IdEstudiante,
+		IdEstudiante: input.Correo,
 		Dpi:          input.Dpi,
 		Nombre:       input.Nombre,
 		Apellido:     input.Apellido,
@@ -50,7 +50,13 @@ func NewStudent(c *gin.Context) {
 		Correo:       input.Correo,
 	}
 
-	err := configs.DB.Create(&e).Error // Se agrega el estudiante a la base de datos
+	u := models.Usuario{
+		Usuario: input.Correo,
+		Contra:  input.Contra,
+	}
+
+	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
+	err = configs.DB.Create(&e).Error  // Se agrega el estudiante a la base de datos
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
