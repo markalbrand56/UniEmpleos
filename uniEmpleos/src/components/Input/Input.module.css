@@ -23,3 +23,15 @@
   box-shadow: 0 0 0 3px rgba(160, 138, 229, 0.25);
   outline: none;
 }
+
+.inputContainer input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: #6E51D9;
+  border-radius: 5px;
+  color: #000; /* Cambia el color del icono del calendario */
+}
+
+.inputContainer input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+.inputContainer input[type="date"]::-webkit-datetime-edit-text {
+  background-color: transparent;
+  color: #000; /* Cambia el color del texto en el calendario */
+}
