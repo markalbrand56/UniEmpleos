@@ -112,3 +112,27 @@ Crea un mensaje
 	"Data":    "nil"
 }
 ```
+
+### [POST] api/companies
+Crea una compañia
+
+#### Params
+
+``` json
+{
+	"id_empresa"    : "string" 
+	"nombre"        : "string" 
+	"detalles"      : "string"
+	"correo"    	: "string"
+	"telefono"    	: "string" 
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  200,
+	"Message": "Company created successfully",
+	"Data":    "nil"
+}
+```
