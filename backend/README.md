@@ -120,11 +120,11 @@ Crea una compañia
 
 ``` json
 {
-	"id_empresa"    : "string" 
 	"nombre"        : "string" 
 	"detalles"      : "string"
 	"correo"    	: "string"
 	"telefono"    	: "string" 
+	"contra" 	: "string"
 }
 ```
 
