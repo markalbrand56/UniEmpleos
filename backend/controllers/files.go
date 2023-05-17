@@ -20,6 +20,10 @@ func UploadFile() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, responses.StandardResponse{Status: http.StatusOK, Message: "File uploaded successfully", Data: nil})
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  http.StatusOK,
+			Message: "File uploaded successfully",
+			Data:    nil,
+		})
 	}
 }
