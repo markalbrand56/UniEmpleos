@@ -44,7 +44,7 @@ Registrar usuario.
 }
 ```
 
-### [GET] api/users/
+### [GET] api/users
 Obtener el usuario actual.
 > **Note**
 > Auth required
@@ -61,7 +61,7 @@ Obtener el usuario actual.
 }
 ```
 
-### [POST] api/students/
+### [POST] api/students
 Crea un estudiante
 
 #### Params
@@ -160,15 +160,15 @@ Crea una oferta de trabajo
 }
 ```
 
-### [POST] api/register
-Verifica que exista un usuario con su respectiva contraseña
+### [POST] api/carrer
+Crea una carrera
 
 #### Params
 
 ``` json
 {
-	"usuario"    : "string" 
-	"contra"	: "string"
+	"nombre"    	: "string" 
+	"descripcion"	: "string"
 }
 ```
 
@@ -176,11 +176,52 @@ Verifica que exista un usuario con su respectiva contraseña
 ``` json
 {
 	"Status":  "200",
-	"Message": "Login successful",
-	"Data": "map[string]interface{}"{
-		"token": "token",
-		"role":  "role",
-	}
+	"Message": "Carrera created successfully",
+	"Data": "nil"
+}
+```
+
+### [POST] api/postulation
+Crea una postulacíon
+
+#### Params
+
+``` json
+{
+	"id_oferta"    	: "int" 
+	"id_estudiante"	: "string"
+	"estado" 	: "string"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Postulation created successfully",
+	"Data": "nil"
+}
+```
+
+### [POST] api/admins
+Crea una postulacíon
+
+#### Params
+
+``` json
+{
+	"id_administrador"    	: "string" 
+	"nombre"		: "string"
+	"apellido" 		: "string"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Admin Created Successfully",
+	"Data": "nil"
 }
 ```
 
