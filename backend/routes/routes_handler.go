@@ -12,6 +12,8 @@ func Routes(router *gin.Engine) {
 
 	public.POST("/register", controllers.Register)
 	public.POST("/login", controllers.Login)
+	public.POST("/students", controllers.NewStudent)
+	public.POST("/companies", controllers.NewCompany)
 
 	router.POST("/upload", controllers.UploadFile())
 
@@ -32,8 +34,6 @@ func Routes(router *gin.Engine) {
 	students := router.Group("api/students")
 	students.Use(middlewares.JwtAuthentication())
 
-	public.POST("/students", controllers.NewStudent)
-
 	// Carreras
 	careers := router.Group("api/careers")
 	careers.Use(middlewares.JwtAuthentication())
@@ -44,8 +44,6 @@ func Routes(router *gin.Engine) {
 	// Ale: Use "company" porque el mamark quería que fuera en inglés :)
 	companies := router.Group("api/companies")
 	companies.Use(middlewares.JwtAuthentication())
-
-	companies.POST("/", controllers.NewCompany)
 
 	// Administradores
 	admins := router.Group("api/admins")
