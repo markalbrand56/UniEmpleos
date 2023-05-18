@@ -44,3 +44,29 @@ func NewPostulation(c *gin.Context) {
 		Data:    nil,
 	})
 }
+
+func GetPrevPostulations(c *gin.Context) {
+	var postulations []models.ViewPrevPostulaciones
+	var data map[string]interface{}
+
+	err := configs.DB.Find(&postulations).Error
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error getting postulations",
+			Data:    nil,
+		})
+		return
+	}
+
+	data = map[string]interface{}{
+		"postulations": postulations,
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Postulations retrieved successfully",
+		Data:    data,
+	})
+}
