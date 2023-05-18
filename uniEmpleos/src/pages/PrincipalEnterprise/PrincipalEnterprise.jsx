@@ -1,19 +1,19 @@
 import React from "react"
-import styles from "./PrincipalStudent.module.css"
+import styles from "./PrincipalEnterprise.module.css"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import { Header } from "../../components/Header/Header"
 
-const PrincipalStudent = () => {
+const PrincipalEnterprise = () => {
   return (
     <div className={styles.container}>
-      <Header userperson="student" />
+      <Header userperson="company" />
       <div className={styles.containerinfomain}>
         <InfoTab
-          title="Título vacante/puesto"
-          area="Área"
+          title="Juan Pérez"
+          area="Tech"
           salary="Q. 5,000.00"
-          company="Empresa"
-          labelbutton="Postularme"
+          company="UVG"
+          labelbutton="Ver perfil"
         />
         <InfoTab
           title="Título vacante/puesto"
@@ -55,4 +55,4 @@ const PrincipalStudent = () => {
   )
 }
 
-export default PrincipalStudent
+export default PrincipalEnterprise
