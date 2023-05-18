@@ -74,6 +74,7 @@ Crea un estudiante
 	"nacimiento"    : "string" 
 	"correo"        : "string" 
 	"telefono"      : "string" 
+	"contra"	: "string"
 	"carrera"       : "int"    
 	"semestre"      : "int"    
 	"cv"            : "string" 
@@ -148,6 +149,7 @@ Crea una oferta de trabajo
 	"puesto"	: "string"
 	"descripcion"   : "string"
 	"requisitos"    : "string" 
+	"salario"	: "double"
 }
 ```
 
