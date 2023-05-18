@@ -34,6 +34,10 @@ const SignUpEmpresa = () => {
     }
   }
 
+  const handleButton = () => {
+    navigate("/login")
+  }
+
   useEffect(() => {
     console.log(nombre, correo, detalles, telefono, password)
   }, [nombre, correo, detalles, telefono, password])
@@ -90,6 +94,9 @@ const SignUpEmpresa = () => {
               max={5}
             />
           </div>
+        </div>
+        <div className={style.buttonContainer}>
+          <Button label="Registrarse" onClick={handleButton} />
         </div>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
