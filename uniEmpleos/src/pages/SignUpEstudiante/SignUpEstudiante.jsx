@@ -1,9 +1,7 @@
 import React, { useEffect } from "react"
 import style from "./SignUpEstudiante.module.css"
-import Logo from "../../components/Logo/Logo"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
-import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 
 const SignUpEstudiante = () => {
@@ -15,13 +13,8 @@ const SignUpEstudiante = () => {
   const [password, setPassword] = React.useState("")
   const [carrera, setCarrera] = React.useState("")
   const [universidad, setUniversidad] = React.useState("")
-  const [cv, setCv] = React.useState("")
-  const [fotoPerfil, setFotoPerfil] = React.useState("")
-  const optionSkins = [
-    { value: "0", label: "Human" },
-    { value: "1", label: "Cat" },
-    { value: "2", label: "Ninja" },
-  ]
+  // const [cv, setCv] = React.useState("")
+  // const [fotoPerfil, setFotoPerfil] = React.useState("")
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -43,6 +36,12 @@ const SignUpEstudiante = () => {
       case "password":
         setPassword(e.target.value)
         break
+      case "carrera":
+        setCarrera(e.target.value)
+        break
+      case "universidad":
+        setUniversidad(e.target.value)
+        break
       default:
         break
     }
@@ -56,35 +55,14 @@ const SignUpEstudiante = () => {
       correo,
       password,
       carrera,
-      universidad,
-      cv,
-      fotoPerfil
+      universidad
     )
-  }, [
-    nombre,
-    apellido,
-    edad,
-    dpi,
-    correo,
-    password,
-    carrera,
-    universidad,
-    cv,
-    fotoPerfil,
-  ])
+  }, [nombre, apellido, edad, dpi, correo, password, carrera, universidad])
 
-  const handleCarrera = (e) => {
-    setCarrera(e.target.value)
+  const handleButton = () => {
+    navigate("/login")
   }
-  const handleUniversidad = (e) => {
-    setUniversidad(e.target.value)
-  }
-  const handleCv = (e) => {
-    setCv(e.target.value)
-  }
-  const handleFotoPerfil = (e) => {
-    setFotoPerfil(e.target.value)
-  }
+
   return (
     <div className={style.signUpCointainer}>
       <h1>UniEmpleos</h1>
@@ -149,20 +127,25 @@ const SignUpEstudiante = () => {
           </div>
           <div className={style.inputSubContainer}>
             <span>Carrera</span>
-            <DropDown
-              opciones={optionSkins}
-              value={carrera}
-              onChange={handleCarrera}
+            <ComponentInput
+              name="carrera"
+              type="text"
+              placeholder="ing. en sistemas"
+              onChange={handleInputsValue}
             />
           </div>
           <div className={style.inputSubContainer}>
             <span>Universidad</span>
-            <DropDown
-              opciones={optionSkins}
-              value={universidad}
-              onChange={handleUniversidad}
+            <ComponentInput
+              name="universidad"
+              type="text"
+              placeholder="Universidad del Valle"
+              onChange={handleInputsValue}
             />
           </div>
+        </div>
+        <div className={style.buttonContainer}>
+          <Button label="Registrarse" onClick={handleButton} />
         </div>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
