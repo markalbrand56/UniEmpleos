@@ -4,37 +4,48 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
-type OffertInput struct {
-	IDempresa   string `json:"id_empresa"`
-	Puesto      string `json:"puesto"`
-	Descripcion string `json:"descripcion"`
-	Requisitos  string `json:"requisitos"`
-	Salario     string `json:"salario"`
+type OfferInput struct {
+	IDEmpresa   string  `json:"id_empresa"`
+	Puesto      string  `json:"puesto"`
+	Descripcion string  `json:"descripcion"`
+	Requisitos  string  `json:"requisitos"`
+	Salario     float64 `json:"salario"`
 }
 
 func NewOffer(c *gin.Context) {
-	var input OffertInput
+	var input OfferInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Invalid input: " + err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 
-	offert := models.Oferta{
-		IDempresa:   input.IDempresa,
+	offer := models.Oferta{
+		IDEmpresa:   input.IDEmpresa,
 		Puesto:      input.Puesto,
 		Descripcion: input.Descripcion,
 		Requisitos:  input.Requisitos,
 		Salario:     input.Salario,
 	}
 
-	err := configs.DB.Create(&offert).Error
+	fmt.Println(offer)
+
+	err := configs.DB.Create(&offer).Error
 
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error creating offer: " + err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 
