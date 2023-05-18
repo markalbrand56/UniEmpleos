@@ -1,7 +1,10 @@
-const user = store => {
-    store.on('@init', () => ({ token: " " }))
-    store.on('user/login', (_, { tokennew }) => ({ token: tokennew }))
-
+const user = (store) => {
+  store.on("@init", () => ({
+    user: {
+      token: " ",
+    },
+  }))
+  store.on("user/config", (_, newConfigs) => ({ user: newConfigs }))
 }
 
 export default user
