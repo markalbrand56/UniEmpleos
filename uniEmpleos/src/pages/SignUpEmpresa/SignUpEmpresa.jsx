@@ -1,10 +1,8 @@
 import React, { useEffect } from "react"
 import style from "./SignUpEmpresa.module.css"
-import Logo from "../../components/Logo/Logo"
 import ComponentInput from "../../components/Input/Input"
 import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import Button from "../../components/Button/Button"
-import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 
 const SignUpEmpresa = () => {
@@ -36,6 +34,10 @@ const SignUpEmpresa = () => {
     }
   }
 
+  useEffect(() => {
+    console.log(nombre, correo, detalles, telefono, password)
+  }, [nombre, correo, detalles, telefono, password])
+
   return (
     <div className={style.signUpCointainer}>
       <h1>UniEmpleos</h1>
@@ -65,6 +67,7 @@ const SignUpEmpresa = () => {
               name="password"
               type="password"
               placeholder="miContraseña"
+              onChange={handleInputsValue}
             />
           </div>
           <div className={style.inputSubContainer}>
@@ -76,7 +79,7 @@ const SignUpEmpresa = () => {
               onChange={handleInputsValue}
             />
           </div>
-          <div className={style.inputSubContainer}>
+          <div className={style.inputTextArea}>
             <span>Detalles</span>
             <TextArea
               name="detalles"

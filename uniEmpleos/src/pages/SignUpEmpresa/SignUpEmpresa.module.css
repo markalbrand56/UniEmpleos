@@ -104,3 +104,7 @@
 .inputSubContainer {
   width: 230px;
 }
+
+.inputTextArea {
+  width: 480px;
+}
