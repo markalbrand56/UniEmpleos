@@ -50,7 +50,7 @@ const Home = () => {
             primary
             label="Iniciar Sesión"
             backgroundColor="#A08AE5"
-            size="large"
+              size="large"
             onClick={(event) => {
               event.preventDefault()
               handleNav("/login")
