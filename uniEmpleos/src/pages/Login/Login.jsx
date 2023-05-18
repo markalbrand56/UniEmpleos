@@ -23,7 +23,7 @@ const LogIn = () => {
       usuario: emailInput,
       contra: passInput,
     }
-    const response = await fetch(`${API_URL}login`, {
+    const response = await fetch(`${API_URL}/api/login`, {
       method: "POST",
       body: JSON.stringify(body),
       headers: {
@@ -39,7 +39,7 @@ const LogIn = () => {
       console.log("token", datos.data.token)
       console.log(user)
       console.log("Credenciales correctas")
-      navigate("/principalStudent")
+      navigate("/profile")
     } else {
       console.log("Credenciales incorrectas")
       setWarning(() => true)
