@@ -5,6 +5,7 @@ export default createRouter([
   ["/signup", () => ({ page: "signup" })],
   ["/login", () => ({ page: "login" })],
   ["/profile", () => ({ page: "principalStudent" })],
+  ["/profilecompany", () => ({ page: "principalempresa" })],
   ["/signupestudiante", () => ({ page: "signupestudiante" })],
   ["/signupempresa", () => ({ page: "signupempresa" })],
 ])

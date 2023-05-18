@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import Logo from "../Logo/Logo"
-import Ue from "/images/Ue_1.svg"
+import Ue from "/images/Ue_2.svg"
 import Button from "../Button/Button"
 import "./header.css"
 import { navigate } from "../../store"
@@ -26,8 +26,8 @@ export const Header = ({
       case "student":
         return (
           <div className="actions">
-            <a href="/">Home</a>
             <a href="/profile">Perfil</a>
+            <a href="/profile">Vacantes</a>
           </div>
         )
       case "company":

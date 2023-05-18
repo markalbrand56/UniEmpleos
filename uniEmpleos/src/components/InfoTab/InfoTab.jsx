@@ -26,7 +26,6 @@ const InfoTab = ({ title, area, salary, company, labelbutton }) => {
 InfoTab.propTypes = {
   title: PropTypes.string.isRequired,
   area: PropTypes.string.isRequired,
-  datepublished: PropTypes.string.isRequired,
   salary: PropTypes.string.isRequired,
   company: PropTypes.string.isRequired,
   labelbutton: PropTypes.string.isRequired,
