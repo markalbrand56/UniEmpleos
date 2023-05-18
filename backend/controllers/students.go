@@ -9,17 +9,18 @@ import (
 )
 
 type EstudianteInput struct {
-	Dpi        string `json:"dpi"`
-	Nombre     string `json:"nombre"`
-	Apellido   string `json:"apellido"`
-	Nacimiento string `json:"nacimiento"`
-	Correo     string `json:"correo"`
-	Telefono   string `json:"telefono"`
-	Carrera    int    `json:"carrera"`
-	Semestre   int    `json:"semestre"`
-	CV         string `json:"cv"`
-	Foto       string `json:"foto"`
-	Contra     string `json:"contra"`
+	Dpi         string `json:"dpi"`
+	Nombre      string `json:"nombre"`
+	Apellido    string `json:"apellido"`
+	Nacimiento  string `json:"nacimiento"`
+	Correo      string `json:"correo"`
+	Telefono    string `json:"telefono"`
+	Carrera     int    `json:"carrera"`
+	Semestre    int    `json:"semestre"`
+	CV          string `json:"cv"`
+	Foto        string `json:"foto"`
+	Contra      string `json:"contra"`
+	Universidad string `json:"universidad"`
 }
 
 func NewStudent(c *gin.Context) {
