@@ -114,3 +114,21 @@ create table mensaje
     tiempo         timestamp
 );
 
+-- Modificaciones 17/05/2023 --
+alter table oferta
+add column salario float;
+
+alter table estudiante
+add column universidad varchar(50);
+
+alter table oferta
+alter column id_empresa type varchar(50);
+
+alter table postulacion
+alter column id_estudiante type varchar(50);
+
+alter table mensaje
+alter column id_emisor type varchar(50);
+
+alter table mensaje
+alter column id_receptor type varchar(50);
