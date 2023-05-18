@@ -5,6 +5,7 @@ import (
 	"backend/models"
 	"backend/responses"
 	"github.com/gin-gonic/gin"
+	"strings"
 )
 
 type PostulationInput struct {
@@ -60,8 +61,26 @@ func GetPrevPostulations(c *gin.Context) {
 		return
 	}
 
+	groupedPostulations := make(map[int][]string)
+	for _, p := range postulations {
+		groupedPostulations[p.IdOferta] = append(groupedPostulations[p.IdOferta], p.NombreCarrera)
+	}
+
+	combinedPostulations := make([]map[string]interface{}, 0)
+	for id, carreras := range groupedPostulations {
+		combinedCarreras := strings.Join(carreras, ", ")
+
+		combinedPostulations = append(combinedPostulations, map[string]interface{}{
+			"id_oferta":       id,
+			"puesto":          getPuestosByIDOferta(postulations, id)[0],
+			"nombre_empresa":  getNombreEmpresaByIDOferta(postulations, id),
+			"nombre_carreras": combinedCarreras,
+			"salario":         getSalarioByIDOferta(postulations, id),
+		})
+	}
+
 	data = map[string]interface{}{
-		"postulations": postulations,
+		"postulations": combinedPostulations,
 	}
 
 	c.JSON(200, responses.StandardResponse{
@@ -69,4 +88,32 @@ func GetPrevPostulations(c *gin.Context) {
 		Message: "Postulations retrieved successfully",
 		Data:    data,
 	})
+}
+
+func getPuestosByIDOferta(postulations []models.ViewPrevPostulaciones, id int) []string {
+	var puestos []string
+	for _, p := range postulations {
+		if p.IdOferta == id {
+			puestos = append(puestos, p.Puesto)
+		}
+	}
+	return puestos
+}
+
+func getNombreEmpresaByIDOferta(postulations []models.ViewPrevPostulaciones, id int) string {
+	for _, p := range postulations {
+		if p.IdOferta == id {
+			return p.NombreEmpresa
+		}
+	}
+	return ""
+}
+
+func getSalarioByIDOferta(postulations []models.ViewPrevPostulaciones, id int) float64 {
+	for _, p := range postulations {
+		if p.IdOferta == id {
+			return p.Salario
+		}
+	}
+	return 0
 }
