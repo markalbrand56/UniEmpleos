@@ -227,3 +227,27 @@ Crea una postulacíon
 }
 ```
 
+### [GET] postulations/previews
+Devuelve la información para las preview de las ofertas
+
+#### Returns
+
+``` json
+{
+	"id_oferta"    		: "int" 
+	"puesto"		: "string"
+	"nombre_empresa" 	: "string"
+	"nombre_carrera"	: "string"
+	"salario" 		: "float64"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Postulations retrieved successfully",
+	"Data": "data"
+}
+```
+
