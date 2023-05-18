@@ -227,7 +227,7 @@ Crea una postulacíon
 }
 ```
 
-### [GET] postulations/previews
+### [GET] api/postulations/previews
 Devuelve la información para las preview de las ofertas
 
 #### Returns
