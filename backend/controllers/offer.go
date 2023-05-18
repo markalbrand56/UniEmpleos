@@ -12,6 +12,7 @@ type OffertInput struct {
 	Puesto      string `json:"puesto"`
 	Descripcion string `json:"descripcion"`
 	Requisitos  string `json:"requisitos"`
+	Salario     string `json:"salario"`
 }
 
 func NewOffer(c *gin.Context) {
@@ -27,6 +28,7 @@ func NewOffer(c *gin.Context) {
 		Puesto:      input.Puesto,
 		Descripcion: input.Descripcion,
 		Requisitos:  input.Requisitos,
+		Salario:     input.Salario,
 	}
 
 	err := configs.DB.Create(&offert).Error
