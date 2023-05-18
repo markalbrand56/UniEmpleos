@@ -149,6 +149,7 @@ Crea una oferta de trabajo
 	"puesto"	: "string"
 	"descripcion"   : "string"
 	"requisitos"    : "string" 
+	"salario"	: "double"
 }
 ```
 
