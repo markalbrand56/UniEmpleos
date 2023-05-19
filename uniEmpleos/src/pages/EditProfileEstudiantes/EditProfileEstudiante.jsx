@@ -1,0 +1,185 @@
+import React, { useEffect, useState } from "react"
+import style from "./EditProfileEstudiante.module.css"
+import ComponentInput from "../../components/Input/Input"
+import Button from "../../components/Button/Button"
+
+const EditProfileEstudiante = () => {
+  const [nombre, setNombre] = useState("")
+  const [apellido, setApellido] = useState("")
+  const [edad, setEdad] = useState("")
+  const [dpi, setDpi] = useState("")
+  const [correo, setCorreo] = useState("")
+  const [password, setPassword] = useState("")
+  const [carrera, setCarrera] = useState("")
+  const [universidad, setUniversidad] = useState("")
+  const [telefono, setTelefono] = useState("")
+
+  const handleInputsValue = (e) => {
+    switch (e.target.name) {
+      case "nombres":
+        setNombre(e.target.value)
+        break
+      case "apellidos":
+        setApellido(e.target.value)
+        break
+      case "fechaNacimiento":
+        setEdad(e.target.value)
+        break
+      case "dpi":
+        if (e.target.value.length < 13) {
+          setDpi(e.target.value)
+        }
+        break
+      case "correo":
+        setCorreo(e.target.value)
+        break
+      case "password":
+        setPassword(e.target.value)
+        break
+      case "carrera":
+        setCarrera(e.target.value)
+        break
+      case "universidad":
+        setUniversidad(e.target.value)
+        break
+      case "telefono":
+        if (e.target.value.length < 9) {
+          setTelefono(e.target.value)
+        }
+        break
+      default:
+        break
+    }
+  }
+  useEffect(() => {
+    console.log(
+      nombre,
+      apellido,
+      edad,
+      dpi,
+      correo,
+      password,
+      carrera,
+      universidad,
+      telefono
+    )
+  }, [
+    nombre,
+    apellido,
+    edad,
+    dpi,
+    correo,
+    password,
+    carrera,
+    universidad,
+    telefono,
+  ])
+
+  const handleButton = () => {
+    console.log("Registrado")
+  }
+
+  return (
+    <div className={style.defaultContainer}>
+      <div className={style.imgContainer}>
+        <img src="/images/Ue_2.svg" alt="Foto de perfil" />
+      </div>
+      <div className={style.editProfileContainer}>
+        <div className={style.inputsContainer}>
+          <div className={style.inputSubContainer}>
+            <span>Nombres</span>
+            <ComponentInput
+              name="nombres"
+              type="text"
+              placeholder="Juan"
+              onChange={handleInputsValue}
+            />
+          </div>
+          <div className={style.inputSubContainer}>
+            <span>Apellidos</span>
+            <ComponentInput
+              name="apellidos"
+              type="text"
+              placeholder="Heredia"
+              onChange={handleInputsValue}
+            />
+          </div>
+          <div className={style.inputSubContainer}>
+            <span>Fecha de nacimiento</span>
+            <ComponentInput
+              name="fechaNacimiento"
+              type="date"
+              placeholder="2018-07-22"
+              min="1940-01-01"
+              max="2005-01-01"
+              onChange={handleInputsValue}
+            />
+          </div>
+          <div className={style.grupoDatos1}>
+            <div className={style.inputSubContainerDataGroup1}>
+              <span>DPI</span>
+              <ComponentInput
+                value={dpi}
+                name="dpi"
+                type="number"
+                placeholder="3131480580502"
+                onChange={handleInputsValue}
+              />
+            </div>
+            <div className={style.inputSubContainerDataGroup1}>
+              <span>Telefono</span>
+              <ComponentInput
+                value={telefono}
+                name="telefono"
+                type="number"
+                placeholder="34325456"
+                onChange={handleInputsValue}
+              />
+            </div>
+            <div className={style.inputSubContainerDataGroup1}>
+              <span>Correo</span>
+              <ComponentInput
+                name="correo"
+                type="text"
+                placeholder="uni@uni.com"
+                onChange={handleInputsValue}
+              />
+            </div>
+            <div className={style.inputSubContainerDataGroup1}>
+              <span>Contraseña</span>
+              <ComponentInput
+                name="password"
+                type="password"
+                placeholder="micontraseña"
+                onChange={handleInputsValue}
+              />
+            </div>
+            <div className={style.inputSubContainerDataGroup1}>
+              <span>Carrera</span>
+              <ComponentInput
+                name="carrera"
+                type="text"
+                placeholder="ing. en sistemas"
+                onChange={handleInputsValue}
+              />
+            </div>
+            <div className={style.inputSubContainerDataGroup1}>
+              <span>Universidad</span>
+              <ComponentInput
+                name="universidad"
+                type="text"
+                placeholder="Universidad del Valle"
+                onChange={handleInputsValue}
+              />
+            </div>
+          </div>
+          <div className={style.buttonContainer}>
+            <Button label="Guardar" onClick={handleButton} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default EditProfileEstudiante
