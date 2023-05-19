@@ -3,10 +3,19 @@ import PropTypes from "prop-types"
 import styles from "./Input.module.css"
 
 // eslint-disable-next-line react/prop-types
-const ComponentInput = ({ name, type, placeholder, onChange, min, max }) => {
+const ComponentInput = ({
+  name,
+  type,
+  placeholder,
+  onChange,
+  min,
+  max,
+  value,
+}) => {
   return (
     <div className={styles.inputContainer}>
       <input
+        value={value}
         id={name}
         name={name}
         type={type}
