@@ -4,9 +4,6 @@
   align-items: center;
   background-color: #f1f1f1;
   flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-  padding: 100px 0;
 }
 
 .imgContainer {
@@ -24,6 +21,10 @@
   color: #000;
 }
 
+.editProfileContainer {
+  padding: 0 30px 30px 30px;
+}
+
 .editProfileContainer > h1 {
   color: #a08ae5;
 }
@@ -36,7 +37,7 @@
   flex-direction: column;
   background-color: #FFF;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  padding: 40px 20px;
+  padding: 20px 20px;
 }
 
 .editProfileContainer svg {
