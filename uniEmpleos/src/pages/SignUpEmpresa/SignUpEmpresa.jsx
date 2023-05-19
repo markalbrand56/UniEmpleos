@@ -57,6 +57,15 @@ const SignUpEmpresa = () => {
             />
           </div>
           <div className={style.inputSubContainer}>
+            <span>Telefono</span>
+            <ComponentInput
+              name="telefono"
+              type="number"
+              placeholder="21212413"
+              onChange={handleInputsValue}
+            />
+          </div>
+          <div className={style.inputSubContainer}>
             <span>Correo</span>
             <ComponentInput
               name="correo"
@@ -71,15 +80,6 @@ const SignUpEmpresa = () => {
               name="password"
               type="password"
               placeholder="miContraseña"
-              onChange={handleInputsValue}
-            />
-          </div>
-          <div className={style.inputSubContainer}>
-            <span>Telefono</span>
-            <ComponentInput
-              name="telefono"
-              type="number"
-              placeholder="21212413"
               onChange={handleInputsValue}
             />
           </div>
