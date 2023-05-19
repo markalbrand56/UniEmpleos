@@ -1,8 +1,6 @@
 #root {
   width: 100vw;
   height: 100vh;
-  margin: 0;
-  padding: 0;
   text-align: center;
 }
 
@@ -40,4 +38,9 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.App {
+  height: 100vh;
+  width: 100vw;
 }

@@ -9,4 +9,5 @@ export default createRouter([
   ["/signupestudiante", () => ({ page: "signupestudiante" })],
   ["/signupempresa", () => ({ page: "signupempresa" })],
   ["/editprofileestudiante", () => ({ page: "editprofileestudiante" })],
+  ["/editprofileempresa", () => ({ page: "editprofileempresa" })],
 ])
