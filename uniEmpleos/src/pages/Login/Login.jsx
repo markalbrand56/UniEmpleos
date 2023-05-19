@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { useStoreon } from "storeon/react"
+import Joi from "joi"
+import useConfig from "../../Hooks/Useconfig"
 import { navigate } from "../../store"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
@@ -7,12 +8,18 @@ import styles from "./Login.module.css"
 import Popup from "../../components/Popup/Popup"
 import API_URL from "../../api"
 
+const schema = Joi.object({
+  token: Joi.string().required(),
+})
+
 const LogIn = () => {
+  const form = useConfig(schema, {
+    token: "a",
+  })
+
   const [emailInput, setEmailInput] = useState("")
   const [passInput, setPassInput] = useState("")
   const [warning, setWarning] = useState(false)
-
-  const { dispatch, user } = useStoreon("user")
 
   // Teniendo el DPI y la contraseña,necesitamos que nos devuelva un objeto usuario
   const logIn = async () => {
@@ -35,9 +42,9 @@ const LogIn = () => {
 
     if (datos.status === 200) {
       // Estado global
-      dispatch("user/login", { token: datos.data.token })
-      console.log("token", datos.data.token)
-      console.log(user)
+      console.log("datos", datos.data.token)
+      form.setValue("token", datos.data.token)
+      console.log("token", form.values.token)
       console.log("Credenciales correctas")
       navigate("/profile")
     } else {
@@ -53,10 +60,6 @@ const LogIn = () => {
   const handlePass = (event) => {
     setPassInput(event.target.value)
   }
-
-  useEffect(() => {
-    dispatch("user/login", { token: "" })
-  }, [])
 
   return (
     <div className={styles.logInCointainer}>

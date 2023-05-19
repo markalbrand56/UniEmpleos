@@ -3,6 +3,7 @@ import style from "./SignUpEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
+import API_URL from "../../api"
 
 const SignUpEstudiante = () => {
   const [nombre, setNombre] = React.useState("")
@@ -80,6 +81,42 @@ const SignUpEstudiante = () => {
 
   const handleButton = () => {
     navigate("/login")
+  }
+
+  const signup = async () => {
+    const body = {
+      dpi,
+      nombre,
+      apellido,
+      nacimiento: edad,
+      correo,
+      telefono: "12345678",
+      carrera: 2,
+      semestre: 3,
+      cv: "",
+      foto: "",
+      contra: password,
+    }
+    const response = await fetch(`${API_URL}/api/students`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    console.log(response.message)
+    console.log(body)
+
+    const datos = await response.json() // Recibidos
+
+    if (datos.status === 200) {
+      // Estado global
+      console.log("Credenciales correctas")
+      handleButton()
+    } else {
+      console.log("Credenciales incorrectas")
+      prompt("Credenciales incorrectas")
+    }
   }
 
   return (
@@ -174,7 +211,7 @@ const SignUpEstudiante = () => {
           </div>
         </div>
         <div className={style.buttonContainer}>
-          <Button label="Registrarse" onClick={handleButton} />
+          <Button label="Registrarse" onClick={signup} />
         </div>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">

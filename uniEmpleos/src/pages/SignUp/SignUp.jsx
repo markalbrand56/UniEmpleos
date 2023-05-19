@@ -6,10 +6,10 @@ import { navigate } from "../../store"
 
 const LogIn = () => {
   const handleCorpClick = () => {
-    navigate("/")
+    navigate("/signupempresa")
   }
   const handleUserClick = () => {
-    navigate("/")
+    navigate("/signupestudiante")
   }
   return (
     <div className={styles.signUpCointainer}>
