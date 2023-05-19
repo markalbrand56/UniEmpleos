@@ -13,6 +13,7 @@ const SignUpEstudiante = () => {
   const [password, setPassword] = React.useState("")
   const [carrera, setCarrera] = React.useState("")
   const [universidad, setUniversidad] = React.useState("")
+  const [telefono, setTelefono] = React.useState("")
   // const [cv, setCv] = React.useState("")
   // const [fotoPerfil, setFotoPerfil] = React.useState("")
 
@@ -28,7 +29,9 @@ const SignUpEstudiante = () => {
         setEdad(e.target.value)
         break
       case "dpi":
-        setDpi(e.target.value)
+        if (e.target.value.length < 13) {
+          setDpi(e.target.value)
+        }
         break
       case "correo":
         setCorreo(e.target.value)
@@ -41,6 +44,11 @@ const SignUpEstudiante = () => {
         break
       case "universidad":
         setUniversidad(e.target.value)
+        break
+      case "telefono":
+        if (e.target.value.length < 9) {
+          setTelefono(e.target.value)
+        }
         break
       default:
         break
@@ -55,9 +63,20 @@ const SignUpEstudiante = () => {
       correo,
       password,
       carrera,
-      universidad
+      universidad,
+      telefono
     )
-  }, [nombre, apellido, edad, dpi, correo, password, carrera, universidad])
+  }, [
+    nombre,
+    apellido,
+    edad,
+    dpi,
+    correo,
+    password,
+    carrera,
+    universidad,
+    telefono,
+  ])
 
   const handleButton = () => {
     navigate("/login")
@@ -67,47 +86,57 @@ const SignUpEstudiante = () => {
     <div className={style.signUpCointainer}>
       <h1>UniEmpleos</h1>
       <div className={style.inputsContainer}>
+        <div className={style.inputSubContainer}>
+          <span>Nombres</span>
+          <ComponentInput
+            name="nombres"
+            type="text"
+            placeholder="Juan"
+            onChange={handleInputsValue}
+          />
+        </div>
+        <div className={style.inputSubContainer}>
+          <span>Apellidos</span>
+          <ComponentInput
+            name="apellidos"
+            type="text"
+            placeholder="Heredia"
+            onChange={handleInputsValue}
+          />
+        </div>
+        <div className={style.inputSubContainer}>
+          <span>Fecha de nacimiento</span>
+          <ComponentInput
+            name="fechaNacimiento"
+            type="date"
+            placeholder="2018-07-22"
+            min="1940-01-01"
+            max="2005-01-01"
+            onChange={handleInputsValue}
+          />
+        </div>
         <div className={style.grupoDatos1}>
-          <div className={style.inputSubContainer}>
-            <span>Nombres</span>
-            <ComponentInput
-              name="nombres"
-              type="text"
-              placeholder="Juan"
-              onChange={handleInputsValue}
-            />
-          </div>
-          <div className={style.inputSubContainer}>
-            <span>Apellidos</span>
-            <ComponentInput
-              name="apellidos"
-              type="text"
-              placeholder="Heredia"
-              onChange={handleInputsValue}
-            />
-          </div>
-          <div className={style.inputSubContainer}>
-            <span>Fecha de nacimiento</span>
-            <ComponentInput
-              name="fechaNacimiento"
-              type="date"
-              placeholder="2018-07-22"
-              min="1940-01-01"
-              max="2005-01-01"
-              onChange={handleInputsValue}
-            />
-          </div>
-          <div className={style.inputSubContainer}>
+          <div className={style.inputSubContainerDataGroup1}>
             <span>DPI</span>
             <ComponentInput
+              value={dpi}
               name="dpi"
               type="number"
               placeholder="3131480580502"
               onChange={handleInputsValue}
             />
           </div>
-
-          <div className={style.inputSubContainer}>
+          <div className={style.inputSubContainerDataGroup1}>
+            <span>Telefono</span>
+            <ComponentInput
+              value={telefono}
+              name="telefono"
+              type="number"
+              placeholder="34325456"
+              onChange={handleInputsValue}
+            />
+          </div>
+          <div className={style.inputSubContainerDataGroup1}>
             <span>Correo</span>
             <ComponentInput
               name="correo"
@@ -116,7 +145,7 @@ const SignUpEstudiante = () => {
               onChange={handleInputsValue}
             />
           </div>
-          <div className={style.inputSubContainer}>
+          <div className={style.inputSubContainerDataGroup1}>
             <span>Contraseña</span>
             <ComponentInput
               name="password"
@@ -125,7 +154,7 @@ const SignUpEstudiante = () => {
               onChange={handleInputsValue}
             />
           </div>
-          <div className={style.inputSubContainer}>
+          <div className={style.inputSubContainerDataGroup1}>
             <span>Carrera</span>
             <ComponentInput
               name="carrera"
@@ -134,7 +163,7 @@ const SignUpEstudiante = () => {
               onChange={handleInputsValue}
             />
           </div>
-          <div className={style.inputSubContainer}>
+          <div className={style.inputSubContainerDataGroup1}>
             <span>Universidad</span>
             <ComponentInput
               name="universidad"

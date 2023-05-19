@@ -17,6 +17,8 @@
     "eslint": "^7.32.0 || ^8.2.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1",
     "react-textarea-autosize": "^8.4.1",
