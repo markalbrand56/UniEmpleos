@@ -58,6 +58,7 @@ func Routes(router *gin.Engine) {
 	offers.Use(middlewares.JwtAuthentication())
 
 	offers.POST("/", controllers.NewOffer)
+	offers.GET("/", controllers.GetOffer)
 
 	// Postulaciones
 	postulations := router.Group("api/postulations")
