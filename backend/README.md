@@ -138,6 +138,30 @@ Crea una compañia
 }
 ```
 
+### [PUT] api/UpdateCompanies
+Actualiza una compañia
+
+#### Params
+``` json
+{
+    "nombre"        : "ejemplo" 
+    "detalles"      : "detalles"
+    "correo"    	: "correo@gmail.com"
+    "telefono"    	: "12345678" 
+    "contra" 	    : "contrasena"
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Company updated successfully",
+    "data": null
+}
+```
+
+
 ### [POST] api/offers
 Crea una oferta de trabajo
 
