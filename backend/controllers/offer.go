@@ -56,3 +56,43 @@ func NewOffer(c *gin.Context) {
 	})
 
 }
+
+type OfferGet struct {
+	Id_Oferta string `json:"id_oferta"`
+}
+
+func GetOffer(c *gin.Context) {
+	var offer models.OfertaGet
+	var data map[string]interface{}
+	var input OfferGet
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Invalid input: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	err := configs.DB.Where("id_oferta = ?", input.Id_Oferta).First(&offer).Error
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error getting offer: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	data = map[string]interface{}{
+		"offer": offer,
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Offer retrieved successfully",
+		Data:    data,
+	})
+}
