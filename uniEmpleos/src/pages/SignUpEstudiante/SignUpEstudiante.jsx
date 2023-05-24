@@ -1,22 +1,61 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import style from "./SignUpEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import API_URL from "../../api"
+import DropDown from "../../components/dropDown/DropDown"
 
 const SignUpEstudiante = () => {
-  const [nombre, setNombre] = React.useState("")
-  const [apellido, setApellido] = React.useState("")
-  const [edad, setEdad] = React.useState("")
-  const [dpi, setDpi] = React.useState("")
-  const [correo, setCorreo] = React.useState("")
-  const [password, setPassword] = React.useState("")
-  const [carrera, setCarrera] = React.useState("")
-  const [universidad, setUniversidad] = React.useState("")
-  const [telefono, setTelefono] = React.useState("")
+  const [nombre, setNombre] = useState("")
+  const [apellido, setApellido] = useState("")
+  const [edad, setEdad] = useState("")
+  const [dpi, setDpi] = useState("")
+  const [correo, setCorreo] = useState("")
+  const [password, setPassword] = useState("")
+  const [carrera, setCarrera] = useState("")
+  const [universidad, setUniversidad] = useState("")
+  const [telefono, setTelefono] = useState("")
+  const [semestre, setSemestre] = useState("1")
   // const [cv, setCv] = React.useState("")
   // const [fotoPerfil, setFotoPerfil] = React.useState("")
+
+  const [universidades, setUniversidades] = useState([
+    { value: "0", label: "Universidad de San Carlos de Guatemala" },
+    { value: "1", label: "Universidad del Valle de Guatemala" },
+    { value: "2", label: "Universidad Rafael Landívar" },
+  ])
+
+  const semestres = [
+    { value: "1", label: "1" },
+    { value: "2", label: "2" },
+    { value: "3", label: "3" },
+    { value: "4", label: "4" },
+    { value: "5", label: "5" },
+    { value: "6", label: "6" },
+    { value: "7", label: "7" },
+    { value: "8", label: "8" },
+    { value: "9", label: "9" },
+    { value: "10", label: "10" },
+    { value: "11", label: "11" },
+    { value: "12", label: "12" },
+  ]
+
+  const obtainUniversidades = async () => {
+    const response = await fetch(`${API_URL}/api/careers`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const datos = await response.json()
+    console.log(datos)
+    setUniversidades(datos)
+  }
+
+  /* useEffect(() => {
+    obtainUniversidades()
+  }, []) */
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -43,9 +82,6 @@ const SignUpEstudiante = () => {
       case "carrera":
         setCarrera(e.target.value)
         break
-      case "universidad":
-        setUniversidad(e.target.value)
-        break
       case "telefono":
         if (e.target.value.length < 9) {
           setTelefono(e.target.value)
@@ -55,6 +91,15 @@ const SignUpEstudiante = () => {
         break
     }
   }
+
+  const handleDropdown = (e) => {
+    setUniversidad(e.target.value)
+  }
+
+  const handleSemestre = (e) => {
+    setSemestre(e.target.value)
+  }
+
   useEffect(() => {
     console.log(
       nombre,
@@ -65,7 +110,8 @@ const SignUpEstudiante = () => {
       password,
       carrera,
       universidad,
-      telefono
+      telefono,
+      semestre
     )
   }, [
     nombre,
@@ -77,6 +123,7 @@ const SignUpEstudiante = () => {
     carrera,
     universidad,
     telefono,
+    semestre,
   ])
 
   const handleButton = () => {
@@ -202,11 +249,18 @@ const SignUpEstudiante = () => {
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Universidad</span>
-            <ComponentInput
-              name="universidad"
-              type="text"
-              placeholder="Universidad del Valle"
-              onChange={handleInputsValue}
+            <DropDown
+              opciones={universidades}
+              value={universidad}
+              onChange={handleDropdown}
+            />
+          </div>
+          <div className={style.inputSubContainerDataGroup1}>
+            <span>Semestre</span>
+            <DropDown
+              opciones={semestres}
+              value={semestre}
+              onChange={handleSemestre}
             />
           </div>
         </div>
