@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react"
 import style from "./EditProfileEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
+import API_URL from "../../api"
+import DropDown from "../../components/dropDown/DropDown"
 
 const EditProfileEstudiante = () => {
   const [nombre, setNombre] = useState("")
@@ -13,6 +15,52 @@ const EditProfileEstudiante = () => {
   const [carrera, setCarrera] = useState("")
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
+  const [semestre, setSemestre] = useState("1")
+
+  const [carreras, setCarreras] = useState([
+    { value: "0", label: "Universidad de San Carlos de Guatemala" },
+    { value: "1", label: "Universidad del Valle de Guatemala" },
+    { value: "2", label: "Universidad Rafael Landívar" },
+  ])
+
+  const semestres = [
+    { value: "1", label: "1" },
+    { value: "2", label: "2" },
+    { value: "3", label: "3" },
+    { value: "4", label: "4" },
+    { value: "5", label: "5" },
+    { value: "6", label: "6" },
+    { value: "7", label: "7" },
+    { value: "8", label: "8" },
+    { value: "9", label: "9" },
+    { value: "10", label: "10" },
+    { value: "11", label: "11" },
+    { value: "12", label: "12" },
+  ]
+
+  const handleSemestre = (e) => {
+    setSemestre(e.target.value)
+  }
+
+  const handleDropdown = (e) => {
+    setCarrera(e.target.value)
+  }
+
+  const obtainCarreras = async () => {
+    const response = await fetch(`${API_URL}/api/careers`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const datos = await response.json()
+    console.log(datos)
+    setCarreras(datos)
+  }
+
+  /* useEffect(() => {
+    obtainCarreras()
+  }, []) */
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -61,7 +109,8 @@ const EditProfileEstudiante = () => {
       password,
       carrera,
       universidad,
-      telefono
+      telefono,
+      semestre
     )
   }, [
     nombre,
@@ -73,6 +122,7 @@ const EditProfileEstudiante = () => {
     carrera,
     universidad,
     telefono,
+    semestre,
   ])
 
   const handleButton = () => {
@@ -156,11 +206,10 @@ const EditProfileEstudiante = () => {
             </div>
             <div className={style.inputSubContainerDataGroup1}>
               <span>Carrera</span>
-              <ComponentInput
-                name="carrera"
-                type="text"
-                placeholder="ing. en sistemas"
-                onChange={handleInputsValue}
+              <DropDown
+                opciones={carreras}
+                value={universidad}
+                onChange={handleDropdown}
               />
             </div>
             <div className={style.inputSubContainerDataGroup1}>
@@ -168,8 +217,16 @@ const EditProfileEstudiante = () => {
               <ComponentInput
                 name="universidad"
                 type="text"
-                placeholder="Universidad del Valle"
+                placeholder="Universidad de San Carlos"
                 onChange={handleInputsValue}
+              />
+            </div>
+            <div className={style.inputSubContainerDataGroup1}>
+              <span>Semestre</span>
+              <DropDown
+                opciones={semestres}
+                value={semestre}
+                onChange={handleSemestre}
               />
             </div>
           </div>
