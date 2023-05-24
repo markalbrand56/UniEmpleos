@@ -13,7 +13,6 @@ type OfferInput struct {
 	Descripcion string  `json:"descripcion"`
 	Requisitos  string  `json:"requisitos"`
 	Salario     float64 `json:"salario"`
-	IDOferta    int     `json:"id_oferta"`
 	IDCarrera   []int   `json:"id_carrera"`
 }
 
@@ -48,11 +47,6 @@ func NewOffer(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
-		Message: "Offer created successfully",
-		Data:    nil,
-	})
 	// Nuevo código: consulta para obtener el ID de la oferta que acabamos de crear.
 	var ofertaCreada models.Oferta
 	result := configs.DB.Where(&models.Oferta{
