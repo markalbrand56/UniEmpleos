@@ -79,8 +79,8 @@ func UpdateCompanies(c *gin.Context) {
 		Telefono:  input.Telefono,
 	}
 
-	// update a todos los datos.
-	err := configs.DB.Model(&e).Updates(&e).Error
+	// update the row of the given id
+	err := configs.DB.Model(&e).Where("id_empresa = ?", input.Correo).Updates(&e).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
