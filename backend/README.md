@@ -312,6 +312,7 @@ Devuelve todas las ofertas de trabajo, y el detalle de la compañia que la publi
 }
 ```
 
+## Carreras
 ### [GET] api/careers
 Devuelve todas las carreras
 > **Note**
