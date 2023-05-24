@@ -208,7 +208,7 @@ const EditProfileEstudiante = () => {
               <span>Carrera</span>
               <DropDown
                 opciones={carreras}
-                value={universidad}
+                value={carrera}
                 onChange={handleDropdown}
               />
             </div>
