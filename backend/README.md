@@ -136,7 +136,7 @@ Crea una compañia
 }
 ```
 
-### [PUT] api/UpdateCompanies
+### [PUT] api/companies/update
 Actualiza una compañia
 > **Note**
 > Auth required
