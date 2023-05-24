@@ -18,9 +18,9 @@ func Routes(router *gin.Engine) {
 
 	public.PUT("/updateCompanies", controllers.UpdateCompanies)
 
-	router.POST("/upload", controllers.UploadFile())
+	public.PUT("/updateStudents", controllers.UpdateStudent)
 
-	// hola
+	router.POST("/upload", controllers.UploadFile())
 
 	// Rutas protegidas
 	// Mensajes
