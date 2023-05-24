@@ -41,7 +41,7 @@ const SignUpEstudiante = () => {
     { value: "12", label: "12" },
   ]
 
-  const obtainUniversidades = async () => {
+  const obtainCarreras = async () => {
     const response = await fetch(`${API_URL}/api/careers`, {
       method: "GET",
       headers: {
@@ -50,11 +50,11 @@ const SignUpEstudiante = () => {
     })
     const datos = await response.json()
     console.log(datos)
-    setUniversidades(datos)
+    setCarreras(datos)
   }
 
   /* useEffect(() => {
-    obtainUniversidades()
+    obtainCarreras()
   }, []) */
 
   const handleInputsValue = (e) => {
