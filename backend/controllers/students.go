@@ -49,6 +49,7 @@ func NewStudent(c *gin.Context) {
 		CV:           input.CV,
 		Foto:         input.Foto,
 		Correo:       input.Correo,
+		Universidad:  input.Universidad,
 	}
 
 	u := models.Usuario{
@@ -101,6 +102,7 @@ func UpdateStudent(c *gin.Context) {
 		CV:           input.CV,
 		Foto:         input.Foto,
 		Correo:       input.Correo,
+		Universidad:  input.Universidad,
 	}
 
 	err := configs.DB.Model(&e).Where("id_estudiante = ?", input.Correo).Updates(&e).Error
@@ -119,4 +121,5 @@ func UpdateStudent(c *gin.Context) {
 		Message: "Student updated successfully",
 		Data:    nil,
 	})
+
 }
