@@ -16,8 +16,6 @@ func Routes(router *gin.Engine) {
 	public.POST("/companies", controllers.NewCompany)
 	public.GET("/postulations/previews", controllers.GetPrevPostulations)
 
-	public.PUT("/updateCompanies", controllers.UpdateCompanies)
-
 	public.PUT("/updateStudents", controllers.UpdateStudent)
 
 	router.POST("/upload", controllers.UploadFile())
@@ -50,6 +48,8 @@ func Routes(router *gin.Engine) {
 	// Ale: Use "company" porque el mamark quería que fuera en inglés :)
 	companies := router.Group("api/companies")
 	companies.Use(middlewares.JwtAuthentication())
+
+	companies.PUT("/update", controllers.UpdateCompanies)
 
 	// Administradores
 	admins := router.Group("api/admins")
