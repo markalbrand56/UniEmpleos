@@ -53,10 +53,28 @@ func NewOffer(c *gin.Context) {
 		Message: "Offer created successfully",
 		Data:    nil,
 	})
+	// Nuevo código: consulta para obtener el ID de la oferta que acabamos de crear.
+	var ofertaCreada models.Oferta
+	result := configs.DB.Where(&models.Oferta{
+		IDEmpresa:   offer.IDEmpresa,
+		Puesto:      offer.Puesto,
+		Descripcion: offer.Descripcion,
+		Requisitos:  offer.Requisitos,
+		Salario:     offer.Salario,
+	}).First(&ofertaCreada)
+
+	if result.Error != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error retrieving created offer: " + result.Error.Error(),
+			Data:    nil,
+		})
+		return
+	}
 
 	for _, carreraId := range input.IDCarrera {
 		oc := models.OfertaCarrera{
-			IdOferta:  input.IDOferta,
+			IdOferta:  ofertaCreada., // Usar el ID de la oferta obtenida
 			IdCarrera: carreraId,
 		}
 
