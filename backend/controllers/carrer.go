@@ -43,3 +43,30 @@ func NewCarrer(c *gin.Context) {
 	})
 
 }
+
+func GetCareers(c *gin.Context) {
+	var carrers []models.CarreraGet
+
+	err := configs.DB.Find(&carrers).Error
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error getting carrers",
+			Data:    nil,
+		})
+		return
+	}
+
+	var data map[string]interface{}
+
+	data = map[string]interface{}{
+		"carrers": carrers,
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Carrers retrieved successfully",
+		Data:    data,
+	})
+}
