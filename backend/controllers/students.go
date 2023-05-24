@@ -103,7 +103,7 @@ func UpdateStudent(c *gin.Context) {
 		Correo:       input.Correo,
 	}
 
-	err := configs.DB.Model(&e).Updates(&e).Error
+	err := configs.DB.Model(&e).Where("id_estudiante = ?", input.Correo).Updates(&e).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
