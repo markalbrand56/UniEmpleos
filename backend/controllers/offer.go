@@ -4,7 +4,6 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +13,8 @@ type OfferInput struct {
 	Descripcion string  `json:"descripcion"`
 	Requisitos  string  `json:"requisitos"`
 	Salario     float64 `json:"salario"`
+	IDOferta    int     `json:"id_oferta"`
+	IDCarrera   []int   `json:"id_carrera"`
 }
 
 func NewOffer(c *gin.Context) {
@@ -36,8 +37,6 @@ func NewOffer(c *gin.Context) {
 		Salario:     input.Salario,
 	}
 
-	fmt.Println(offer)
-
 	err := configs.DB.Create(&offer).Error
 
 	if err != nil {
@@ -55,4 +54,26 @@ func NewOffer(c *gin.Context) {
 		Data:    nil,
 	})
 
+	for _, carreraId := range input.IDCarrera {
+		oc := models.OfertaCarrera{
+			IdOferta:  input.IDOferta,
+			IdCarrera: carreraId,
+		}
+
+		err := configs.DB.Create(&oc).Error
+		if err != nil {
+			c.JSON(400, responses.StandardResponse{
+				Status:  400,
+				Message: "Error creating offer: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Offer created successfully",
+		Data:    nil,
+	})
 }
