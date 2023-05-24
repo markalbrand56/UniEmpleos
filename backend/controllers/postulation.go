@@ -18,7 +18,11 @@ func NewPostulation(c *gin.Context) {
 	var input PostulationInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error binding JSON. " + err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 
@@ -28,12 +32,13 @@ func NewPostulation(c *gin.Context) {
 		Estado:       input.Estado,
 	}
 
-	err := configs.DB.Create(&postulation).Error
+	var inserted models.PostulacionGet
+	err := configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Error creating",
+			Message: "Error creating. " + err.Error(),
 			Data:    nil,
 		})
 		return
