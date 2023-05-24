@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react"
 import "./Popup.css"
-import close from "/images/close.svg"
-import warning from "/images/warning.svg"
 
 const Popup = ({ message, setWarning, closable }) => {
   const [mensaje, setMensaje] = useState(message)
@@ -17,19 +15,20 @@ const Popup = ({ message, setWarning, closable }) => {
       {closable && (
         <img
           className="close-img"
-          src={close}
+          src="/images/close.svg"
+          alt="close"
           onClick={(event) => {
             event.preventDefault()
             console.log("cerrar popup: ", closed)
             setWarning(false)
           }}
-        ></img>
+        />
       )}
       <div className="popup-subcontainer1">
         <h1 className="popup-title">Advertencia</h1>
       </div>
       <div className="popup-subcontainer2">
-        <img className="warning-img" src={warning}></img>
+        <img className="warning-img" src="/images/warning.svg" alt="warning" />
         <p className="popup-mensaje">{mensaje}</p>
       </div>
     </div>
