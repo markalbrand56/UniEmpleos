@@ -20,7 +20,7 @@ const SignUpEstudiante = () => {
   // const [cv, setCv] = React.useState("")
   // const [fotoPerfil, setFotoPerfil] = React.useState("")
 
-  const [universidades, setUniversidades] = useState([
+  const [carreras, setCarreras] = useState([
     { value: "0", label: "Universidad de San Carlos de Guatemala" },
     { value: "1", label: "Universidad del Valle de Guatemala" },
     { value: "2", label: "Universidad Rafael Landívar" },
@@ -87,13 +87,16 @@ const SignUpEstudiante = () => {
           setTelefono(e.target.value)
         }
         break
+      case "universidad":
+        setUniversidad(e.target.value)
+        break
       default:
         break
     }
   }
 
   const handleDropdown = (e) => {
-    setUniversidad(e.target.value)
+    setCarrera(e.target.value)
   }
 
   const handleSemestre = (e) => {
@@ -240,19 +243,19 @@ const SignUpEstudiante = () => {
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Carrera</span>
-            <ComponentInput
-              name="carrera"
-              type="text"
-              placeholder="ing. en sistemas"
-              onChange={handleInputsValue}
+            <DropDown
+              opciones={carreras}
+              value={carrera}
+              onChange={handleDropdown}
             />
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Universidad</span>
-            <DropDown
-              opciones={universidades}
-              value={universidad}
-              onChange={handleDropdown}
+            <ComponentInput
+              name="universidad"
+              type="text"
+              placeholder="Universidad de San Carlos"
+              onChange={handleInputsValue}
             />
           </div>
           <div className={style.inputSubContainerDataGroup1}>
