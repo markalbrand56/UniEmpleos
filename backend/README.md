@@ -27,7 +27,7 @@ Login de usuario.
 ### [POST] api/register
 Registrar usuario.
 
-#### Request Body
+#### Params
 ``` json
 {
     "usuario": "ejemplo",
@@ -44,7 +44,7 @@ Registrar usuario.
 }
 ```
 
-### [GET] api/users/
+### [GET] api/users
 Obtener el usuario actual.
 > **Note**
 > Auth required
@@ -60,3 +60,194 @@ Obtener el usuario actual.
     }
 }
 ```
+
+### [POST] api/students
+Crea un estudiante
+
+#### Params
+
+``` json
+{
+	"dpi"	        : "string" 
+	"nombre"        : "string" 
+	"apellido"      : "string"
+	"nacimiento"    : "string" 
+	"correo"        : "string" 
+	"telefono"      : "string" 
+	"contra"	: "string"
+	"carrera"       : "int"    
+	"semestre"      : "int"    
+	"cv"            : "string" 
+	"foto"          : "string" 
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  200,
+	"Message": "Student created successfully",
+	"Data":    "nil"
+}
+```
+
+### [POST] api/messages
+Crea un mensaje
+
+#### Params
+
+``` json
+{
+	"id_postulacion"   : "int" 
+	"id_emisor"        : "string" 
+	"id_receptor"      : "string"
+	"mensaje"    	   : "string" 
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  200,
+	"Message": "Message sent successfully",
+	"Data":    "nil"
+}
+```
+
+### [POST] api/companies
+Crea una compañia
+
+#### Params
+
+``` json
+{
+	"nombre"        : "string" 
+	"detalles"      : "string"
+	"correo"    	: "string"
+	"telefono"    	: "string" 
+	"contra" 	: "string"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  200,
+	"Message": "Company created successfully",
+	"Data":    "nil"
+}
+```
+
+### [POST] api/offers
+Crea una oferta de trabajo
+
+#### Params
+
+``` json
+{
+	"id_empresa"    : "string" 
+	"puesto"	: "string"
+	"descripcion"   : "string"
+	"requisitos"    : "string" 
+	"salario"	: "double"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  200,
+	"Message": "Offer created successfully",
+	"Data":    "nil"
+}
+```
+
+### [POST] api/carrer
+Crea una carrera
+
+#### Params
+
+``` json
+{
+	"nombre"    	: "string" 
+	"descripcion"	: "string"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Carrera created successfully",
+	"Data": "nil"
+}
+```
+
+### [POST] api/postulation
+Crea una postulacíon
+
+#### Params
+
+``` json
+{
+	"id_oferta"    	: "int" 
+	"id_estudiante"	: "string"
+	"estado" 	: "string"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Postulation created successfully",
+	"Data": "nil"
+}
+```
+
+### [POST] api/admins
+Crea una postulacíon
+
+#### Params
+
+``` json
+{
+	"id_administrador"    	: "string" 
+	"nombre"		: "string"
+	"apellido" 		: "string"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Admin Created Successfully",
+	"Data": "nil"
+}
+```
+
+### [GET] api/postulations/previews
+Devuelve la información para las preview de las ofertas
+
+#### Returns
+
+``` json
+{
+	"id_oferta"    		: "int" 
+	"puesto"		: "string"
+	"nombre_empresa" 	: "string"
+	"nombre_carrera"	: "string"
+	"salario" 		: "float64"
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Postulations retrieved successfully",
+	"Data": "data"
+}
+```
+
