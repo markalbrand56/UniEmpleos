@@ -1,10 +1,6 @@
 import React from "react"
 import styles from "./Home.module.css"
-import { Header } from "../../components/Header/Header"
-import Uniempleos from "/images/Uniempleos.png"
 import Infocontainer from "../../components/Infocontainer/Infocontainer"
-import wave from "/images/wave.svg"
-import waveup from "/images/waveup.svg"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 
@@ -18,7 +14,7 @@ const Home = () => {
     <div className={styles.homeContainer}>
       <div className={styles.homeContent}>
         <div className={styles.image}>
-          <img src={Uniempleos} alt="Uniempleos" />
+          <img src="/images/Uniempleos.png" alt="Uniempleos" />
         </div>
         <div className={styles.info}>
           <Infocontainer
@@ -37,39 +33,39 @@ const Home = () => {
           />
         </div>
         <div className={styles.waveup}>
-          <img src={waveup} alt="wave" />
+          <img src="/images/waveup.svg" alt="wave" />
         </div>
         <div className={styles.infobutton}>
-        <Infocontainer
-          title="¿Qué esperas para encontrar tu oportunidad?"
-          backgroundColor="transparent"
-          textColor="#000"
-        />
-        <div className={styles.button}>
-          <Button
-            primary
-            label="Iniciar Sesión"
-            backgroundColor="#A08AE5"
+          <Infocontainer
+            title="¿Qué esperas para encontrar tu oportunidad?"
+            backgroundColor="transparent"
+            textColor="#000"
+          />
+          <div className={styles.button}>
+            <Button
+              primary
+              label="Iniciar Sesión"
+              backgroundColor="#A08AE5"
               size="large"
-            onClick={(event) => {
-              event.preventDefault()
-              handleNav("/login")
-            }}
-          />
-          <Button
-            primary
-            label="Registrarse"
-            backgroundColor="#A08AE5"
-            size="large"
-            onClick={(event) => {
-              event.preventDefault()
-              handleNav("/signup")
-            }}
-          />
-        </div>
+              onClick={(event) => {
+                event.preventDefault()
+                handleNav("/login")
+              }}
+            />
+            <Button
+              primary
+              label="Registrarse"
+              backgroundColor="#A08AE5"
+              size="large"
+              onClick={(event) => {
+                event.preventDefault()
+                handleNav("/signup")
+              }}
+            />
+          </div>
         </div>
         <div className={styles.waveup}>
-          <img src={wave} alt="waveup" />
+          <img src="/images/wave.svg" alt="waveup" />
         </div>
       </div>
     </div>
