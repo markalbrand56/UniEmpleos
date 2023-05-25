@@ -1,5 +1,7 @@
 import React from "react"
+import Joi from "joi"
 import PropTypes from "prop-types"
+import useConfig from "../../Hooks/Useconfig"
 import Logo from "../Logo/Logo"
 import Ue from "/images/Ue_2.svg"
 import Button from "../Button/Button"
@@ -10,9 +12,10 @@ const handleClick = () => {
   navigate("/login")
 }
 
-const handleCreateAccount = () => {
-  navigate("/signup")
-}
+const schema = Joi.object({
+  token: Joi.string().required(),
+  rol: Joi.string().required(),
+})
 
 export const Header = ({
   user,
@@ -21,16 +24,20 @@ export const Header = ({
   onCreateAccount,
   userperson,
 }) => {
+  const form = useConfig(schema, {
+    token: "a",
+    role: "a",
+  })
   const renderActions = () => {
-    switch (userperson) {
+    switch (form.values.role) {
       case "student":
         return (
           <div className="actions">
-            <a href="/profile">Perfil</a>
+            <a href="/editprofileestudiante">Perfil</a>
             <a href="/profile">Vacantes</a>
           </div>
         )
-      case "company":
+      case "enterprise":
         return (
           <div className="actions">
             <a href="/postulacion">Añadir Empleo</a>
