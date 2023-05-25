@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import styles from "./InfoTab.module.css"
 import Button from "../Button/Button"
 
-const InfoTab = ({ title, area, salary, company, labelbutton }) => {
+const InfoTab = ({ title, area, salary, company, labelbutton, onClick }) => {
   return (
     <div className={styles.container}>
       <div className={styles.containerinfomain}>
@@ -17,7 +17,7 @@ const InfoTab = ({ title, area, salary, company, labelbutton }) => {
         <p>{salary}</p>
       </div>
       <div className={styles.button}>
-        <Button label={labelbutton} />
+        <Button label={labelbutton} onClick={onClick} />
       </div>
     </div>
   )
@@ -29,6 +29,7 @@ InfoTab.propTypes = {
   salary: PropTypes.string.isRequired,
   company: PropTypes.string.isRequired,
   labelbutton: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 }
 
 export default InfoTab
