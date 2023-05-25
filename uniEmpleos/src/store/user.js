@@ -3,6 +3,7 @@ const user = (store) => {
     user: {
       token: " ",
       idoffert: " ",
+      role: " ",
     },
   }))
   store.on("user/config", (_, newConfigs) => ({ user: newConfigs }))

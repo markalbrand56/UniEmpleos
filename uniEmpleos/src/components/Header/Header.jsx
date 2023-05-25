@@ -29,6 +29,7 @@ export const Header = ({
     role: "a",
   })
   const renderActions = () => {
+    console.log("datossss en el header", form.values.role)
     switch (form.values.role) {
       case "student":
         return (
