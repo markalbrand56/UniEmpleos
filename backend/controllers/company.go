@@ -41,12 +41,22 @@ func NewCompany(c *gin.Context) {
 	}
 
 	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
-	err = configs.DB.Create(&e).Error  // Se agrega la empresa a la base de datos
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Error creating",
+			Message: "Error creating user. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Create(&e).Error // Se agrega la empresa a la base de datos
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error creating company. " + err.Error(),
 			Data:    nil,
 		})
 		return
