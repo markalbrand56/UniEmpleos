@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react"
+import Joi from "joi"
 import style from "./SignUpEstudiante.module.css"
+import useConfig from "../../Hooks/Useconfig"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
 
+const schema = Joi.object({
+  token: Joi.string().required(),
+})
+
 const SignUpEstudiante = () => {
+  const form = useConfig(schema, {
+    token: "a",
+  })
+
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
   const [edad, setEdad] = useState("")
@@ -20,11 +30,7 @@ const SignUpEstudiante = () => {
   // const [cv, setCv] = React.useState("")
   // const [fotoPerfil, setFotoPerfil] = React.useState("")
 
-  const [carreras, setCarreras] = useState([
-    { value: "0", label: "Universidad de San Carlos de Guatemala" },
-    { value: "1", label: "Universidad del Valle de Guatemala" },
-    { value: "2", label: "Universidad Rafael Landívar" },
-  ])
+  const [carreras, setCarreras] = useState([])
 
   const semestres = [
     { value: "1", label: "1" },
@@ -41,7 +47,7 @@ const SignUpEstudiante = () => {
     { value: "12", label: "12" },
   ]
 
-  const obtainUniversidades = async () => {
+  const obtainCarreras = async () => {
     const response = await fetch(`${API_URL}/api/careers`, {
       method: "GET",
       headers: {
@@ -49,13 +55,18 @@ const SignUpEstudiante = () => {
       },
     })
     const datos = await response.json()
-    console.log(datos)
-    setUniversidades(datos)
+    if (datos.status === 200) {
+      const dataCarreras = datos.data.carrers.map((e) => ({
+        value: e.id_carrera.toString(),
+        label: e.nombre,
+      }))
+      setCarreras(dataCarreras)
+    }
   }
 
-  /* useEffect(() => {
-    obtainUniversidades()
-  }, []) */
+  useEffect(() => {
+    obtainCarreras()
+  }, [])
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
