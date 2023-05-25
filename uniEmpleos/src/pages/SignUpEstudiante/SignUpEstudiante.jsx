@@ -47,7 +47,7 @@ const SignUpEstudiante = () => {
     const datos = await response.json()
 
     if (datos.status === 200) {
-      const dataCarreras = datos.data.carrers.map((e) => ({
+      const dataCarreras = datos.data.careers.map((e) => ({
         value: e.id_carrera.toString(),
         label: e.nombre,
       }))

@@ -52,11 +52,11 @@ const EditProfileEstudiante = () => {
   }
 
   const obtainUserData = async () => {
-    const response = await fetch(`${API_URL}/api/users/`, {
+    const response = await fetch(`${API_URL}/api/users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${form.values.token}`,
+        Authorization: `Bearer ${form.values.token}`,
       },
     })
     const datos = await response.json()
@@ -81,7 +81,7 @@ const EditProfileEstudiante = () => {
     })
     const datos = await response.json()
     if (datos.status === 200) {
-      const dataCarreras = datos.data.carrers.map((e) => ({
+      const dataCarreras = datos.data.careers.map((e) => ({
         value: e.id_carrera.toString(),
         label: e.nombre,
       }))
