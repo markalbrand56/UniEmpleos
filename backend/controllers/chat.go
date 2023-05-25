@@ -19,7 +19,11 @@ func SendMessage(c *gin.Context) {
 	var input MessageInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error binding JSON: " + err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 
@@ -38,7 +42,7 @@ func SendMessage(c *gin.Context) {
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Error creating",
+			Message: "Error creating message. " + err.Error(),
 			Data:    nil,
 		})
 		return
