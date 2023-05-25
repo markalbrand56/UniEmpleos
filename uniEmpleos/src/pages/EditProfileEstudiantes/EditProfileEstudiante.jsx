@@ -195,42 +195,12 @@ const EditProfileEstudiante = () => {
           </div>
           <div className={style.grupoDatos1}>
             <div className={style.inputSubContainerDataGroup1}>
-              <span>DPI</span>
-              <ComponentInput
-                value={dpi}
-                name="dpi"
-                type="number"
-                placeholder="3131480580502"
-                onChange={handleInputsValue}
-              />
-            </div>
-            <div className={style.inputSubContainerDataGroup1}>
               <span>Telefono</span>
               <ComponentInput
                 value={telefono}
                 name="telefono"
                 type="number"
                 placeholder="34325456"
-                onChange={handleInputsValue}
-              />
-            </div>
-            <div className={style.inputSubContainerDataGroup1}>
-              <span>Correo</span>
-              <ComponentInput
-                value={correo}
-                name="correo"
-                type="text"
-                placeholder="uni@uni.com"
-                onChange={handleInputsValue}
-              />
-            </div>
-            <div className={style.inputSubContainerDataGroup1}>
-              <span>Contraseña</span>
-              <ComponentInput
-                value={password}
-                name="password"
-                type="password"
-                placeholder="micontraseña"
                 onChange={handleInputsValue}
               />
             </div>
