@@ -235,7 +235,7 @@ Devuelve la información para las preview de las ofertas disponibles
 }
 ```
 
-### [GET] api/offers/company
+### [POST] api/offers/company
 Devuelve las ofertas de trabajo publicadas por una compañia
 > **Note**
 > Auth required
@@ -275,7 +275,7 @@ Devuelve las ofertas de trabajo publicadas por una compañia
 }
 ```
 
-### [GET] api/offers
+### [POST] api/offers/all
 Devuelve todas las ofertas de trabajo, y el detalle de la compañia que la publicó
 > **Note**
 > Auth required
