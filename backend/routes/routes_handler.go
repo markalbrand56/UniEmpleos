@@ -70,4 +70,9 @@ func Routes(router *gin.Engine) {
 	postulations.Use(middlewares.JwtAuthentication())
 
 	postulations.POST("/", controllers.NewPostulation)
+
+	postulation := router.Group("api/Getpostulations")
+	postulation.Use(middlewares.JwtAuthentication())
+
+	postulation.POST("/", controllers.GetUserPostulation)
 }
