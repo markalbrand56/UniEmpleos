@@ -12,4 +12,5 @@ export default createRouter([
   ["/editprofileempresa", () => ({ page: "editprofileempresa" })],
   ["/postulacion", () => ({ page: "postulacion" })],
   ["/newoffer", () => ({ page: "newoffer" })],
+  ["/postulacionempresa", () => ({ page: "postulacionempresa" })],
 ])

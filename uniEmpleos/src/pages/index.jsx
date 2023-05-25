@@ -11,6 +11,7 @@ import PrincipalEnterprise from "./PrincipalEnterprise/PrincipalEnterprise"
 import EditProfileEstudiante from "./EditProfileEstudiantes/EditProfileEstudiante"
 import EditProfileEmpresa from "./EditProfileEmpresas/EditProfileEmpresa"
 import Postulacion from "./postulacion/Postulacion"
+import PostulationsEmpresa from "./PostulationsEmpresa/PostulationsEmpresa"
 import NewOffer from "./nuevaOferta/NewOffer"
 
 const Page = () => {
@@ -47,6 +48,9 @@ const Page = () => {
       break
     case "postulacion":
       Component = <Postulacion />
+      break
+    case "postulacionempresa":
+      Component = <PostulationsEmpresa />
       break
     case "newoffer":
       Component = <NewOffer />
