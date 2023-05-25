@@ -58,3 +58,43 @@ func NewCompany(c *gin.Context) {
 		Data:    nil,
 	})
 }
+
+func UpdateCompanies(c *gin.Context) {
+	var input EmpresaInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error binding JSON: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	e := models.Empresa{
+		IdEmpresa: input.Correo,
+		Nombre:    input.Nombre,
+		Detalles:  input.Detalles,
+		Correo:    input.Correo,
+		Telefono:  input.Telefono,
+	}
+
+	// update the row of the given id
+	err := configs.DB.Model(&e).Where("id_empresa = ?", input.Correo).Updates(&e).Error
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error updating",
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Company updated successfully",
+		Data:    nil,
+	})
+
+}
