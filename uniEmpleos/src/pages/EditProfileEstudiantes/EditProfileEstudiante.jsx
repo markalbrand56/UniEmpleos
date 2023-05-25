@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react"
+import Joi from "joi"
+import useConfig from "../../Hooks/Useconfig"
 import style from "./EditProfileEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
 
+const schema = Joi.object({
+  token: Joi.string().required(),
+})
+
 const EditProfileEstudiante = () => {
+  const form = useConfig(schema, {
+    token: "a",
+  })
+
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
   const [edad, setEdad] = useState("")
@@ -17,11 +27,7 @@ const EditProfileEstudiante = () => {
   const [telefono, setTelefono] = useState("")
   const [semestre, setSemestre] = useState("1")
 
-  const [carreras, setCarreras] = useState([
-    { value: "0", label: "Universidad de San Carlos de Guatemala" },
-    { value: "1", label: "Universidad del Valle de Guatemala" },
-    { value: "2", label: "Universidad Rafael Landívar" },
-  ])
+  const [carreras, setCarreras] = useState([])
 
   const semestres = [
     { value: "1", label: "1" },
@@ -46,6 +52,19 @@ const EditProfileEstudiante = () => {
     setCarrera(e.target.value)
   }
 
+  const obtainUserData = async () => {
+    const response = await fetch(`${API_URL}/api/users`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const datos = await response.json()
+    if (datos.status === 200) {
+      console.log(datos.data)
+    }
+  }
+
   const obtainCarreras = async () => {
     const response = await fetch(`${API_URL}/api/careers`, {
       method: "GET",
@@ -54,13 +73,19 @@ const EditProfileEstudiante = () => {
       },
     })
     const datos = await response.json()
-    console.log(datos)
-    setCarreras(datos)
+    if (datos.status === 200) {
+      const dataCarreras = datos.data.carrers.map((e) => ({
+        value: e.id_carrera.toString(),
+        label: e.nombre,
+      }))
+      setCarreras(dataCarreras)
+    }
   }
 
-  /* useEffect(() => {
+  useEffect(() => {
+    obtainUserData()
     obtainCarreras()
-  }, []) */
+  }, [])
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -99,7 +124,7 @@ const EditProfileEstudiante = () => {
         break
     }
   }
-  useEffect(() => {
+  /* useEffect(() => {
     console.log(
       nombre,
       apellido,
@@ -123,7 +148,7 @@ const EditProfileEstudiante = () => {
     universidad,
     telefono,
     semestre,
-  ])
+  ]) */
 
   const handleButton = () => {
     console.log("Registrado")
@@ -139,6 +164,7 @@ const EditProfileEstudiante = () => {
           <div className={style.inputSubContainer}>
             <span>Nombres</span>
             <ComponentInput
+              value={nombre}
               name="nombres"
               type="text"
               placeholder="Juan"
@@ -148,6 +174,7 @@ const EditProfileEstudiante = () => {
           <div className={style.inputSubContainer}>
             <span>Apellidos</span>
             <ComponentInput
+              value={apellido}
               name="apellidos"
               type="text"
               placeholder="Heredia"
@@ -157,6 +184,7 @@ const EditProfileEstudiante = () => {
           <div className={style.inputSubContainer}>
             <span>Fecha de nacimiento</span>
             <ComponentInput
+              value={edad}
               name="fechaNacimiento"
               type="date"
               placeholder="2018-07-22"
@@ -189,6 +217,7 @@ const EditProfileEstudiante = () => {
             <div className={style.inputSubContainerDataGroup1}>
               <span>Correo</span>
               <ComponentInput
+                value={correo}
                 name="correo"
                 type="text"
                 placeholder="uni@uni.com"
@@ -198,6 +227,7 @@ const EditProfileEstudiante = () => {
             <div className={style.inputSubContainerDataGroup1}>
               <span>Contraseña</span>
               <ComponentInput
+                value={password}
                 name="password"
                 type="password"
                 placeholder="micontraseña"
@@ -215,6 +245,7 @@ const EditProfileEstudiante = () => {
             <div className={style.inputSubContainerDataGroup1}>
               <span>Universidad</span>
               <ComponentInput
+                value={universidad}
                 name="universidad"
                 type="text"
                 placeholder="Universidad de San Carlos"
