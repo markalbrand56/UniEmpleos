@@ -10,7 +10,11 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.Use(cors.Default())
+	// Configurar el middleware CORS
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AddAllowHeaders("Authorization")
+	router.Use(cors.New(config))
 
 	routes.Routes(router)
 	configs.SetupDB()
