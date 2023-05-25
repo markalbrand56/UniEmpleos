@@ -68,11 +68,12 @@ Crea un estudiante
 	"nacimiento"    : "string" 
 	"correo"        : "string" 
 	"telefono"      : "string" 
-	"contra"	: "string"
 	"carrera"       : "int"    
 	"semestre"      : "int"    
 	"cv"            : "string" 
 	"foto"          : "string" 
+	"contra"	: "string"
+	"universidad"   : "string"
 }
 ```
 
@@ -315,8 +316,7 @@ Devuelve todas las ofertas de trabajo, y el detalle de la compañia que la publi
 ## Carreras
 ### [GET] api/careers
 Devuelve todas las carreras
-> **Note**
-> Auth required
+
 
 #### Response
 ``` json

@@ -42,7 +42,7 @@ func Routes(router *gin.Engine) {
 	careers.Use(middlewares.JwtAuthentication())
 
 	careers.POST("/", controllers.NewCarrer)
-	careers.GET("/careers", controllers.GetCareers)
+	public.GET("/careers", controllers.GetCareers)
 
 	// Empresas
 	// Ale: Use "company" porque el mamark quería que fuera en inglés :)
