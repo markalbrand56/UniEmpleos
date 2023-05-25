@@ -43,7 +43,7 @@ export const Header = ({
           <div className="actions">
             <a href="/postulacion">Añadir Empleo</a>
             <a href="/postulantes">Postulantes</a>
-            <a href="/postulacionempresa">Mis Postulaciones</a>
+            <a href="/postulacionempresa">Mis Ofertas</a>
             <a href="/editprofileempresa">Profile</a>
           </div>
         )
