@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import Joi from "joi"
 import useConfig from "../../Hooks/Useconfig"
 import { navigate } from "../../store"
@@ -10,11 +10,13 @@ import API_URL from "../../api"
 
 const schema = Joi.object({
   token: Joi.string().required(),
+  rol: Joi.string().required(),
 })
 
 const LogIn = () => {
   const form = useConfig(schema, {
     token: "a",
+    role: "a",
   })
 
   const [emailInput, setEmailInput] = useState("")
@@ -42,8 +44,13 @@ const LogIn = () => {
 
     if (datos.status === 200) {
       // Estado global
-      console.log("datos", datos.data.token)
-      form.setValue("token", datos.data.token)
+      console.log("datos", datos.data)
+      form.setManyValues({
+        token: datos.data.token,
+        role: datos.data.role,
+      })
+
+      console.log("DATOS", form)
       console.log("token", form.values.token)
       console.log("Credenciales correctas")
       navigate("/profile")
