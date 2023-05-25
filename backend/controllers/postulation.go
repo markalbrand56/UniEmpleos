@@ -51,6 +51,63 @@ func NewPostulation(c *gin.Context) {
 	})
 }
 
+type PostulationResult struct {
+	IDEstudiante string `json:"id_estudiante"`
+	Estado       string `json:"estado"`
+}
+
+func GetUserPostulation(c *gin.Context) {
+	var input PostulationInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error binding JSON. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	var results []map[string]interface{}
+
+	rows, err := configs.DB.Raw("SELECT id_estudiante, estado FROM postulacion WHERE id_oferta = ?", input.IdOferta).Rows()
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error getting postulations. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var idEstudiante string
+		var estado string
+		err := rows.Scan(&idEstudiante, &estado)
+		if err != nil {
+			c.JSON(400, responses.StandardResponse{
+				Status:  400,
+				Message: "Error scanning postulation row. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		result := map[string]interface{}{
+			"id_estudiante": idEstudiante,
+			"estado":        estado,
+		}
+		results = append(results, result)
+	}
+
+	c.JSON(200, responses.PostulationResponse{
+		Status:  200,
+		Message: "Postulations returned successfully",
+		Data:    results,
+	})
+}
+
 func GetPrevPostulations(c *gin.Context) {
 	var postulations []models.ViewPrevPostulaciones
 	var data map[string]interface{}
