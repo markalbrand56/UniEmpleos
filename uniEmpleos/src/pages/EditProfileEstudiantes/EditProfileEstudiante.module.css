@@ -1,0 +1,117 @@
+.defaultContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f1f1f1;
+  flex-direction: column;
+}
+
+.imgContainer {
+  margin: 10px 0;
+}
+
+.imgContainer img {
+  height: 200px;
+  width: 200px;
+}
+
+.inputsContainer div span {
+  display: flex;
+  justify-content: left;
+  color: #000;
+}
+
+.editProfileContainer {
+  padding: 0 30px 30px 30px;
+}
+
+.editProfileContainer > h1 {
+  color: #a08ae5;
+}
+
+.editProfileContainer > div {
+  z-index: 1;
+  border-radius: 5px;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  background-color: #FFF;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  padding: 20px 20px;
+}
+
+.editProfileContainer svg {
+  width: 100vw;
+  z-index: 0;
+  position: absolute;
+  bottom: 0px;
+}
+
+.editProfileContainer div a {
+  text-decoration: none;
+  color: #333131;
+}
+
+.editProfileContainer div a span {
+  color: #a08ae5;
+}
+
+.editProfileContainer div a span:hover {
+  text-decoration: underline;
+  color: #977de7;
+}
+
+.usuarioContainer {
+  font-family: Arial;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  user-select: none;
+}
+
+.usuarioContainer input {
+  padding: 10px 5px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #000;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.usuarioContainer input:focus {
+  border-color: #a08ae5;
+  box-shadow: 0 0 0 3px rgba(160, 138, 229, 0.25);
+  outline: none;
+}
+
+.inputsContainer {
+  width: 500px;
+}
+
+.grupoDatos1 {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.inputSubContainer {
+  width: 480px;
+  padding: 0 10px 0 10px;
+}
+
+.inputSubContainerDataGroup1 {
+  width: 230px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px 0 10px;
+}

@@ -62,8 +62,6 @@ func Routes(router *gin.Engine) {
 	offers.Use(middlewares.JwtAuthentication())
 
 	offers.POST("/", controllers.NewOffer)
-	offers.POST("/all", controllers.GetOffer)
-	offers.GET("/company", controllers.GetOfferByCompany)
 
 	// Postulaciones
 	postulations := router.Group("api/postulations")
