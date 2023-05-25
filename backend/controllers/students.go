@@ -57,13 +57,23 @@ func NewStudent(c *gin.Context) {
 		Contra:  input.Contra,
 	}
 
-	err := configs.DB.Updates(&u).Error // Se agrega el usuario a la base de datos
-	err = configs.DB.Updates(&e).Error  // Se agrega el estudiante a la base de datos
+	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Error creating",
+			Message: "Error creating user. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Create(&e).Error // Se agrega el estudiante a la base de datos
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error creating student. " + err.Error(),
 			Data:    nil,
 		})
 		return
