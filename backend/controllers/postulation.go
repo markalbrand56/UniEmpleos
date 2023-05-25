@@ -54,6 +54,18 @@ func NewPostulation(c *gin.Context) {
 type PostulationResult struct {
 	IDEstudiante string `json:"id_estudiante"`
 	Estado       string `json:"estado"`
+	Dpi          string `json:"dpi"`
+	Nombre       string `json:"nombre"`
+	Apellido     string `json:"apellido"`
+	Nacimiento   string `json:"nacimiento"`
+	Correo       string `json:"correo"`
+	Telefono     string `json:"telefono"`
+	Carrera      int    `json:"carrera"`
+	Semestre     int    `json:"semestre"`
+	CV           string `json:"cv"`
+	Foto         string `json:"foto"`
+	Contra       string `json:"contra"`
+	Universidad  string `json:"universidad"`
 }
 
 func GetUserPostulation(c *gin.Context) {
@@ -70,7 +82,7 @@ func GetUserPostulation(c *gin.Context) {
 
 	var results []map[string]interface{}
 
-	rows, err := configs.DB.Raw("SELECT id_estudiante, estado FROM postulacion WHERE id_oferta = ?", input.IdOferta).Rows()
+	rows, err := configs.DB.Raw("SELECT p.id_estudiante, p.estado, e.dpi, e.nombre, e.apellido, e.nacimiento, e.correo, e.telefono, e.carrera, e.semestre, e.cv, e.foto, e.universidad FROM postulacion p JOIN estudiante e ON p.id_estudiante = e.id_estudiante WHERE id_oferta = ?", input.IdOferta).Rows()
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
@@ -84,7 +96,18 @@ func GetUserPostulation(c *gin.Context) {
 	for rows.Next() {
 		var idEstudiante string
 		var estado string
-		err := rows.Scan(&idEstudiante, &estado)
+		var dpi string
+		var nombre string
+		var apellido string
+		var nacimiento string
+		var correo string
+		var telefono string
+		var carrera int
+		var semestre int
+		var cv string
+		var foto string
+		var universidad string
+		err := rows.Scan(&idEstudiante, &estado, &dpi, &nombre, &apellido, &nacimiento, &correo, &telefono, &carrera, &semestre, &cv, &foto, &universidad)
 		if err != nil {
 			c.JSON(400, responses.StandardResponse{
 				Status:  400,
@@ -97,6 +120,17 @@ func GetUserPostulation(c *gin.Context) {
 		result := map[string]interface{}{
 			"id_estudiante": idEstudiante,
 			"estado":        estado,
+			"dpi":           dpi,
+			"nombre":        nombre,
+			"apellido":      apellido,
+			"nacimiento":    nacimiento,
+			"correo":        correo,
+			"telefono":      telefono,
+			"carrera":       carrera,
+			"semestre":      semestre,
+			"cv":            cv,
+			"foto":          foto,
+			"universidad":   universidad,
 		}
 		results = append(results, result)
 	}
