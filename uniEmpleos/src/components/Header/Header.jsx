@@ -33,9 +33,10 @@ export const Header = ({
       case "company":
         return (
           <div className="actions">
-            <a href="postjob">Post a job</a>
+            <a href="/postulacion">Añadir Empleo</a>
             <a href="/postulantes">Postulantes</a>
-            <a href="/profile">Profile</a>
+            <a href="/postulacionempresa">Mis Postulaciones</a>
+            <a href="/editprofileempresa">Profile</a>
           </div>
         )
       case "admin":

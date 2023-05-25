@@ -11,6 +11,7 @@ import PrincipalEnterprise from "./PrincipalEnterprise/PrincipalEnterprise"
 import EditProfileEstudiante from "./EditProfileEstudiantes/EditProfileEstudiante"
 import EditProfileEmpresa from "./EditProfileEmpresas/EditProfileEmpresa"
 import Postulacion from "./postulacion/Postulacion"
+import PostulationsEmpresa from "./PostulationsEmpresa/PostulationsEmpresa"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
@@ -46,6 +47,9 @@ const Page = () => {
       break
     case "postulacion":
       Component = <Postulacion />
+      break
+    case "postulacionempresa":
+      Component = <PostulationsEmpresa />
       break
     default:
       Component = <h1>404 Error</h1>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Joi from "joi"
-import styles from "./PrincipalEnterprise.module.css"
+import styles from "./PostulationsEmpresa.module.css"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import { Header } from "../../components/Header/Header"
 import useConfig from "../../Hooks/Useconfig"
@@ -10,7 +10,7 @@ const schema = Joi.object({
   token: Joi.string().required(),
 })
 
-const PrincipalEnterprise = () => {
+const PostulationsEmpresa = () => {
   const form = useConfig(schema, {
     token: "a",
   })
@@ -35,7 +35,7 @@ const PrincipalEnterprise = () => {
   console.log(form.values.token)
 
   return (
-    <div className={styles.container}>
+    <div className={styles.containePostulation}>
       <Header userperson="company" />
       {dataa.status === 200 ? (
         <div className={styles.containerinfomain}>
@@ -51,11 +51,11 @@ const PrincipalEnterprise = () => {
         </div>
       ) : (
         <div className={styles.containerinfomain}>
-          <h1>No hay postulantes</h1>
+          <h1>No tiene niguna oferta activa</h1>
         </div>
       )}
     </div>
   )
 }
 
-export default PrincipalEnterprise
+export default PostulationsEmpresa
