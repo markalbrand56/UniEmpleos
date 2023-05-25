@@ -19,6 +19,15 @@ const useConfig = (schema, initialValues) => {
     dispatch("user/config", { ...user, [field]: value })
   }
 
+  const setManyValues = (updates) => {
+    console.log("setValues", updates)
+    setValues({
+      ...values,
+      ...updates,
+    })
+    dispatch("user/config", { ...user, ...updates })
+  }
+
   const onChange =
     (field) =>
     ({ target: { value } }) =>
@@ -47,6 +56,7 @@ const useConfig = (schema, initialValues) => {
     validate,
     error,
     user,
+    setManyValues,
   }
 }
 
