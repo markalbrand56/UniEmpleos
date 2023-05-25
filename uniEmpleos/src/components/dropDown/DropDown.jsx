@@ -22,7 +22,7 @@ DropDown.propTypes = {
     PropTypes.shape({
       value: string.isRequired,
       label: string.isRequired,
-    }),
+    })
   ).isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
