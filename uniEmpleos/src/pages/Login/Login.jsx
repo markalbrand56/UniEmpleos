@@ -45,8 +45,11 @@ const LogIn = () => {
     if (datos.status === 200) {
       // Estado global
       console.log("datos", datos.data)
-      form.setValue("role", datos.data.role)
-      form.setValue("token", datos.data.token)
+      form.setManyValues({
+        token: datos.data.token,
+        role: datos.data.role,
+      })
+
       console.log("DATOS", form)
       console.log("token", form.values.token)
       console.log("Credenciales correctas")
