@@ -8,24 +8,32 @@ import API_URL from "../../api"
 
 const schema = Joi.object({
   token: Joi.string().required(),
+  id_user: Joi.string().required(),
 })
 
 const PostulationsEmpresa = () => {
   const form = useConfig(schema, {
     token: "a",
+    id_user: " ",
   })
   const [dataa, setData] = useState([])
 
   const configureData = async () => {
-    const response = await fetch(`${API_URL}/api/postulations/previews`, {
-      method: "GET",
+    const body = {
+      id_empresa: form.values.id_user,
+    }
+    const response = await fetch(`${API_URL}/api/offers/company`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${form.values.token}`,
       },
+      body: JSON.stringify(body),
     })
-    const datos = await response.json()
-    console.log(datos)
-    setData(datos)
+
+    const data = await response.json()
+    console.log("data", data)
+    setData(data)
   }
 
   useEffect(() => {
@@ -38,7 +46,7 @@ const PostulationsEmpresa = () => {
     <div className={styles.containePostulation}>
       <Header userperson="company" />
       {dataa.status === 200 ? (
-        <div className={styles.containerinfomain}>
+        <div className={styles.containerinfoprincipal}>
           {dataa.data.postulations.map((postulation) => (
             <InfoTab
               title={postulation.puesto}

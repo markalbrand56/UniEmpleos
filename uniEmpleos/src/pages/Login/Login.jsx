@@ -49,7 +49,13 @@ const LogIn = () => {
         id_user: emailInput,
       })
       console.log("iduser", form.id_user)
-      navigate("/profile")
+      if (form.values.role === "student") {
+        navigate("/profile")
+      } else if (form.values.role === "enterprise") {
+        navigate("/profilecompany")
+      } else if (form.values.role === "admin") {
+        navigate("/profileadmin")
+      }
     } else {
       setWarning(() => true)
     }

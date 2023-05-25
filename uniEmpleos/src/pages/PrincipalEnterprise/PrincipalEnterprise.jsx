@@ -38,7 +38,7 @@ const PrincipalEnterprise = () => {
     <div className={styles.container}>
       <Header userperson="company" />
       {dataa.status === 200 ? (
-        <div className={styles.containerinfomain}>
+        <div className={styles.containerinfoprincipal}>
           {dataa.data.postulations.map((postulation) => (
             <InfoTab
               title={postulation.puesto}
