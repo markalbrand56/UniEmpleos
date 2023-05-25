@@ -42,8 +42,10 @@ const PrincipalStudent = () => {
     console.log(form.values.idoffert)
     if (form.values.idoffert !== "a" || form.values.idoffert !== "undefined") {
       navigate("/postulacion")
-    }
-
+    } else
+      alert(
+        "No se pudo guardar el id de la oferta, por favor intentelo de nuevo"
+      )
   }
 
 
