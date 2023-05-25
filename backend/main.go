@@ -20,5 +20,7 @@ func main() {
 	routes.Routes(router)
 	configs.SetupDB()
 
+	router.OPTIONS("/*any", func(c *gin.Context) {}) // Agregar OPTIONS como método permitido
+
 	router.Run(":8080")
 }
