@@ -90,22 +90,9 @@ func UpdateStudent(c *gin.Context) {
 
 	t, _ := time.Parse("2006-01-02", input.Nacimiento)
 
-	e := models.Estudiante{
-		IdEstudiante: input.Correo,
-		Dpi:          input.Dpi,
-		Nombre:       input.Nombre,
-		Apellido:     input.Apellido,
-		Nacimiento:   t,
-		Telefono:     input.Telefono,
-		Carrera:      input.Carrera,
-		Semestre:     input.Semestre,
-		CV:           input.CV,
-		Foto:         input.Foto,
-		Correo:       input.Correo,
-		Universidad:  input.Universidad,
-	}
+	var inserted models.EstudianteGet
 
-	err := configs.DB.Model(&e).Where("id_estudiante = ?", input.Correo).Updates(&e).Error
+	err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, t, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
