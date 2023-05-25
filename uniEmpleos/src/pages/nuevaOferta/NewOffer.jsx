@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import Joi from "joi"
+import useConfig from "../../Hooks/Useconfig"
 import style from "./NewOffer.module.css"
 import { Header } from "../../components/Header/Header"
 import Button from "../../components/Button/Button"
@@ -8,7 +10,16 @@ import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import API_URL from "../../api"
 
+const schema = Joi.object({
+  token: Joi.string().required(),
+})
+
 const Postulacion = () => {
+  const form = useConfig(schema, {
+    token: "a",
+    id_empresa: "a",
+  })
+
   const [requisitos, setRequisitos] = useState("")
   const [salario, setSalario] = useState("")
   const [puesto, setPuesto] = useState("")
@@ -16,6 +27,31 @@ const Postulacion = () => {
   const [carrera, setCarrera] = useState("")
 
   const [carreras, setCarreras] = useState([])
+
+  const postOffer = async () => {
+    const body = {
+      id_empresa: form.id_empresa,
+      puesto,
+      descripcion: detalles,
+      requisitos,
+      salario: parseFloat(salario),
+    }
+    const response = await fetch(`${API_URL}/api/offers`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${form.values.token}`,
+      },
+    })
+
+    const datos = await response.json() // Recibidos
+
+    if (datos.status === 200) {
+      console.log("Creacion de la oferta exitosa")
+      navigate("/profilecompany")
+    }
+  }
 
   const handleCarrera = (e) => {
     setCarrera(e.target.value)
@@ -68,7 +104,7 @@ const Postulacion = () => {
     navigate("/profile")
   }
   const handlePostularme = () => {
-    console.log("Postularme")
+    postOffer()
   }
 
   return (

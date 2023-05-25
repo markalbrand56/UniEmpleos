@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import Joi from "joi"
+import useConfig from "../../Hooks/Useconfig"
 import style from "./Postulacion.module.css"
 import { Header } from "../../components/Header/Header"
 import OfertaInfo from "../../components/ofertaInfo/OfertaInfo"
@@ -6,24 +8,41 @@ import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import API_URL from "../../api"
 
-const Postulacion = () => {
-  const [dataa, setData] = useState([])
+const schema = Joi.object({
+  token: Joi.string().required(),
+  id_user: Joi.string().required(),
+  idoffert: Joi.string().required(),
+})
 
-  const body = {
-    id_oferta: "1",
-  }
+const Postulacion = () => {
+  const form = useConfig(schema, {
+    token: "a",
+    idoffert: "a",
+  })
+
+  const [datosGet, setDataGet] = useState([])
+
+  /* useEffect(() => {
+    console.log("idoffertPrincipal", form.values.idoffert)
+    console.log("token", form.values.token)
+    console.log(datosGet)
+  }, [form, datosGet]) */
 
   const configureData = async () => {
+    const body = {
+      id_oferta: form.values.idoffert,
+    }
+
     const response = await fetch(`${API_URL}/api/offers`, {
-      method: "GET",
+      method: "POST",
       body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${form.values.token}`,
       },
     })
     const datos = await response.json()
-    console.log(datos)
-    setData(datos)
+    setDataGet(datos)
   }
 
   useEffect(() => {
@@ -40,14 +59,52 @@ const Postulacion = () => {
     <div className={style.container}>
       <Header userperson="student" />
       <div className={style.postulacionContainer}>
-        <div className={style.titleContainer}>Titulo</div>
+        <div className={style.titleContainer}>
+          {datosGet.length !== 0 ? datosGet.data.offer.puesto : "titulo"}
+        </div>
         <div className={style.dataContainer}>
-          <OfertaInfo img="images/empresa.svg" label="Nombre de la Empresa" />
-          <OfertaInfo img="images/email.svg" label="Correo" />
-          <OfertaInfo img="images/telefono.svg" label="Telefono" />
-          <OfertaInfo img="images/requisitos.svg" label="Requisitos" />
-          <OfertaInfo img="images/salario.svg" label="Salario" />
-          <OfertaInfo img="images/descripcion.svg" label="Descripcion" />
+          <OfertaInfo
+            img="images/empresa.svg"
+            label={
+              datosGet.length !== 0 ? datosGet.data.company.nombre : "Nombre"
+            }
+          />
+          <OfertaInfo
+            img="images/email.svg"
+            label={
+              datosGet.length !== 0 ? datosGet.data.company.correo : "Correo"
+            }
+          />
+          <OfertaInfo
+            img="images/telefono.svg"
+            label={
+              datosGet.length !== 0
+                ? datosGet.data.company.telefono
+                : "Telefono"
+            }
+          />
+          <OfertaInfo
+            img="images/requisitos.svg"
+            label={
+              datosGet.length !== 0
+                ? datosGet.data.offer.requisitos
+                : "Requisitos"
+            }
+          />
+          <OfertaInfo
+            img="images/salario.svg"
+            label={
+              datosGet.length !== 0 ? datosGet.data.offer.salrio : "Salario"
+            }
+          />
+          <OfertaInfo
+            img="images/descripcion.svg"
+            label={
+              datosGet.length !== 0
+                ? datosGet.data.offer.descripcion
+                : "Descripcion"
+            }
+          />
         </div>
         <div className={style.buttonContainer}>
           <Button

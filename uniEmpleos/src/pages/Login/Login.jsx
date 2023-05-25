@@ -17,6 +17,7 @@ const LogIn = () => {
   const form = useConfig(schema, {
     token: "a",
     role: "a",
+    id_user: "a",
   })
 
   const [emailInput, setEmailInput] = useState("")
@@ -25,9 +26,6 @@ const LogIn = () => {
 
   // Teniendo el DPI y la contraseña,necesitamos que nos devuelva un objeto usuario
   const logIn = async () => {
-    console.log("dpi: ", emailInput)
-    console.log("pass: ", passInput)
-    console.log(`API URL: ${API_URL}`)
     const body = {
       usuario: emailInput,
       contra: passInput,
@@ -44,18 +42,15 @@ const LogIn = () => {
 
     if (datos.status === 200) {
       // Estado global
-      console.log("datos", datos.data)
+      console.log("idUser", emailInput)
       form.setManyValues({
         token: datos.data.token,
         role: datos.data.role,
+        id_user: emailInput,
       })
-
-      console.log("DATOS", form)
-      console.log("token", form.values.token)
-      console.log("Credenciales correctas")
+      console.log("iduser", form.id_user)
       navigate("/profile")
     } else {
-      console.log("Credenciales incorrectas")
       setWarning(() => true)
     }
   }
