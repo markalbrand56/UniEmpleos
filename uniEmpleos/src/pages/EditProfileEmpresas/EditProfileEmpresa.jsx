@@ -43,62 +43,64 @@ const EditProfileEmpresa = () => {
 
   return (
     <div className={style.defaultContainer}>
-      <div className={style.imgContainer}>
-        <img src="/images/Ue_2.svg" alt="Foto de perfil" />
-      </div>
-      <div className={style.editProfileContainer}>
-        <div className={style.inputsContainer}>
-          <div className={style.grupoDatos1}>
-            <div className={style.inputSubContainer}>
-              <span>Nombre</span>
-              <ComponentInput
-                name="nombre"
-                type="text"
-                placeholder="miEmpresa.org"
-                onChange={handleInputsValue}
-              />
+      <div className={style.contentContainer}>
+        <div className={style.imgContainer}>
+          <img src="/images/Ue_2.svg" alt="Foto de perfil" />
+        </div>
+        <div className={style.editProfileContainer}>
+          <div className={style.inputsContainer}>
+            <div className={style.grupoDatos1}>
+              <div className={style.inputSubContainer}>
+                <span>Nombre</span>
+                <ComponentInput
+                  name="nombre"
+                  type="text"
+                  placeholder="miEmpresa.org"
+                  onChange={handleInputsValue}
+                />
+              </div>
+              <div className={style.inputSubContainer}>
+                <span>Telefono</span>
+                <ComponentInput
+                  name="telefono"
+                  type="number"
+                  placeholder="21212413"
+                  onChange={handleInputsValue}
+                />
+              </div>
+              <div className={style.inputSubContainer}>
+                <span>Correo</span>
+                <ComponentInput
+                  name="correo"
+                  type="text"
+                  placeholder="empresa@org.com"
+                  onChange={handleInputsValue}
+                />
+              </div>
+              <div className={style.inputSubContainer}>
+                <span>Contraseña</span>
+                <ComponentInput
+                  name="password"
+                  type="password"
+                  placeholder="miContraseña"
+                  onChange={handleInputsValue}
+                />
+              </div>
+              <div className={style.inputTextArea}>
+                <span>Detalles</span>
+                <TextArea
+                  name="detalles"
+                  type="text"
+                  placeholder="Detalles de la empresa"
+                  onChange={handleInputsValue}
+                  min={1}
+                  max={5}
+                />
+              </div>
             </div>
-            <div className={style.inputSubContainer}>
-              <span>Telefono</span>
-              <ComponentInput
-                name="telefono"
-                type="number"
-                placeholder="21212413"
-                onChange={handleInputsValue}
-              />
+            <div className={style.buttonContainer}>
+              <Button label="Guardar" onClick={handleButton} />
             </div>
-            <div className={style.inputSubContainer}>
-              <span>Correo</span>
-              <ComponentInput
-                name="correo"
-                type="text"
-                placeholder="empresa@org.com"
-                onChange={handleInputsValue}
-              />
-            </div>
-            <div className={style.inputSubContainer}>
-              <span>Contraseña</span>
-              <ComponentInput
-                name="password"
-                type="password"
-                placeholder="miContraseña"
-                onChange={handleInputsValue}
-              />
-            </div>
-            <div className={style.inputTextArea}>
-              <span>Detalles</span>
-              <TextArea
-                name="detalles"
-                type="text"
-                placeholder="Detalles de la empresa"
-                onChange={handleInputsValue}
-                min={1}
-                max={5}
-              />
-            </div>
-          </div>
-          <div className={style.buttonContainer}>
-            <Button label="Guardar" onClick={handleButton} />
           </div>
         </div>
       </div>
