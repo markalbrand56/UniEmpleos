@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react"
+import Joi from "joi"
 import styles from "./PrincipalStudent.module.css"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import { navigate } from "../../store"
 import { Header } from "../../components/Header/Header"
 import useConfig from "../../Hooks/Useconfig"
-import Joi from "joi"
 import API_URL from "../../api"
 
 const schema = Joi.object({
   token: Joi.string().required(),
   idoffert: Joi.string().required(),
+  id_user: Joi.string().required(),
 })
 
 const PrincipalStudent = () => {
   const form = useConfig(schema, {
     token: "a",
-    idoffert : "a"
+    idoffert: "a",
+    id_user: "a",
   })
+
+  /* useEffect(() => {
+    console.log("tokenPrincipal", form.values.token)
+  }, [form.values.token]) */
 
   const [dataa, setData] = useState([])
 
@@ -28,7 +34,6 @@ const PrincipalStudent = () => {
       },
     })
     const datos = await response.json()
-    console.log(datos)
     setData(datos)
   }
 
@@ -36,10 +41,12 @@ const PrincipalStudent = () => {
     configureData()
   }, [])
 
+  /* useEffect(() => {
+    console.log("idoffertPrincipal", form.values.id_user)
+  }, [form.values.id_user]) */
+
   const saveidlocalstorage = (id) => {
-    console.log("GUArdando id", id)
     form.setValue("idoffert", id)
-    console.log(form.values.idoffert)
     if (form.values.idoffert !== "a" || form.values.idoffert !== "undefined") {
       navigate("/postulacion")
     } else
@@ -48,8 +55,6 @@ const PrincipalStudent = () => {
       )
   }
 
-
-  console.log(form.values.token)
   return (
     <div className={styles.container}>
       <Header userperson="student" />
@@ -76,4 +81,3 @@ const PrincipalStudent = () => {
 }
 
 export default PrincipalStudent
-

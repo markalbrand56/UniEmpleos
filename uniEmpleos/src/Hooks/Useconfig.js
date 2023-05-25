@@ -6,11 +6,8 @@ const useConfig = (schema, initialValues) => {
   const [error, setError] = useState(false)
   const [values, setValues] = useState(initialValues)
 
-  console.log("useConfig", user)
-
   // Aca actualizamos los valores de entrada y los actualizamos en el store
   const setValue = (field, value) => {
-    console.log("setValue", field, value)
     setValues({
       ...values,
       [field]: value,
@@ -20,7 +17,6 @@ const useConfig = (schema, initialValues) => {
   }
 
   const setManyValues = (updates) => {
-    console.log("setValues", updates)
     setValues({
       ...values,
       ...updates,

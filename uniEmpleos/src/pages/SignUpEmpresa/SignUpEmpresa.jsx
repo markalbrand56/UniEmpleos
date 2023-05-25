@@ -4,6 +4,7 @@ import ComponentInput from "../../components/Input/Input"
 import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
+import API_URL from "../../api"
 
 const SignUpEmpresa = () => {
   const [nombre, setNombre] = React.useState("")
@@ -21,7 +22,9 @@ const SignUpEmpresa = () => {
         setDetalles(e.target.value)
         break
       case "telefono":
-        setTelefono(e.target.value)
+        if (telefono.length < 8) {
+          setTelefono(e.target.value)
+        }
         break
       case "correo":
         setCorreo(e.target.value)
@@ -38,9 +41,35 @@ const SignUpEmpresa = () => {
     navigate("/login")
   }
 
-  useEffect(() => {
+  const signup = async () => {
+    const body = {
+      nombre,
+      detalles,
+      correo,
+      telefono,
+      contra: password,
+    }
+    const response = await fetch(`${API_URL}/api/companies`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+
+    const datos = await response.json() // Recibidos
+
+    if (datos.status === 200) {
+      // Estado global
+      handleButton()
+    } else {
+      prompt("Error al crear el usuario")
+    }
+  }
+
+  /* useEffect(() => {
     console.log(nombre, correo, detalles, telefono, password)
-  }, [nombre, correo, detalles, telefono, password])
+  }, [nombre, correo, detalles, telefono, password]) */
 
   return (
     <div className={style.signUpCointainer}>
@@ -53,6 +82,7 @@ const SignUpEmpresa = () => {
               name="nombre"
               type="text"
               placeholder="miEmpresa.org"
+              value={nombre}
               onChange={handleInputsValue}
             />
           </div>
@@ -62,6 +92,7 @@ const SignUpEmpresa = () => {
               name="telefono"
               type="number"
               placeholder="21212413"
+              value={telefono}
               onChange={handleInputsValue}
             />
           </div>
@@ -71,6 +102,7 @@ const SignUpEmpresa = () => {
               name="correo"
               type="text"
               placeholder="empresa@org.com"
+              value={correo}
               onChange={handleInputsValue}
             />
           </div>
@@ -80,6 +112,7 @@ const SignUpEmpresa = () => {
               name="password"
               type="password"
               placeholder="miContraseña"
+              value={password}
               onChange={handleInputsValue}
             />
           </div>
@@ -90,13 +123,14 @@ const SignUpEmpresa = () => {
               type="text"
               placeholder="Detalles de la empresa"
               onChange={handleInputsValue}
+              value={detalles}
               min={1}
               max={5}
             />
           </div>
         </div>
         <div className={style.buttonContainer}>
-          <Button label="Registrarse" onClick={handleButton} />
+          <Button label="Registrarse" onClick={signup} />
         </div>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">

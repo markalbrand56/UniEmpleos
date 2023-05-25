@@ -6,6 +6,8 @@ import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
+import { Header } from "../../components/Header/Header"
+import { navigate } from "../../store"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -19,9 +21,6 @@ const EditProfileEstudiante = () => {
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
   const [edad, setEdad] = useState("")
-  const [dpi, setDpi] = useState("")
-  const [correo, setCorreo] = useState("")
-  const [password, setPassword] = useState("")
   const [carrera, setCarrera] = useState("")
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
@@ -53,15 +52,23 @@ const EditProfileEstudiante = () => {
   }
 
   const obtainUserData = async () => {
-    const response = await fetch(`${API_URL}/api/users`, {
+    const response = await fetch(`${API_URL}/api/users/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${form.values.token}`,
       },
     })
     const datos = await response.json()
     if (datos.status === 200) {
       console.log(datos.data)
+      setNombre(datos.data.nombre)
+      setApellido(datos.data.apellido)
+      setEdad(datos.data.edad)
+      setCarrera(datos.data.id_carrera)
+      setUniversidad(datos.data.id_universidad)
+      setTelefono(datos.data.telefono)
+      setSemestre(datos.data.semestre)
     }
   }
 
@@ -82,6 +89,36 @@ const EditProfileEstudiante = () => {
     }
   }
 
+  const putCompanyData = async () => {
+    const body = {
+      nombre,
+      detalles,
+      correo,
+      telefono,
+      contra: password,
+    }
+    const response = await fetch(`${API_URL}/api/companies/update`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${form.values.token}`,
+      },
+    })
+
+    const datos = await response.json() // Recibidos
+    console.log("datos", datos)
+
+    if (datos.status === 200) {
+      console.log("Actualizacion de los datos exitosa")
+      navigate("/profile")
+    }
+  }
+
+  useEffect(() => {
+    console.log("token--->", form.values.token)
+  }, [form])
+
   useEffect(() => {
     obtainUserData()
     obtainCarreras()
@@ -97,17 +134,6 @@ const EditProfileEstudiante = () => {
         break
       case "fechaNacimiento":
         setEdad(e.target.value)
-        break
-      case "dpi":
-        if (e.target.value.length < 13) {
-          setDpi(e.target.value)
-        }
-        break
-      case "correo":
-        setCorreo(e.target.value)
-        break
-      case "password":
-        setPassword(e.target.value)
         break
       case "carrera":
         setCarrera(e.target.value)
@@ -156,6 +182,9 @@ const EditProfileEstudiante = () => {
 
   return (
     <div className={style.defaultContainer}>
+      <div className={style.headerContainer}>
+        <Header userperson="student" />
+      </div>
       <div className={style.imgContainer}>
         <img src="/images/Ue_2.svg" alt="Foto de perfil" />
       </div>

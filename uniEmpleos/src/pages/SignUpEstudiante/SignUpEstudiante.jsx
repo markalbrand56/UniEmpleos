@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from "react"
-import Joi from "joi"
 import style from "./SignUpEstudiante.module.css"
-import useConfig from "../../Hooks/Useconfig"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
 
-const schema = Joi.object({
-  token: Joi.string().required(),
-})
-
 const SignUpEstudiante = () => {
-  const form = useConfig(schema, {
-    token: "a",
-  })
-
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
   const [edad, setEdad] = useState("")
@@ -115,7 +105,7 @@ const SignUpEstudiante = () => {
     setSemestre(e.target.value)
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log(
       nombre,
       apellido,
@@ -139,7 +129,7 @@ const SignUpEstudiante = () => {
     universidad,
     telefono,
     semestre,
-  ])
+  ]) */
 
   const handleButton = () => {
     navigate("/login")
@@ -152,12 +142,13 @@ const SignUpEstudiante = () => {
       apellido,
       nacimiento: edad,
       correo,
-      telefono: "12345678",
-      carrera: 2,
-      semestre: 3,
-      cv: "",
-      foto: "",
+      telefono,
+      carrera: parseInt(carrera, 10),
+      semestre: parseInt(semestre, 10),
+      cv: " ",
+      foto: " ",
       contra: password,
+      universidad,
     }
     const response = await fetch(`${API_URL}/api/students`, {
       method: "POST",
@@ -166,18 +157,19 @@ const SignUpEstudiante = () => {
         "Content-Type": "application/json",
       },
     })
-    console.log(response.message)
-    console.log(body)
+    console.log("Response", response.message)
+    console.log("Body", body)
 
     const datos = await response.json() // Recibidos
+
+    console.log("Datos", datos)
 
     if (datos.status === 200) {
       // Estado global
       console.log("Credenciales correctas")
       handleButton()
     } else {
-      console.log("Credenciales incorrectas")
-      prompt("Credenciales incorrectas")
+      prompt("Error al crear el usuario")
     }
   }
 
