@@ -14,6 +14,10 @@ type PostulationInput struct {
 	Estado       string `json:"estado"`
 }
 
+type GetPostulationInput struct {
+	IdOferta int `json:"id_oferta"`
+}
+
 func NewPostulation(c *gin.Context) {
 	var input PostulationInput
 
@@ -69,7 +73,7 @@ type PostulationResult struct {
 }
 
 func GetUserPostulation(c *gin.Context) {
-	var input PostulationInput
+	var input GetPostulationInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(400, responses.StandardResponse{
