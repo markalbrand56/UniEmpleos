@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react"
-import Joi from "joi"
 import { useStoreon } from "storeon/react"
-import useConfig from "../../Hooks/Useconfig"
 import style from "./EditProfileEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
-import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
@@ -85,7 +82,6 @@ const EditProfileEstudiante = () => {
   useEffect(() => {
     api.handleRequest("GET", "/users/")
     apiCareers.handleRequest("GET", "/careers")
-    //obtainCarreras()
   }, [])
 
   const handleInputsValue = (e) => {

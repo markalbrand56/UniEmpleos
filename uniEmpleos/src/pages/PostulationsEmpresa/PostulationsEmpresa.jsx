@@ -1,54 +1,37 @@
 import React, { useEffect, useState } from "react"
-import Joi from "joi"
+import { useStoreon } from "storeon/react"
 import styles from "./PostulationsEmpresa.module.css"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import { Header } from "../../components/Header/Header"
-import useConfig from "../../Hooks/Useconfig"
-import API_URL from "../../api"
-
-const schema = Joi.object({
-  token: Joi.string().required(),
-  id_user: Joi.string().required(),
-})
+import useApi from "../../Hooks/useApi"
 
 const PostulationsEmpresa = () => {
-  const form = useConfig(schema, {
-    token: "a",
-    id_user: " ",
-  })
+  const { user } = useStoreon("user")
+  const api = useApi()
+
   const [dataa, setData] = useState([])
 
-  const configureData = async () => {
-    console.log ("TOKEEEEEN", form.values.token)
-    const body = {
-      id_empresa: form.values.id_user,
+  useEffect(() => {
+    console.log("DATAAAAA USEEFECT", api.data)
+    if (api.data) {
+      const { offers } = api.data
+      setData(offers)
     }
-    const response = await fetch(`${API_URL}/api/offers/company`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${form.values.token}`,
-      },
-      body: JSON.stringify(body),
-    })
-
-    const data = await response.json()
-    console.log("data", data)
-    setData(data)
-  }
+    console.log("DATAAAAA", dataa)
+  }, [api.data])
 
   useEffect(() => {
-    configureData()
+    api.handleRequest("POST", "/offers/company", {
+      id_empresa: user.id_user,
+    })
   }, [])
-
-  console.log(form.values.token)
 
   return (
     <div className={styles.containePostulation}>
       <Header userperson="company" />
-      {dataa.status === 200 ? (
+      {api.data ? (
         <div className={styles.containerinfoprincipal}>
-          {dataa.data.postulations.map((postulation) => (
+          {dataa.map((postulation) => (
             <InfoTab
               title={postulation.puesto}
               area={postulation.nombre_carreras}

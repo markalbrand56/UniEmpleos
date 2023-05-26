@@ -1,6 +1,4 @@
 import React, { useState } from "react"
-import Joi from "joi"
-import useConfig from "../../Hooks/Useconfig"
 import { navigate } from "../../store"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
