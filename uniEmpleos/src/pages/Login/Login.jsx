@@ -7,18 +7,10 @@ import Button from "../../components/Button/Button"
 import styles from "./Login.module.css"
 import Popup from "../../components/Popup/Popup"
 import API_URL from "../../api"
-
-const schema = Joi.object({
-  token: Joi.string().required(),
-  rol: Joi.string().required(),
-})
+import { useStoreon } from "storeon/react"
 
 const LogIn = () => {
-  const form = useConfig(schema, {
-    token: "a",
-    role: "a",
-    id_user: "a",
-  })
+  const { dispatch } = useStoreon("user")
 
   const [emailInput, setEmailInput] = useState("")
   const [passInput, setPassInput] = useState("")
@@ -42,18 +34,17 @@ const LogIn = () => {
 
     if (datos.status === 200) {
       // Estado global
-      console.log("idUser", emailInput)
-      form.setManyValues({
-        token: datos.data.token,
-        role: datos.data.role,
+      const { token, role } = datos.data
+      dispatch("user/config", {
+        token,
+        role,
         id_user: emailInput,
       })
-      console.log("iduser", form.id_user)
-      if (form.values.role === "student") {
+      if (role === "student") {
         navigate("/profile")
-      } else if (form.values.role === "enterprise") {
+      } else if (role === "enterprise") {
         navigate("/profilecompany")
-      } else if (form.values.role === "admin") {
+      } else if (role === "admin") {
         navigate("/profileadmin")
       }
     } else {

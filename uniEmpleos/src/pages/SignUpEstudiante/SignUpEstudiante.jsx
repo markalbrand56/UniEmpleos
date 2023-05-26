@@ -47,7 +47,7 @@ const SignUpEstudiante = () => {
     const datos = await response.json()
 
     if (datos.status === 200) {
-      const dataCarreras = datos.data.carrers.map((e) => ({
+      const dataCarreras = datos.data.careers.map((e) => ({
         value: e.id_carrera.toString(),
         label: e.nombre,
       }))
@@ -157,16 +157,11 @@ const SignUpEstudiante = () => {
         "Content-Type": "application/json",
       },
     })
-    console.log("Response", response.message)
-    console.log("Body", body)
 
     const datos = await response.json() // Recibidos
 
-    console.log("Datos", datos)
-
     if (datos.status === 200) {
       // Estado global
-      console.log("Credenciales correctas")
       handleButton()
     } else {
       prompt("Error al crear el usuario")

@@ -2,7 +2,6 @@ const user = (store) => {
   store.on("@init", () => ({
     user: {
       token: " ",
-      idoffert: " ",
       role: " ",
       id_user: " ",
     },

@@ -19,6 +19,7 @@ const PostulationsEmpresa = () => {
   const [dataa, setData] = useState([])
 
   const configureData = async () => {
+    console.log ("TOKEEEEEN", form.values.token)
     const body = {
       id_empresa: form.values.id_user,
     }
