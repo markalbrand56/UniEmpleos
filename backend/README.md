@@ -328,6 +328,13 @@ Devuelve todas las ofertas de trabajo, y el detalle de la compañia que la publi
 > **Note**
 > Auth required
 
+#### Params
+``` json
+{
+    "id_empresa"    : "string" 
+}
+```
+
 #### Response
 ``` json
 {
