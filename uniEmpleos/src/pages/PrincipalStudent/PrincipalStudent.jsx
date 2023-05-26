@@ -20,10 +20,6 @@ const PrincipalStudent = () => {
     id_user: "a",
   })
 
-  /* useEffect(() => {
-    console.log("tokenPrincipal", form.values.token)
-  }, [form.values.token]) */
-
   const [dataa, setData] = useState([])
 
   const configureData = async () => {

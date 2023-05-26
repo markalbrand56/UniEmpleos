@@ -3,21 +3,16 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    align-items: center;
 }
 
 .container{
     background-color: #fff;
+    height: 100%;
 }
 
-.containerinfomain h1{
-    font-size: 30px;
+.containerinfoprincipal h1{
+    font-size: 50px;
     font-weight: 700;
     color: #000;
-}
-
-.containerinfomain {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
 }
