@@ -8,7 +8,6 @@ const Popup = ({ message, setWarning, closable }) => {
     setMensaje(message)
   }, [message])
 
-  console.log("Renderizando popup")
 
   return (
     <div className="popup-container">
@@ -19,7 +18,6 @@ const Popup = ({ message, setWarning, closable }) => {
           alt="close"
           onClick={(event) => {
             event.preventDefault()
-            console.log("cerrar popup: ", closed)
             setWarning(false)
           }}
         />

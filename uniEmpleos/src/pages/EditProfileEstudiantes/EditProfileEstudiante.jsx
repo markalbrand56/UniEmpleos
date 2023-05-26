@@ -8,15 +8,11 @@ import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
-
-const schema = Joi.object({
-  token: Joi.string().required(),
-})
+import useApi from "../../Hooks/useApi"
 
 const EditProfileEstudiante = () => {
-  const form = useConfig(schema, {
-    token: "a",
-  })
+  const api = useApi()
+  const apiCareers = useApi()
 
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
@@ -51,45 +47,33 @@ const EditProfileEstudiante = () => {
     setCarrera(e.target.value)
   }
 
-  const obtainUserData = async () => {
-    const response = await fetch(`${API_URL}/api/users`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${form.values.token}`,
-      },
-    })
-    const datos = await response.json()
-    if (datos.status === 200) {
-      console.log(datos.data)
-      setNombre(datos.data.nombre)
-      setApellido(datos.data.apellido)
-      setEdad(datos.data.edad)
-      setCarrera(datos.data.id_carrera)
-      setUniversidad(datos.data.id_universidad)
-      setTelefono(datos.data.telefono)
-      setSemestre(datos.data.semestre)
+  useEffect(() => {
+    console.log("DATAAA", api.data)
+    if (api.data) {
+      const { usuario } = api.data
+      setNombre(usuario.nombre)
+      setApellido(usuario.apellido)
+      setEdad(usuario.edad)
+      setCarrera(usuario.id_carrera)
+      setUniversidad(usuario.id_universidad)
+      setTelefono(usuario.telefono)
+      setSemestre(usuario.semestre)
     }
-  }
+  }, [api.data])
 
-  const obtainCarreras = async () => {
-    const response = await fetch(`${API_URL}/api/careers`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    const datos = await response.json()
-    if (datos.status === 200) {
-      const dataCarreras = datos.data.careers.map((e) => ({
+  useEffect(() => {
+    console.log("USEEFECT", apiCareers.data)
+    if (apiCareers.data) {
+      const { careers } = apiCareers.data
+      const dataCarreras = careers.map((e) => ({
         value: e.id_carrera.toString(),
         label: e.nombre,
       }))
       setCarreras(dataCarreras)
     }
-  }
+  }, [apiCareers.data])
 
-  const putCompanyData = async () => {
+  /*   const putCompanyData = async () => {
     const body = {
       nombre,
       detalles,
@@ -113,15 +97,12 @@ const EditProfileEstudiante = () => {
       console.log("Actualizacion de los datos exitosa")
       navigate("/profile")
     }
-  }
+  } */
 
   useEffect(() => {
-    console.log("token--->", form.values.token)
-  }, [form])
-
-  useEffect(() => {
-    obtainUserData()
-    obtainCarreras()
+    api.handleRequest("GET", "/users/")
+    apiCareers.handleRequest("GET", "/careers")
+    //obtainCarreras()
   }, [])
 
   const handleInputsValue = (e) => {
