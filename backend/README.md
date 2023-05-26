@@ -324,14 +324,14 @@ Devuelve las ofertas de trabajo publicadas por una compañia
 ```
 
 ### [POST] api/offers/all
-Devuelve todas las ofertas de trabajo, y el detalle de la compañia que la publicó
+Devuelve todos los detalles de una oferta según el ID. Devuelve además la información de la empresa que lo publicó 
 > **Note**
 > Auth required
 
 #### Params
 ``` json
 {
-    "id_empresa"    : "string" 
+    "id_oferta"    : "string" 
 }
 ```
 
