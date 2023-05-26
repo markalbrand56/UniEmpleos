@@ -11,49 +11,12 @@ const schema = Joi.object({
 })
 
 const PrincipalEnterprise = () => {
-  const form = useConfig(schema, {
-    token: "a",
-  })
-  const [dataa, setData] = useState([])
-
-  const configureData = async () => {
-    const response = await fetch(`${API_URL}/api/postulations/previews`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    const datos = await response.json()
-    console.log(datos)
-    setData(datos)
-  }
-
-  useEffect(() => {
-    configureData()
-  }, [])
-
-  console.log(form.values.token)
-
   return (
     <div className={styles.container}>
       <Header userperson="company" />
-      {dataa.status === 200 ? (
-        <div className={styles.containerinfoprincipal}>
-          {dataa.data.postulations.map((postulation) => (
-            <InfoTab
-              title={postulation.puesto}
-              area={postulation.nombre_carreras}
-              salary={`Q.${postulation.salario}.00`}
-              company={postulation.nombre_empresa}
-              labelbutton="Postularme"
-            />
-          ))}
-        </div>
-      ) : (
-        <div className={styles.containerinfomain}>
-          <h1>No hay postulantes</h1>
-        </div>
-      )}
+      <div className={styles.containerinfoprincipal}>
+        <h1>¡Bienvenido!</h1>
+      </div>
     </div>
   )
 }

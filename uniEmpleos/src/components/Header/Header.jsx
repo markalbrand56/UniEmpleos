@@ -1,9 +1,7 @@
 import React from "react"
-import Joi from "joi"
+import { useStoreon } from "storeon/react"
 import PropTypes from "prop-types"
-import useConfig from "../../Hooks/Useconfig"
 import Logo from "../Logo/Logo"
-import Ue from "/images/Ue_2.svg"
 import Button from "../Button/Button"
 import "./header.css"
 import { navigate } from "../../store"
@@ -12,24 +10,11 @@ const handleClick = () => {
   navigate("/login")
 }
 
-const schema = Joi.object({
-  token: Joi.string().required(),
-  rol: Joi.string().required(),
-})
+export const Header = () => {
+  const { user } = useStoreon("user")
 
-export const Header = ({
-  user,
-  onLogin,
-  onLogout,
-  onCreateAccount,
-  userperson,
-}) => {
-  const form = useConfig(schema, {
-    token: "a",
-    role: "a",
-  })
   const renderActions = () => {
-    switch (form.values.role) {
+    switch (user.role) {
       case "student":
         return (
           <div className="actions">
@@ -41,7 +26,6 @@ export const Header = ({
         return (
           <div className="actions">
             <a href="/newoffer">Añadir Empleo</a>
-            <a href="/postulantes">Postulantes</a>
             <a href="/postulacionempresa">Mis Ofertas</a>
             <a href="/editprofileempresa">Profile</a>
           </div>
@@ -69,7 +53,7 @@ export const Header = ({
       <div className="wrapper">
         <div className="headercontainer">
           <div className="logo">
-            <Logo src={Ue} size={80} />
+            <Logo src="/images/Ue_2.svg" size={80} />
           </div>
           {renderActions()}
         </div>
