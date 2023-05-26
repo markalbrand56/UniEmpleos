@@ -37,7 +37,7 @@ const PostulationsEmpresa = () => {
               area={postulation.nombre_carreras}
               salary={`Q.${postulation.salario}.00`}
               company={postulation.nombre_empresa}
-              labelbutton="Postularme"
+              labelbutton="Ver más"
             />
           ))}
         </div>

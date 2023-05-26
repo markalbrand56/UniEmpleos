@@ -143,7 +143,7 @@ const Postulacion = () => {
             onClick={handleRegresar}
           />
           <Button
-            label="Postularme"
+            label="Añadir"
             backgroundColor="#a08ae5"
             onClick={handlePostularme}
           />
