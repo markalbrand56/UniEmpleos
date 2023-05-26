@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -100,6 +101,8 @@ func UpdateStudent(c *gin.Context) {
 
 	nacimiento, _ := time.Parse("2006-01-02", input.Nacimiento)
 
+	fmt.Println(input) // TODO BORRAR ESTO
+
 	var inserted models.EstudianteGet
 
 	err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, nacimiento, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
@@ -107,7 +110,7 @@ func UpdateStudent(c *gin.Context) {
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Error updating",
+			Message: "Error updating. " + err.Error(),
 			Data:    nil,
 		})
 		return
