@@ -47,7 +47,7 @@ const Page = () => {
       Component = <EditProfileEmpresa />
       break
     case "postulacion":
-      Component = <Postulacion />
+      Component = <Postulacion id={route.match.props.id} />
       break
     case "postulacionempresa":
       Component = <PostulationsEmpresa />

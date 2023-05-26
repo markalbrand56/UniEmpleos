@@ -46,9 +46,8 @@ const PrincipalStudent = () => {
   }, [form.values.id_user]) */
 
   const saveidlocalstorage = (id) => {
-    form.setValue("idoffert", id)
     if (form.values.idoffert !== "a" || form.values.idoffert !== "undefined") {
-      navigate("/postulacion")
+      navigate(`/postulacion/${id}`)
     } else
       alert(
         "No se pudo guardar el id de la oferta, por favor intentelo de nuevo"

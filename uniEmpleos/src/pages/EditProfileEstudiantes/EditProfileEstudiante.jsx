@@ -102,7 +102,6 @@ const EditProfileEstudiante = () => {
   useEffect(() => {
     api.handleRequest("GET", "/users/")
     apiCareers.handleRequest("GET", "/careers")
-    //obtainCarreras()
   }, [])
 
   const handleInputsValue = (e) => {
