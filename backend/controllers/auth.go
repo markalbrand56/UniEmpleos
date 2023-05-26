@@ -148,14 +148,22 @@ func CurrentUser(c *gin.Context) {
 	username, err := utils.ExtractTokenUsername(c)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
+			Message: "Invalid token. +" + err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 
 	u, err := models.GetUserByUsername(username)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
+			Message: "User not found. +" + err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 
