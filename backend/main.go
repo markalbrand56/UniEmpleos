@@ -27,6 +27,7 @@ func main() {
 }
 
 func CORS() gin.HandlerFunc {
+	// Reference: https://github.com/gin-contrib/cors/issues/29
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
