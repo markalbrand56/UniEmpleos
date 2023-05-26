@@ -7,16 +7,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CarrerInput struct {
+type CareerInput struct {
 	Nombre      string `json:"nombre"`
 	Descripcion string `json:"descripcion"`
 }
 
-func NewCarrer(c *gin.Context) {
-	var input CarrerInput
+func NewCareer(c *gin.Context) {
+	var input CareerInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error binding JSON: " + err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 
@@ -30,7 +34,7 @@ func NewCarrer(c *gin.Context) {
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Error creating",
+			Message: "Error creating career. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -42,4 +46,31 @@ func NewCarrer(c *gin.Context) {
 		Data:    nil,
 	})
 
+}
+
+func GetCareers(c *gin.Context) {
+	var careers []models.CarreraGet
+
+	err := configs.DB.Find(&careers).Error
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error getting careers",
+			Data:    nil,
+		})
+		return
+	}
+
+	var data map[string]interface{}
+
+	data = map[string]interface{}{
+		"careers": careers,
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Careers retrieved successfully",
+		Data:    data,
+	})
 }

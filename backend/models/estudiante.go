@@ -18,6 +18,11 @@ type Estudiante struct {
 	Semestre     int       `json:"semestre"`
 	CV           string    `json:"cv"`
 	Foto         string    `json:"foto"`
+	Universidad  string    `json:"universidad"`
+}
+
+type EstudianteGet struct {
+	IdEstudiante string `json:"id_estudiante"`
 }
 
 // TableName Esta función se llama automáticamente cuando se hace un Create() en el ORM, acá va el nombre como aparece en Postgres
