@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from "react"
-import Joi from "joi"
-import useConfig from "../../Hooks/Useconfig"
-import API_URL from "../../api"
+import { useStoreon } from "storeon/react"
 import style from "./EditProfileEmpresa.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
-
-const schema = Joi.object({
-  token: Joi.string().required(),
-})
+import useApi from "../../Hooks/useApi"
 
 const EditProfileEmpresa = () => {
-  const form = useConfig(schema, {
-    token: "a",
-  })
+  const api = useApi()
+  const { user } = useStoreon("user")
 
   const [nombre, setNombre] = useState("")
   const [correo, setCorreo] = useState("")
@@ -47,67 +41,30 @@ const EditProfileEmpresa = () => {
         break
     }
   }
-
-  const putCompanyData = async () => {
-    const body = {
-      nombre,
-      detalles,
-      correo,
-      telefono,
-      contra: password,
+  useEffect(() => {
+    if (api.data) {
+      setNombre(api.data.usuario.nombre)
+      setCorreo(api.data.usuario.correo)
+      setDetalles(api.data.usuario.detalles)
+      setTelefono(parseInt(api.data.usuario.telefono, 10))
     }
-    const response = await fetch(`${API_URL}/api/companies/update`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${form.values.token}`,
-      },
-    })
-
-    const datos = await response.json() // Recibidos
-    console.log("datos", datos)
-
-    if (datos.status === 200) {
-      console.log("Actualizacion de los datos exitosa")
-      navigate("/profilecompany")
-    }
-  }
-
-  const obtainUserData = async () => {
-    const response = await fetch(`${API_URL}/api/users`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${form.values.token}`,
-      },
-    })
-    const datos = await response.json()
-    if (datos.status === 200) {
-      console.log(datos.data)
-      setNombre(datos.data.nombre)
-      setCorreo(datos.data.correo)
-      setDetalles(datos.data.detalles)
-      setTelefono(datos.data.telefono)
-      setPassword(datos.data.contra)
-    }
-  }
+  }, [api.data])
 
   useEffect(() => {
-    console.log("token--->", form.values.token)
-  }, [form])
-
-  useEffect(() => {
-    // obtainUserData()
+    api.handleRequest("GET", "/users/")
   }, [])
 
-  const handleButton = () => {
-    putCompanyData()
+  const body = {
+    nombre,
+    detalles,
+    correo,
+    telefono: telefono.toString(),
+    contra: " ",
   }
-
-  useEffect(() => {
-    console.log(nombre, correo, detalles, telefono, password)
-  }, [nombre, correo, detalles, telefono, password])
+  const handleButton = () => {
+    api.handleRequest("PUT", "/companies/update", body)
+    navigate("/profilecompany")
+  }
 
   return (
     <div className={style.defaultContainer}>
@@ -148,16 +105,6 @@ const EditProfileEmpresa = () => {
                   name="correo"
                   type="text"
                   placeholder="empresa@org.com"
-                  onChange={handleInputsValue}
-                />
-              </div>
-              <div className={style.inputSubContainer}>
-                <span>Contraseña</span>
-                <ComponentInput
-                  value={password}
-                  name="password"
-                  type="password"
-                  placeholder="miContraseña"
                   onChange={handleInputsValue}
                 />
               </div>
