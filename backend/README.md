@@ -125,6 +125,7 @@ Actualiza un estudiante
 }
 ```
 
+
 #### Response
 ``` json
 {
@@ -453,4 +454,39 @@ Crea un administrador
 	"Data": "nil"
 }
 ```
+
+## POstulaciones
+### [POST] api/Getpostulations
+
+## Params
+``` json
+{
+	"id_oferta"    	: "string" 
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Postulations returned successfully",
+	"Data": [
+        {
+            "apellido": "Albrand",
+            "carrera": 1,
+            "correo": "alb21004@uvg.edu.gt",
+            "cv": "cv",
+            "dpi": "2806089930101",
+            "estado": "Enviada",
+            "foto": "foto",
+            "id_estudiante": "alb21004@uvg.edu.gt",
+            "nacimiento": "2002-05-06T00:00:00Z",
+            "nombre": "Mark",
+            "semestre": 5,
+            "telefono": "58748587",
+            "universidad": "Universidad del Valle de Guatemala"
+        }
+}
+```
+
 
