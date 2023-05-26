@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react"
-import Joi from "joi"
-import useConfig from "../../Hooks/Useconfig"
+import { useStoreon } from "storeon/react"
 import style from "./EditProfileEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
-import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 
 const EditProfileEstudiante = () => {
+  const { user } = useStoreon("user")
   const api = useApi()
   const apiCareers = useApi()
+  const publishChanges = useApi()
 
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
@@ -53,9 +53,15 @@ const EditProfileEstudiante = () => {
       const { usuario } = api.data
       setNombre(usuario.nombre)
       setApellido(usuario.apellido)
-      setEdad(usuario.edad)
+      const date = new Date(usuario.nacimiento)
+      const day = date.getDate().toString().padStart(2, "0")
+      const month = (date.getMonth() + 1).toString().padStart(2, "0")
+      const year = date.getFullYear().toString()
+      const formattedDate = `${year}-${month}-${day}`
+      console.log(formattedDate)
+      setEdad(formattedDate)
       setCarrera(usuario.id_carrera)
-      setUniversidad(usuario.id_universidad)
+      setUniversidad(usuario.universidad)
       setTelefono(usuario.telefono)
       setSemestre(usuario.semestre)
     }
@@ -72,32 +78,6 @@ const EditProfileEstudiante = () => {
       setCarreras(dataCarreras)
     }
   }, [apiCareers.data])
-
-  /*   const putCompanyData = async () => {
-    const body = {
-      nombre,
-      detalles,
-      correo,
-      telefono,
-      contra: password,
-    }
-    const response = await fetch(`${API_URL}/api/companies/update`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${form.values.token}`,
-      },
-    })
-
-    const datos = await response.json() // Recibidos
-    console.log("datos", datos)
-
-    if (datos.status === 200) {
-      console.log("Actualizacion de los datos exitosa")
-      navigate("/profile")
-    }
-  } */
 
   useEffect(() => {
     api.handleRequest("GET", "/users/")
@@ -130,34 +110,21 @@ const EditProfileEstudiante = () => {
         break
     }
   }
-  /* useEffect(() => {
-    console.log(
+
+  const handleButton = () => {
+    publishChanges.handleRequest("PUT", "/students/update", {
       nombre,
       apellido,
-      edad,
-      dpi,
-      correo,
-      password,
+      nacimiento: edad,
       carrera,
       universidad,
       telefono,
-      semestre
-    )
-  }, [
-    nombre,
-    apellido,
-    edad,
-    dpi,
-    correo,
-    password,
-    carrera,
-    universidad,
-    telefono,
-    semestre,
-  ]) */
-
-  const handleButton = () => {
-    console.log("Registrado")
+      semestre,
+      cv: "",
+      foto: "",
+      correo: user.id_user,
+    })
+    navigate("/profile")
   }
 
   return (
