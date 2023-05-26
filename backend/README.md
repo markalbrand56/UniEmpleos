@@ -54,6 +54,22 @@ Obtener el usuario actual.
 }
 
 ```
+```json
+{
+  "status": 200,
+  "message": "User found",
+  "data": {
+    "suspendido": false,
+    "usuario": {
+      "id_empresa": "reclutamiento@sarita.com",
+      "nombre": "Sarita SA",
+      "detalles": "Venta de insumos refrigerados_NUEVO",
+      "correo": "reclutamiento@sarita.com",
+      "telefono": "22227314"
+    }
+  }
+}
+```
 ## Estudiante
 ### [POST] api/students
 Crea un estudiante
@@ -83,6 +99,38 @@ Crea un estudiante
 	"Status":  200,
 	"Message": "Student created successfully",
 	"Data":    "nil"
+}
+```
+
+### [PUT] api/students/update
+Actualiza un estudiante
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "dpi"	        : "string" 
+    "nombre"        : "string" 
+    "apellido"      : "string"
+    "nacimiento"    : "string" 
+    "correo"        : "string" 
+    "telefono"      : "string" 
+    "carrera"       : "int"    
+    "semestre"      : "int"    
+    "cv"            : "string" 
+    "foto"          : "string" 
+    "contra"	: "string"
+    "universidad"   : "string"
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Student updated successfully",
+    "data": null
 }
 ```
 
@@ -276,9 +324,16 @@ Devuelve las ofertas de trabajo publicadas por una compañia
 ```
 
 ### [POST] api/offers/all
-Devuelve todas las ofertas de trabajo, y el detalle de la compañia que la publicó
+Devuelve todos los detalles de una oferta según el ID. Devuelve además la información de la empresa que lo publicó 
 > **Note**
 > Auth required
+
+#### Params
+``` json
+{
+    "id_oferta"    : "string" 
+}
+```
 
 #### Response
 ``` json

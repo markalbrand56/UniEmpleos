@@ -57,13 +57,23 @@ func NewStudent(c *gin.Context) {
 		Contra:  input.Contra,
 	}
 
-	err := configs.DB.Updates(&u).Error // Se agrega el usuario a la base de datos
-	err = configs.DB.Updates(&e).Error  // Se agrega el estudiante a la base de datos
+	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Error creating",
+			Message: "Error creating user. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Create(&e).Error // Se agrega el estudiante a la base de datos
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error creating student. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -88,11 +98,11 @@ func UpdateStudent(c *gin.Context) {
 		return
 	}
 
-	t, _ := time.Parse("2006-01-02", input.Nacimiento)
+	nacimiento, _ := time.Parse("2006-01-02", input.Nacimiento)
 
 	var inserted models.EstudianteGet
 
-	err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, t, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
+	err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, nacimiento, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
