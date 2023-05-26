@@ -226,7 +226,7 @@ Crea una oferta de trabajo
 	"descripcion"   : "string"
 	"requisitos"    : "string" 
 	"salario"	: "double"
-	"id_ofertas"    : "[]string"
+	"id_carreras"    : "[]string"
 }
 ```
 
