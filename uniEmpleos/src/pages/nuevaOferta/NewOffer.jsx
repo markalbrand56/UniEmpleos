@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
-import Joi from "joi"
-import useConfig from "../../Hooks/Useconfig"
+import { useStoreon } from "storeon/react"
 import style from "./NewOffer.module.css"
 import { Header } from "../../components/Header/Header"
 import Button from "../../components/Button/Button"
@@ -8,49 +7,31 @@ import ComponentInput from "../../components/Input/Input"
 import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
-import API_URL from "../../api"
-
-const schema = Joi.object({
-  token: Joi.string().required(),
-})
+import useApi from "../../Hooks/useApi"
 
 const Postulacion = () => {
-  const form = useConfig(schema, {
-    token: "a",
-    id_empresa: "a",
-  })
+  const { user } = useStoreon("user")
+  const api = useApi()
+  const apiCareers = useApi()
 
   const [requisitos, setRequisitos] = useState("")
   const [salario, setSalario] = useState("")
   const [puesto, setPuesto] = useState("")
   const [detalles, setDetalles] = useState("")
   const [carrera, setCarrera] = useState("")
-
   const [carreras, setCarreras] = useState([])
 
-  const postOffer = async () => {
-    const body = {
-      id_empresa: form.id_empresa,
+  const postOffer = () => {
+    console.log("CARRERA", carrera)
+    api.handleRequest("POST", "/offers/", {
+      id_empresa: user.id_user,
       puesto,
+      salario: parseFloat(salario),
       descripcion: detalles,
       requisitos,
-      salario: parseFloat(salario),
-    }
-    const response = await fetch(`${API_URL}/api/offers`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${form.values.token}`,
-      },
+      id_carreras: [carrera],
     })
-
-    const datos = await response.json() // Recibidos
-
-    if (datos.status === 200) {
-      console.log("Creacion de la oferta exitosa")
-      navigate("/profilecompany")
-    }
+    navigate("/profilecompany")
   }
 
   const handleCarrera = (e) => {
@@ -76,32 +57,25 @@ const Postulacion = () => {
     }
   }
 
-  const obtainCarreras = async () => {
-    const response = await fetch(`${API_URL}/api/careers`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    const datos = await response.json()
-    if (datos.status === 200) {
-      const dataCarreras = datos.data.carrers.map((e) => ({
+  useEffect(() => {
+    console.log("USEEFECT", apiCareers.data)
+    if (apiCareers.data) {
+      const { careers } = apiCareers.data
+      const dataCarreras = careers.map((e) => ({
         value: e.id_carrera.toString(),
         label: e.nombre,
       }))
       setCarreras(dataCarreras)
     }
-  }
-  /* useEffect(() => {
-    console.log(requisitos, salario, puesto, detalles, carrera)
-  }, [requisitos, salario, puesto, detalles, carrera]) */
+  }, [apiCareers.data])
 
   useEffect(() => {
-    obtainCarreras()
+    api.handleRequest("GET", "/users/")
+    apiCareers.handleRequest("GET", "/careers")
   }, [])
 
   const handleRegresar = () => {
-    navigate("/profile")
+    navigate("/profilecompany")
   }
   const handlePostularme = () => {
     postOffer()
