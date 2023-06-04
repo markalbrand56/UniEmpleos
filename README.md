@@ -1,5 +1,9 @@
-# IS-Proyecto
-Ingeniería de Software I: Proyecto Semestral. 
+# UniEmpleos
+Ingeniería de Software I: Proyecto Semestral.
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
 ## Integrantes:
 - [Mark Albrand](https://github.com/markalbrand56)
@@ -9,7 +13,6 @@ Ingeniería de Software I: Proyecto Semestral.
 - [Diego Morales](https://github.com/Diego2250)
 
 ## Informe del Proyecto
-- [Google Drive](https://docs.google.com/document/d/1bZ_D6-jxHqZlXLhaNH35PPa5RHcib3fngrrhZWa_l70/edit?usp=sharing)
-- [PDF](https://github.com/markalbrand56/IS-Proyecto/blob/main/Informe/Proyecto%201.%20Corte%201.%20G5.pdf)
+- [Google Drive](https://docs.google.com/document/d/1IoDZOgkqnnaGnb2-ZLRJwCUD0MBx3s9lFyc2UDsd8wU/edit?usp=drive_link)
 
 > Los informes de la gestión de tiempo de cada miembro del grupo se encuentra dentro de el informe.
