@@ -48,17 +48,16 @@ const EditProfileEstudiante = () => {
   }
 
   useEffect(() => {
-    console.log("DATAAA", api.data)
     if (api.data) {
       const { usuario } = api.data
       setNombre(usuario.nombre)
       setApellido(usuario.apellido)
       const date = new Date(usuario.nacimiento)
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
       const day = date.getDate().toString().padStart(2, "0")
       const month = (date.getMonth() + 1).toString().padStart(2, "0")
       const year = date.getFullYear().toString()
       const formattedDate = `${year}-${month}-${day}`
-      console.log(formattedDate)
       setEdad(formattedDate)
       setCarrera(usuario.id_carrera)
       setUniversidad(usuario.universidad)
@@ -68,7 +67,6 @@ const EditProfileEstudiante = () => {
   }, [api.data])
 
   useEffect(() => {
-    console.log("USEEFECT", apiCareers.data)
     if (apiCareers.data) {
       const { careers } = apiCareers.data
       const dataCarreras = careers.map((e) => ({
