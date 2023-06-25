@@ -8,6 +8,7 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import EditorComponent from "../../components/textEditor/textEditor"
 
 const Postulacion = () => {
   const { user } = useStoreon("user")
@@ -126,14 +127,7 @@ const Postulacion = () => {
           </div>
           <div className={style.inputContainer}>
             <span>Descripción</span>
-            <TextArea
-              name="detalles"
-              type="text"
-              placeholder="Describe el trabajo..."
-              onChange={handleInputsValue}
-              min={1}
-              max={5}
-            />
+            <EditorComponent />
           </div>
         </div>
         <div className={style.buttonContainer}>
