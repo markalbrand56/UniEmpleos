@@ -1,8 +1,10 @@
 package tests
 
 import (
-	"backend/controllers"
+	"backend/configs"
+	"backend/routes"
 	"bytes"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -10,26 +12,47 @@ import (
 	"testing"
 )
 
-func TestRegister(t *testing.T) {
-	// Crea una solicitud HTTP POST simulada con un JSON válido
-	jsonData := `{"Usuario": "nuevo_usuario", "Contra": "password123"}`
-	req, err := http.NewRequest("POST", "/register", bytes.NewBufferString(jsonData))
-	if err != nil {
-		t.Fatal(err)
+func setupRouter() *gin.Engine {
+	router := gin.Default()
+	router.Use(CORS())
+	routes.Routes(router)
+	configs.SetupDB()
+
+	return router
+}
+
+func CORS() gin.HandlerFunc {
+	// Reference: https://github.com/gin-contrib/cors/issues/29
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
 	}
+}
 
-	// Configura el contexto de Gin con un ResponseRecorder para capturar la respuesta
-	rr := httptest.NewRecorder()
-	ctx, _ := gin.CreateTestContext(rr)
-	ctx.Request = req
+func TestLogin(t *testing.T) {
+	router := setupRouter()
 
-	// Ejecuta la función Register
-	controllers.Register(ctx)
+	w := httptest.NewRecorder()
+	// usuario: mor21246@uvg
+	// contraseña: mora
+	jsonData := `{"usuario": "mor21146@uvg.edu.gt", "contra": "mora"}`
 
+	body := bytes.NewBufferString(jsonData)
+
+	req := httptest.NewRequest("POST", "/api/login", body)
+
+	router.ServeHTTP(w, req)
+
+	fmt.Println(w.Body.String())
 	// Comprueba la respuesta HTTP y el cuerpo de la respuesta
-	assert.Equal(t, http.StatusOK, rr.Code, "Status code is not 200")
-	assert.JSONEq(t, `{"Status":200,"Message":"Usuario created successfully","Data":null}`, rr.Body.String(), "Response body does not match expected")
-
-	// También puedes agregar pruebas adicionales para verificar la lógica dentro de la función Register.
-	// Por ejemplo, podrías comprobar si el usuario se guardó correctamente en la base de datos.
+	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
 }
