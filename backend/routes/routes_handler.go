@@ -24,6 +24,7 @@ func Routes(router *gin.Engine) {
 	messages.Use(middlewares.JwtAuthentication())
 
 	messages.POST("/send", controllers.SendMessage)
+	messages.GET("/get", controllers.GetMessages)
 
 	// Usuarios
 	users := router.Group("api/users")
