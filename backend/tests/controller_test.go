@@ -56,3 +56,21 @@ func TestLogin(t *testing.T) {
 	// Comprueba la respuesta HTTP y el cuerpo de la respuesta
 	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
 }
+
+func TestNewStudent(t *testing.T) {
+	router := setupRouter()
+
+	w := httptest.NewRecorder()
+
+	jsonData := `{"dpi": "101010101010", "nombre": "Juan", "apellido": "Perez", "nacimiento": "19/05/2002", "correo": "juan@prueba.com", "telefono": "55555555", "carrera": 1, "semestre": 4, "contra": "12345678", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
+
+	body := bytes.NewBufferString(jsonData)
+
+	req := httptest.NewRequest("POST", "/api/students", body)
+
+	router.ServeHTTP(w, req)
+
+	fmt.Println(w.Body.String())
+
+	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
+}
