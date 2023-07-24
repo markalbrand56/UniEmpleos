@@ -12,9 +12,18 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@storeon/localstorage": "^1.5.0",
+    "@storeon/router": "^2.0.1",
     "eslint": "^7.32.0 || ^8.2.0",
+    "joi": "^17.9.2",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.1",
+    "react-textarea-autosize": "^8.4.1",
+    "storeon": "^3.1.5"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.7",
@@ -35,7 +44,6 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-storybook": "^0.6.11",
-    "prop-types": "^15.8.1",
     "storybook": "^7.0.7",
     "vite": "^4.2.0"
   }

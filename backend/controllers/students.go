@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -49,6 +50,7 @@ func NewStudent(c *gin.Context) {
 		CV:           input.CV,
 		Foto:         input.Foto,
 		Correo:       input.Correo,
+		Universidad:  input.Universidad,
 	}
 
 	u := models.Usuario{
@@ -56,13 +58,23 @@ func NewStudent(c *gin.Context) {
 		Contra:  input.Contra,
 	}
 
-	err := configs.DB.Updates(&u).Error // Se agrega el usuario a la base de datos
-	err = configs.DB.Updates(&e).Error  // Se agrega el estudiante a la base de datos
+	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Error creating",
+			Message: "Error creating user. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Create(&e).Error // Se agrega el estudiante a la base de datos
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error creating student. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -87,28 +99,18 @@ func UpdateStudent(c *gin.Context) {
 		return
 	}
 
-	t, _ := time.Parse("2006-01-02", input.Nacimiento)
+	nacimiento, _ := time.Parse("2006-01-02", input.Nacimiento)
 
-	e := models.Estudiante{
-		IdEstudiante: input.Correo,
-		Dpi:          input.Dpi,
-		Nombre:       input.Nombre,
-		Apellido:     input.Apellido,
-		Nacimiento:   t,
-		Telefono:     input.Telefono,
-		Carrera:      input.Carrera,
-		Semestre:     input.Semestre,
-		CV:           input.CV,
-		Foto:         input.Foto,
-		Correo:       input.Correo,
-	}
+	fmt.Println(input) // TODO BORRAR ESTO
 
-	err := configs.DB.Model(&e).Updates(&e).Error
+	var inserted models.EstudianteGet
+
+	err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, nacimiento, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Error updating",
+			Message: "Error updating. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -119,4 +121,5 @@ func UpdateStudent(c *gin.Context) {
 		Message: "Student updated successfully",
 		Data:    nil,
 	})
+
 }
