@@ -1,0 +1,115 @@
+.container {
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.generalChatContainer {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
+.chatsContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  color: #fff;
+  width: 30%;
+  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer / Edge */
+  /* Desplazamiento suave */
+  scroll-behavior: smooth;
+  /* Agrega un efecto de sombra para mejorar la apariencia visual */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  /* Añade una transición para el efecto */
+}
+
+/* Elimina la sombra cuando no esté en desplazamiento */
+.chatsContainer:hover {
+  box-shadow: none;
+}
+
+.chatsContainer::-webkit-scrollbar {
+  /* Oculta la barra de desplazamiento en navegadores basados en WebKit */
+  display: none;
+
+}
+
+.currentChatContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background-color: #f5f5f5;
+  color: aliceblue;
+  width: calc(70% - 20px);
+  height: calc(100% - 40px);
+  padding: 20px;
+  /* Agregar sombra sutil */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.noUsersMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: aliceblue;
+  width: 100%;
+  height: 100%;
+}
+
+.inputContainer {
+  position: absolute;
+  bottom: 0;
+  padding: 10px;
+  width: calc(66% - 20px);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.inputBar {
+  width: 85%;
+}
+
+.buttonSend {
+  width: 10%;
+}
+
+.buttonFile {
+  width: 5%;
+  margin: 0;
+}
+
+.button {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button img {
+  width: 50%;
+  height: 50%;
+  object-fit: contain;
+}
+
+.button:focus {
+  border-color: #a08ae5;
+  box-shadow: 0 0 0 3px rgba(160, 138, 229, 0.25);
+  outline: none;
+}
