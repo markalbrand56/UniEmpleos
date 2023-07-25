@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/routes"
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -73,4 +74,48 @@ func TestNewStudent(t *testing.T) {
 	fmt.Println(w.Body.String())
 
 	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
+}
+
+func TestUpdateStudent(t *testing.T) {
+	// Paso 1: Realizar la solicitud de inicio de sesión para obtener el token
+	router := setupRouter()
+
+	w := httptest.NewRecorder()
+	jsonData := `{"usuario": "mor21146@uvg.edu.gt", "contra": "mora"}`
+	body := bytes.NewBufferString(jsonData)
+
+	req := httptest.NewRequest("POST", "/api/login", body)
+
+	router.ServeHTTP(w, req)
+
+	// Comprueba la respuesta HTTP y el cuerpo de la respuesta
+	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
+
+	// Paso 2: Extraer el token de la respuesta
+	var loginResponse struct {
+		Status  int    `json:"status"`
+		Message string `json:"message"`
+		Data    struct {
+			Role  string `json:"role"`
+			Token string `json:"token"`
+		} `json:"data"`
+	}
+
+	err := json.Unmarshal(w.Body.Bytes(), &loginResponse)
+	assert.NoError(t, err, "Error unmarshalling login response")
+
+	// Paso 3: Usar el token para hacer la actualización del estudiante
+	w = httptest.NewRecorder()
+
+	jsonData = `{"dpi": "101010101010", "nombre": "Juan", "apellido": "Perez", "nacimiento": "19/05/2002", "correo": "juan@prueba.com", "telefono": "55555555", "carrera": 1, "semestre": 4, "contra": "12345678", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
+	body = bytes.NewBufferString(jsonData)
+
+	req = httptest.NewRequest("PUT", "/api/students/update", body)
+	req.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
+
+	router.ServeHTTP(w, req)
+
+	fmt.Println(w.Body.String())
+
+	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200 on update student")
 }
