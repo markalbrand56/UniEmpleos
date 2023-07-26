@@ -45,7 +45,7 @@ func TestLogin(t *testing.T) {
 	w := httptest.NewRecorder()
 	// usuario: mor21246@uvg
 	// contraseña: mora
-	jsonData := `{"usuario": "mor21146@uvg.edu.gt", "contra": "mora"}`
+	jsonData := `{"usuario": "prueba@prueba", "contra": "prueba"}`
 
 	body := bytes.NewBufferString(jsonData)
 
