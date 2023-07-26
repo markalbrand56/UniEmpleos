@@ -52,7 +52,8 @@ func SendMessage(c *gin.Context) {
 }
 
 type MessageOutput struct {
-	ID_postulacion int `json:"id_postulacion"`
+	ID_emisor   string `json:"id_emisor"`
+	ID_receptor string `json:"id_receptor"`
 }
 
 func GetMessages(c *gin.Context) {
@@ -64,7 +65,15 @@ func GetMessages(c *gin.Context) {
 	}
 
 	var messages []models.MensajeGet
-	err := configs.DB.Where("id_postulacion = ?", inputID.ID_postulacion).Find(&messages).Error
+	err := configs.DB.
+		Table("mensaje m").
+		Select("es.nombre as emisor_nombre, es.foto as emisor_foto, em.nombre as receptor_nombre, em.foto as receptor_foto, m.*").
+		Joins("JOIN estudiante es ON m.id_emisor = es.id_estudiante OR m.id_receptor = es.id_estudiante").
+		Joins("JOIN empresa em ON m.id_emisor = em.id_empresa OR m.id_receptor = em.id_empresa").
+		Where("(m.id_emisor = ? AND m.id_receptor = ?) OR (m.id_emisor = ? AND m.id_receptor = ?)",
+			inputID.ID_emisor, inputID.ID_receptor,
+			inputID.ID_receptor, inputID.ID_emisor).
+		Find(&messages).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{

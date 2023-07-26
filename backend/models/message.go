@@ -14,11 +14,16 @@ type Mensaje struct {
 
 // mensajeGet es la estructura de la tabla mensaje en la base de datos
 type MensajeGet struct {
-	ID_mensaje int       `json:"id_mensaje"`
-	IdEmisor   string    `json:"id_emisor"`
-	IdReceptor string    `json:"id_receptor"`
-	Mensaje    string    `json:"mensaje"`
-	Tiempo     time.Time `json:"tiempo"`
+	ID_mensaje     int       `json:"id_mensaje"`
+	IdEmisor       string    `json:"id_emisor"`
+	IdReceptor     string    `json:"id_receptor"`
+	Mensaje        string    `json:"mensaje"`
+	Tiempo         time.Time `json:"tiempo"`
+	EmisorNombre   string    `json:"emisor_nombre"`
+	EmisorFoto     string    `json:"emisor_foto"`
+	ReceptorNombre string    `json:"receptor_nombre"`
+	ReceptorFoto   string    `json:"receptor_foto"`
+	Archivo        string    `json:"archivo"`
 }
 
 // TableName Esta función se llama automáticamente cuando se hace un Create() en el ORM, acá va el nombre como aparece en Postgres
