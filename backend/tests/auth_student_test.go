@@ -81,7 +81,7 @@ func TestUpdateStudent(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	jsonData := `{"usuario": "mor21146@uvg.edu.gt", "contra": "mora"}`
+	jsonData := `{"usuario": "prueba@prueba", "contra": "prueba"}` // Solo para obtener el token
 	body := bytes.NewBufferString(jsonData)
 
 	req := httptest.NewRequest("POST", "/api/login", body)
@@ -107,7 +107,7 @@ func TestUpdateStudent(t *testing.T) {
 	// Paso 3: Usar el token para hacer la actualización del estudiante
 	w = httptest.NewRecorder()
 
-	jsonData = `{"dpi": "101010101010", "nombre": "Juan", "apellido": "Perez", "nacimiento": "19/05/2002", "correo": "juan@prueba.com", "telefono": "55555555", "carrera": 1, "semestre": 4, "contra": "12345678", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
+	jsonData = `{"dpi": "101010101010", "nombre": "Juan", "apellido": "Perez", "nacimiento": "19/05/2002", "correo": "juan@prueba.com", "telefono": "666666", "carrera": 1, "semestre": 4, "contra": "12345678", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
 	body = bytes.NewBufferString(jsonData)
 
 	req = httptest.NewRequest("PUT", "/api/students/update", body)
