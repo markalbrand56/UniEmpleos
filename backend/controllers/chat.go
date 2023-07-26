@@ -63,7 +63,7 @@ func GetMessages(c *gin.Context) {
 		return
 	}
 
-	var messages []models.Mensaje
+	var messages []models.MensajeGet
 	err := configs.DB.Where("id_postulacion = ?", inputID.ID_postulacion).Find(&messages).Error
 
 	if err != nil {
