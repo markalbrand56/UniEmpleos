@@ -20,6 +20,7 @@ export const Header = () => {
           <div className="actions">
             <a href="/editprofileestudiante">Perfil</a>
             <a href="/profile">Vacantes</a>
+            <a href="/chatstudents">Chat</a>
           </div>
         )
       case "enterprise":

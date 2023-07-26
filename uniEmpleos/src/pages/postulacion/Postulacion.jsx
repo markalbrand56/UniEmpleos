@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react"
+/* eslint-disable react/prop-types */
+import React, { useEffect } from "react"
 import { useStoreon } from "storeon/react"
 import style from "./Postulacion.module.css"
 import { Header } from "../../components/Header/Header"
@@ -15,13 +16,12 @@ const Postulacion = ({ id }) => {
     api.handleRequest("POST", "/offers/all", { id_oferta: id })
   }, [])
 
-  const body = {
-    id_estudiante: user.id,
-    id_oferta: id,
-    estado: "enviada",
-  }
   const handlePostularme = () => {
-    api.handleRequest("POST", "/postulacion", body)
+    api.handleRequest("POST", "/postulations/", {
+      id_oferta: parseInt(id, 10),
+      id_estudiante: user.id_user,
+      estado: "enviada",
+    })
     navigate("/profile")
   }
 
