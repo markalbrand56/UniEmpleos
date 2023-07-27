@@ -89,6 +89,55 @@ func NewOffer(c *gin.Context) {
 
 }
 
+type OfferUpdateInput struct {
+	Id_Oferta   int      `json:"id_oferta"`
+	IDEmpresa   string   `json:"id_empresa"`
+	Puesto      string   `json:"puesto"`
+	Descripcion string   `json:"descripcion"`
+	Requisitos  string   `json:"requisitos"`
+	Salario     float64  `json:"salario"`
+	IdCarreras  []string `json:"id_carreras"`
+}
+
+func UpdateOffer(c *gin.Context) {
+	var input OfferUpdateInput
+	var offer models.Oferta
+
+	if err := c.BindJSON(&input); err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Invalid input: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	offer = models.Oferta{
+		IDEmpresa:   input.IDEmpresa,
+		Puesto:      input.Puesto,
+		Descripcion: input.Descripcion,
+		Requisitos:  input.Requisitos,
+		Salario:     input.Salario,
+	}
+
+	err := configs.DB.Model(&offer).Where("id_oferta = ?", input.Id_Oferta).Updates(offer).Error
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error updating offer: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Offer updated successfully",
+		Data:    nil,
+	})
+}
+
 type OfferGet struct {
 	Id_Oferta string `json:"id_oferta"`
 }
