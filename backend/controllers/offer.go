@@ -131,6 +131,32 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
+	// eliminar todas las carreras de la oferta en oferta_carrera
+	err = configs.DB.Where("id_oferta = ?", input.Id_Oferta).Delete(&models.OfertaCarrera{}).Error
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error deleting oferta_carrera to update them: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Insert into oferta_carrera table
+	for _, idCarrera := range input.IdCarreras {
+		var inserted2 AfterInsert2
+		err = configs.DB.Raw("INSERT INTO oferta_carrera (id_oferta, id_carrera) VALUES (?, ?) RETURNING id_oferta, id_carrera", input.Id_Oferta, idCarrera).Scan(&inserted2).Error
+		if err != nil {
+			c.JSON(400, responses.StandardResponse{
+				Status:  400,
+				Message: "Error creating oferta_carrera: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+	}
+
 	c.JSON(200, responses.StandardResponse{
 		Status:  200,
 		Message: "Offer updated successfully",
