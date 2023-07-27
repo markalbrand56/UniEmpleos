@@ -13,6 +13,7 @@ import EditProfileEmpresa from "./EditProfileEmpresas/EditProfileEmpresa"
 import Postulacion from "./postulacion/Postulacion"
 import PostulationsEmpresa from "./PostulationsEmpresa/PostulationsEmpresa"
 import NewOffer from "./nuevaOferta/NewOffer"
+import ChatPage from "./ChatPage/ChatPage"
 import ChatStudents from "./chatStudents/ChatStudents"
 import OfferDetails from "./OfferDetails/OfferDetails"
 
@@ -57,8 +58,8 @@ const Page = () => {
     case "newoffer":
       Component = <NewOffer />
       break
-    case "chatstudents":
-      Component = <ChatStudents />
+    case "chat":
+      Component = <ChatPage />
       break
     case "postulationdetails":
       Component = <OfferDetails id={route.match.props.id} />

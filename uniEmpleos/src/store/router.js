@@ -13,6 +13,7 @@ export default createRouter([
   ["/postulacion/*", (id) => ({ page: "postulacion", props: { id } })],
   ["/newoffer", () => ({ page: "newoffer" })],
   ["/postulacionempresa", () => ({ page: "postulacionempresa" })],
+  ["/chat", () => ({ page: "chat" })],
   ["/chatstudents", () => ({ page: "chatstudents" })],
   [
     "/postulationdetails/*",

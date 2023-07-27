@@ -20,7 +20,7 @@ export const Header = () => {
           <div className="actions">
             <a href="/editprofileestudiante">Perfil</a>
             <a href="/profile">Vacantes</a>
-            <a href="/chatstudents">Chat</a>
+            <a href="/chat">Chat</a>
           </div>
         )
       case "enterprise":
@@ -29,6 +29,7 @@ export const Header = () => {
             <a href="/newoffer">Añadir Empleo</a>
             <a href="/postulacionempresa">Mis Ofertas</a>
             <a href="/editprofileempresa">Profile</a>
+            <a href="/chat">Chat</a>
           </div>
         )
       case "admin":

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
-import style from "./ChatStudents.module.css"
+import style from "./ChatPage.module.css"
 import { Header } from "../../components/Header/Header"
 import Chat from "../../components/Chat/Chat"
 import Message from "../../components/Message/Message"
@@ -9,7 +9,14 @@ import Input from "../../components/Input/Input"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 
-const ChatStudents = () => {
+const ChatPage = () => {
+  const { user } = useStoreon("user")
+  const api = useApi()
+
+  useEffect(() => {
+    api.handleRequest("POST", "/offers/all", { id_user: user.id_user })
+  }, [])
+
   const [textMessage, setTextMessage] = useState("")
 
   const handleChat = () => {
@@ -118,7 +125,7 @@ const ChatStudents = () => {
       pfp: "images/usuario.png",
       name: "Juan",
       time: "12:00",
-      message: "Que haces?",
+      message: "",
       file: "images/usuario.png",
       side: "left",
     },
@@ -134,7 +141,7 @@ const ChatStudents = () => {
       pfp: "images/usuario.png",
       name: "Juan",
       time: "12:00",
-      message: "Hola que tal!",
+      message: "",
       file: "images/usuario.png",
       side: "right",
     },
@@ -246,4 +253,4 @@ const ChatStudents = () => {
   )
 }
 
-export default ChatStudents
+export default ChatPage
