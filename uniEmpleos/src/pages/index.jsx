@@ -14,6 +14,7 @@ import Postulacion from "./postulacion/Postulacion"
 import PostulationsEmpresa from "./PostulationsEmpresa/PostulationsEmpresa"
 import NewOffer from "./nuevaOferta/NewOffer"
 import ChatStudents from "./chatStudents/ChatStudents"
+import OfferDetails from "./OfferDetails/OfferDetails"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
@@ -58,6 +59,9 @@ const Page = () => {
       break
     case "chatstudents":
       Component = <ChatStudents />
+      break
+    case "postulationdetails":
+      Component = <OfferDetails id={route.match.props.id} />
       break
     default:
       Component = <h1>404 Error</h1>
