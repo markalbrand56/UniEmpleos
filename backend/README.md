@@ -161,7 +161,7 @@ Crea un mensaje
 }
 ```
 
-### [GET] api/messages/getLast
+### [POST] api/messages/getLast
 Devuelve el último mensaje de un chat dado el usuario
 > **Note**
 > Auth required
@@ -190,7 +190,7 @@ Devuelve el último mensaje de un chat dado el usuario
     }
 }
 ```
-### [GET] api/messages/get
+### [POST] api/messages/get
 Devuelve los mensajes de un chat dado el emisor y el receptor
 
 > **Note**
