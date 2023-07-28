@@ -37,10 +37,6 @@ const PrincipalStudent = () => {
     configureData()
   }, [])
 
-  /* useEffect(() => {
-    console.log("idoffertPrincipal", form.values.id_user)
-  }, [form.values.id_user]) */
-
   const saveidlocalstorage = (id) => {
     if (form.values.idoffert !== "a" || form.values.idoffert !== "undefined") {
       navigate(`/postulacion/${id}`)
