@@ -161,6 +161,34 @@ Crea un mensaje
 }
 ```
 
+### [GET] api/messages/getLast
+Devuelve el ultimo mensaje de un chat dado el usuario
+
+#### Params
+
+``` json
+{
+    "id_usuario": "string" 
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Message retrieved successfully",
+    "data": {
+        "message": {
+            "chat_id": 1,
+            "user_name": "Empresa INC",
+            "user_photo": "",
+            "last_message": "Muchas gracias por la información. Estaré a la espera de su correo",
+            "last_time": "2023-05-18T02:51:32.554275Z"
+        }
+    }
+}
+```
+
 ## Empresas
 ### [POST] api/companies
 Crea una compañia
