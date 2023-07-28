@@ -239,6 +239,32 @@ Crea una oferta de trabajo
 }
 ```
 
+### [PUT] api/offers/
+Actualiza una oferta de trabajo
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "id_oferta"     : "int" 
+    "puesto"	    : "string"
+    "descripcion"   : "string"
+    "requisitos"    : "string" 
+    "salario"	    : "double"
+    "id_carreras"   : "[]string"
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Offer updated successfully",
+    "data": null
+}
+```
+
 ### [GET] api/postulations/previews
 Devuelve la información para las preview de las ofertas disponibles
 > **Note**
@@ -455,7 +481,7 @@ Crea un administrador
 }
 ```
 
-## POstulaciones
+## Postulaciones
 ### [POST] api/Getpostulations
 
 ## Params
