@@ -26,11 +26,23 @@ type MensajeGet struct {
 	Archivo        string    `json:"archivo"`
 }
 
+type ChatInfo struct {
+	ChatID      int       `json:"chat_id"`
+	UserName    string    `json:"user_name"`
+	UserPhoto   string    `json:"user_photo"`
+	LastMessage string    `json:"last_message"`
+	LastTime    time.Time `json:"last_time"`
+}
+
 // TableName Esta función se llama automáticamente cuando se hace un Create() en el ORM, acá va el nombre como aparece en Postgres
 func (Mensaje) TableName() string {
 	return "mensaje"
 }
 
 func (MensajeGet) TableName() string {
+	return "mensaje"
+}
+
+func (ChatInfo) TableName() string {
 	return "mensaje"
 }

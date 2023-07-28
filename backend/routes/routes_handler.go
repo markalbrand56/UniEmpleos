@@ -25,6 +25,7 @@ func Routes(router *gin.Engine) {
 
 	messages.POST("/send", controllers.SendMessage)
 	messages.GET("/get", controllers.GetMessages)
+	messages.GET("/getLast", controllers.GetLastChat)
 
 	// Usuarios
 	users := router.Group("api/users")
