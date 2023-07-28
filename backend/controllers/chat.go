@@ -110,7 +110,7 @@ func GetLastChat(c *gin.Context) {
 		return
 	}
 
-	var chat models.ChatInfo
+	var chats []models.ChatInfo
 
 	// Consulta SQL pura con alias y parámetro ?
 	query := `SELECT p.id_postulacion as chat_id,
@@ -123,12 +123,16 @@ func GetLastChat(c *gin.Context) {
 			  JOIN oferta o ON p.id_oferta = o.id_oferta
 			  JOIN estudiante e ON p.id_estudiante = e.id_estudiante
 			  JOIN empresa e2 ON o.id_empresa = e2.id_empresa
+			  JOIN (
+			  	SELECT id_postulacion, MAX(tiempo) as max_tiempo
+				FROM mensaje
+				GROUP BY id_postulacion
+			  ) max_msg ON m.id_postulacion = max_msg.id_postulacion AND m.tiempo = max_msg.max_tiempo
 			  WHERE p.id_estudiante = ? OR o.id_empresa = ?
-			  ORDER BY m.tiempo DESC
-			  LIMIT 1`
+			  ORDER BY m.tiempo DESC`
 
 	// Ejecutamos la consulta SQL pura con parámetros inputID.ID_usuario
-	err := configs.DB.Raw(query, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario).Scan(&chat).Error
+	err := configs.DB.Raw(query, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario).Scan(&chats).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
@@ -140,11 +144,11 @@ func GetLastChat(c *gin.Context) {
 	}
 
 	// Convertimos el resultado en un mapa
-	messageMap := map[string]interface{}{"message": chat}
+	messageMap := map[string]interface{}{"messages": chats}
 
 	c.JSON(200, responses.StandardResponse{
 		Status:  200,
-		Message: "Message retrieved successfully",
+		Message: "Messages retrieved successfully",
 		Data:    messageMap,
 	})
 }
