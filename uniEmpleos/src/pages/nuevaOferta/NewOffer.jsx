@@ -8,7 +8,7 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import EditorComponent from "../../components/textEditor/textEditor"
+import MyEditor from "../../components/textEditor/textEditor"
 
 const Postulacion = () => {
   const { user } = useStoreon("user")
@@ -23,7 +23,6 @@ const Postulacion = () => {
   const [carreras, setCarreras] = useState([])
 
   const postOffer = () => {
-    console.log("CARRERA", carrera)
     api.handleRequest("POST", "/offers/", {
       id_empresa: user.id_user,
       puesto,
@@ -44,9 +43,6 @@ const Postulacion = () => {
       case "salario":
         setSalario(e.target.value.toString())
         break
-      case "detalles":
-        setDetalles(e.target.value)
-        break
       case "requisitos":
         setRequisitos(e.target.value)
         break
@@ -58,8 +54,11 @@ const Postulacion = () => {
     }
   }
 
+  const handleDetalles = (e) => {
+    setDetalles(e)
+  }
+
   useEffect(() => {
-    console.log("USEEFECT", apiCareers.data)
     if (apiCareers.data) {
       const { careers } = apiCareers.data
       const dataCarreras = careers.map((e) => ({
@@ -127,7 +126,7 @@ const Postulacion = () => {
           </div>
           <div className={style.inputContainer}>
             <span>Descripción</span>
-            <EditorComponent />
+            <MyEditor content={detalles} handleContentChange={handleDetalles} />
           </div>
         </div>
         <div className={style.buttonContainer}>

@@ -71,7 +71,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: aliceblue;
+  color: #000;
   width: 100%;
   height: 100%;
 }
@@ -119,4 +119,14 @@
   border-color: #a08ae5;
   box-shadow: 0 0 0 3px rgba(160, 138, 229, 0.25);
   outline: none;
+}
+
+.noMessagesMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  width: 100%;
+  height: 100%;
 }
