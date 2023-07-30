@@ -88,17 +88,19 @@ const OfferDetails = ({ id }) => {
       setData(offers)
     }
     console.log("DATAAAAA", dataa)
-    for (let i = 0; i < dataa.length; i++) {
-      console.log(id)
-      if (dataa[i].id_oferta === parseInt(id)) {
-        console.log("changinggg", dataa[i])
-        setPuesto(dataa[i].puesto)
-        setSalario(dataa[i].salario)
-        setRequisitos(dataa[i].requisitos)
-        setDetalles(dataa[i].detalles)
-        setCarrera(dataa[i].id_carrera)
-      } else {
-        console.log("not changinggg", id)
+    if (dataa) {
+      for (let i = 0; i < dataa.length; i++) {
+        console.log(id)
+        if (dataa[i].id_oferta === parseInt(id, 10)) {
+          console.log("changinggg", dataa[i])
+          setPuesto(dataa[i].puesto)
+          setSalario(dataa[i].salario)
+          setRequisitos(dataa[i].requisitos)
+          setDetalles(dataa[i].detalles)
+          setCarrera(dataa[i].id_carrera)
+        } else {
+          console.log("not changinggg", id)
+        }
       }
     }
   }, [api.data])
@@ -108,6 +110,17 @@ const OfferDetails = ({ id }) => {
       id_empresa: user.id_user,
     })
   }, [])
+
+  const updateOffer = () => {
+    api.handleRequest("PUT", "/offers/", {
+      id_oferta: parseInt(id, 10),
+      puesto,
+      descripcion: detalles,
+      requisitos,
+      salario: parseFloat(salario),
+      id_carrera: carrera,
+    })
+  }
 
   return (
     <div className={styles.container}>
@@ -166,7 +179,11 @@ const OfferDetails = ({ id }) => {
             backgroundColor="transparet"
             onClick={handleRegresar}
           />
-          <Button label="Guardar" backgroundColor="#a08ae5" />
+          <Button
+            label="Guardar"
+            backgroundColor="#a08ae5"
+            onClick={updateOffer}
+          />
         </div>
       </div>
     </div>
