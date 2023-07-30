@@ -14,7 +14,6 @@ import Postulacion from "./postulacion/Postulacion"
 import PostulationsEmpresa from "./PostulationsEmpresa/PostulationsEmpresa"
 import NewOffer from "./nuevaOferta/NewOffer"
 import ChatPage from "./ChatPage/ChatPage"
-import ChatStudents from "./chatStudents/ChatStudents"
 import OfferDetails from "./OfferDetails/OfferDetails"
 
 const Page = () => {

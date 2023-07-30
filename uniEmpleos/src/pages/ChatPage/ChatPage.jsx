@@ -97,8 +97,8 @@ const ChatPage = () => {
   }
 
   useEffect(() => {
-    setObtainLastChats()
-    obtainLastChats()
+    // setObtainLastChats()
+    // obtainLastChats()
   }, [])
 
   const setObtainMessages = () => {
