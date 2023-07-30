@@ -9,7 +9,8 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import EditorComponent from "../../components/textEditor/textEditor"
+import { useQuill } from "react-quilljs"
+import MyEditor from "../../components/textEditor/textEditor"
 import useConfig from "../../Hooks/Useconfig"
 
 const schema = Joi.object({
@@ -29,6 +30,7 @@ const OfferDetails = ({ id }) => {
   const [detalles, setDetalles] = useState("")
   const [carrera, setCarrera] = useState("")
   const [carreras, setCarreras] = useState([])
+  const { quill, quillRef } = useQuill()
 
   const handleCarrera = (e) => {
     setCarrera(e.target.value)
@@ -51,6 +53,10 @@ const OfferDetails = ({ id }) => {
       default:
         break
     }
+  }
+
+  const handleDetalles = () => {
+    setDetalles(JSON.stringify(quill.getContents()))
   }
 
   useEffect(() => {
@@ -151,7 +157,7 @@ const OfferDetails = ({ id }) => {
           </div>
           <div className={styles.inputContainer}>
             <span>Descripción</span>
-            <EditorComponent />
+            <div ref={quillRef} onInput={handleDetalles} />
           </div>
         </div>
         <div className={styles.buttonContainer}>
