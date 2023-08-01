@@ -122,7 +122,7 @@ const ChatPage = () => {
   }
 
   const handleSendMessage = (e) => {
-    sendMessage(e.target.value)
+    //sendMessage(e.target.value)
     setTextMessage("")
   }
 

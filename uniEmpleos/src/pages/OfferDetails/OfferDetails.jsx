@@ -10,7 +10,7 @@ import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import { useQuill } from "react-quilljs"
-import MyEditor from "../../components/textEditor/textEditor"
+import "react-quill/dist/quill.snow.css"
 import useConfig from "../../Hooks/Useconfig"
 
 const schema = Joi.object({
@@ -88,7 +88,7 @@ const OfferDetails = ({ id }) => {
           setPuesto(dataa[i].puesto)
           setSalario(dataa[i].salario)
           setRequisitos(dataa[i].requisitos)
-          setDetalles(dataa[i].detalles)
+          setDetalles(dataa[i].descripcion)
           setCarrera(dataa[i].id_carrera)
         } else {
           console.log("not changing", id)
@@ -117,17 +117,14 @@ const OfferDetails = ({ id }) => {
   }
 
   useEffect(() => {
-    if (quill) {
+    if (quill && detalles) {
       try {
         quill.setContents(JSON.parse(detalles))
       } catch (error) {
-        console.log("Error al cargar detalles", error, detalles)
+        console.log("Error al cargar detalles", error)
       }
     }
-  }, [quill])
-
-
-  
+  }, [quill, detalles])  
 
   return (
     <div className={styles.container}>

@@ -8,7 +8,7 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import MyEditor from "../../components/textEditor/textEditor"
+import { useQuill } from "react-quilljs"
 
 const Postulacion = () => {
   const { user } = useStoreon("user")
@@ -18,20 +18,21 @@ const Postulacion = () => {
   const [requisitos, setRequisitos] = useState("")
   const [salario, setSalario] = useState("")
   const [puesto, setPuesto] = useState("")
-  const [detalles, setDetalles] = useState("")
   const [carrera, setCarrera] = useState("")
   const [carreras, setCarreras] = useState([])
+  const { quill, quillRef } = useQuill()
 
   const postOffer = () => {
+    const details = JSON.stringify(quill.getContents())
     api.handleRequest("POST", "/offers/", {
       id_empresa: user.id_user,
       puesto,
       salario: parseFloat(salario),
-      descripcion: detalles,
+      descripcion: details,
       requisitos,
       id_carreras: [carrera],
     })
-    navigate("/profilecompany")
+    navigate("/postulacionempresa")
   }
 
   const handleCarrera = (e) => {
@@ -52,10 +53,6 @@ const Postulacion = () => {
       default:
         break
     }
-  }
-
-  const handleDetalles = (e) => {
-    setDetalles(e)
   }
 
   useEffect(() => {
@@ -126,7 +123,7 @@ const Postulacion = () => {
           </div>
           <div className={style.inputContainer}>
             <span>Descripción</span>
-            <MyEditor content={detalles} handleContentChange={handleDetalles} />
+            <div ref={quillRef} />
           </div>
         </div>
         <div className={style.buttonContainer}>
