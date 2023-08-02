@@ -9,6 +9,7 @@ import Message from "../../components/Message/Message"
 import Input from "../../components/Input/Input"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import ImageUploader from "../../components/ImageUploader/ImageUploader"
 
 const ChatPage = () => {
   const { user } = useStoreon("user")
@@ -56,6 +57,7 @@ const ChatPage = () => {
   ])
   const [currentChat, setCurrentChat] = useState("")
   const [textMessage, setTextMessage] = useState("")
+  const [uploadedImage, setUploadedImage] = useState("")
 
   const obtainLastChats = () => {
     apiLastChats.handleRequest("POST", "/messages/getLast", {
@@ -117,13 +119,14 @@ const ChatPage = () => {
     setTextMessage(e.target.value)
   }
 
-  const handleUploadFile = () => {
-    console.log("upload")
+  const handleUploadFile = (uploadedImage) => {
+    setUploadedImage(uploadedImage)
   }
 
   const handleSendMessage = (e) => {
     //sendMessage(e.target.value)
     setTextMessage("")
+    setUploadedImage("")
   }
 
   return (
@@ -175,16 +178,7 @@ const ChatPage = () => {
               />
             </div>
             <div className={style.buttonFile}>
-              <button
-                type="button"
-                className={style.button}
-                style={{
-                  backgroundColor: "#e0dede", // Opcional: color de fondo
-                }}
-                onClick={handleUploadFile}
-              >
-                <img src="/images/clip.svg" alt="upload files" />
-              </button>
+              <ImageUploader onImageUpload={handleUploadFile} image={uploadedImage} />
             </div>
             <div className={style.buttonSend}>
               <button
