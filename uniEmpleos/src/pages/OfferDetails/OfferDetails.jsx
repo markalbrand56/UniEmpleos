@@ -9,7 +9,8 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import EditorComponent from "../../components/textEditor/textEditor"
+import { useQuill } from "react-quilljs"
+import "react-quill/dist/quill.snow.css"
 import useConfig from "../../Hooks/Useconfig"
 
 const schema = Joi.object({
@@ -27,8 +28,9 @@ const OfferDetails = ({ id }) => {
   const [salario, setSalario] = useState("")
   const [puesto, setPuesto] = useState("")
   const [detalles, setDetalles] = useState("")
-  const [carrera, setCarrera] = useState("")
+  const [carrera, setCarrera] = useState("1")
   const [carreras, setCarreras] = useState([])
+  const { quill, quillRef } = useQuill()
 
   const handleCarrera = (e) => {
     setCarrera(e.target.value)
@@ -70,30 +72,26 @@ const OfferDetails = ({ id }) => {
   }, [])
 
   const handleRegresar = () => {
-    navigate("/profilecompany")
+    navigate("/postulacionempresa")
   }
 
   const [dataa, setData] = useState([])
 
   useEffect(() => {
-    console.log("DATAAAAA USEEFECT", api.data)
     if (api.data) {
       const { offers } = api.data
       setData(offers)
     }
-    console.log("DATAAAAA", dataa)
     if (dataa) {
       for (let i = 0; i < dataa.length; i++) {
-        console.log(id)
         if (dataa[i].id_oferta === parseInt(id, 10)) {
-          console.log("changinggg", dataa[i])
           setPuesto(dataa[i].puesto)
           setSalario(dataa[i].salario)
           setRequisitos(dataa[i].requisitos)
-          setDetalles(dataa[i].detalles)
+          setDetalles(dataa[i].descripcion)
           setCarrera(dataa[i].id_carrera)
         } else {
-          console.log("not changinggg", id)
+          console.log("not changing", id)
         }
       }
     }
@@ -106,15 +104,27 @@ const OfferDetails = ({ id }) => {
   }, [])
 
   const updateOffer = () => {
+    const details = JSON.stringify(quill.getContents())   
     api.handleRequest("PUT", "/offers/", {
       id_oferta: parseInt(id, 10),
       puesto,
-      descripcion: detalles,
+      descripcion: details,
       requisitos,
       salario: parseFloat(salario),
-      id_carrera: carrera,
+      id_carrera: carrera ?? "1",
     })
+    navigate("/postulacionempresa")
   }
+
+  useEffect(() => {
+    if (quill && detalles) {
+      try {
+        quill.setContents(JSON.parse(detalles))
+      } catch (error) {
+        console.log("Error al cargar detalles", error)
+      }
+    }
+  }, [quill, detalles])  
 
   return (
     <div className={styles.container}>
@@ -164,7 +174,7 @@ const OfferDetails = ({ id }) => {
           </div>
           <div className={styles.inputContainer}>
             <span>Descripción</span>
-            <EditorComponent />
+            <div ref={quillRef} />
           </div>
         </div>
         <div className={styles.buttonContainer}>

@@ -27,12 +27,10 @@ const PostulationsEmpresa = () => {
   const [dataa, setData] = useState([])
 
   useEffect(() => {
-    console.log("DATAAAAA USEEFECT", api.data)
     if (api.data) {
       const { offers } = api.data
       setData(offers)
     }
-    console.log("DATAAAAA", dataa)
   }, [api.data])
 
   useEffect(() => {
