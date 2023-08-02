@@ -16,6 +16,7 @@
   "dependencies": {
     "@storeon/localstorage": "^1.5.0",
     "@storeon/router": "^2.0.1",
+    "@testing-library/jest-dom": "^5.17.0",
     "eslint": "^7.32.0 || ^8.2.0",
     "joi": "^17.9.2",
     "prop-types": "^15.8.1",
