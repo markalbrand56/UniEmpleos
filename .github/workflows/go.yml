@@ -16,6 +16,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Change to backend directory
+      run: cd backend
+
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
