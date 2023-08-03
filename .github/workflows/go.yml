@@ -13,11 +13,14 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    env:
+      # Define las variables de entorno específicas para este flujo de trabajo
+      PG_USER: ${{ vars.PG_USER }}
+      PG_PASSWORD: ${{ vars.PG_PASSWORD }}
+      PG_RDS_HOST: ${{ vars.PG_RDS_HOST }}
+      PG_RDS_PORT: ${{ vars.PG_RDS_PORT }}
     steps:
     - uses: actions/checkout@v3
-
-    - name: Change to backend directory
-      run: cd /home/runner/work/IS-Proyecto/IS-Proyecto/backend && ls -a
 
     - name: Set up Go
       uses: actions/setup-go@v4
