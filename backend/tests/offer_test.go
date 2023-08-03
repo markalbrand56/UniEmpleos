@@ -109,12 +109,12 @@ func TestNewOffer(t *testing.T) {
 	err := json.Unmarshal(w.Body.Bytes(), &loginResponse)
 	assert.NoError(t, err, "Error unmarshalling login response")
 
+	fmt.Println("Login response: ", loginResponse)
+
 	jsonData2 := `{"id_empresa":"reclutamiento@sarita.com", "puesto":"puesto dummy", "descripcion":"descripcion dummy", "requisitos":"requisitos dummy", "salario":1000.00, "id_carreras":["1", "2", "3"]}`
 	body2 := bytes.NewBufferString(jsonData2)
 	req2 := httptest.NewRequest("POST", "/api/offers/", body2)
 	req2.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
-
-	fmt.Println("Token" + loginResponse.Data.Token)
 
 	router.ServeHTTP(w, req2)
 
