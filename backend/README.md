@@ -161,6 +161,98 @@ Crea un mensaje
 }
 ```
 
+### [POST] api/messages/getLast
+Devuelve el último mensaje de un chat dado el usuario
+> **Note**
+> Auth required
+
+#### Params
+
+``` json
+{
+    "id_usuario": "string" 
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Message retrieved successfully",
+    "data": {
+        "message": {
+            "chat_id": 1,
+            "user_name": "Empresa INC",
+            "user_photo": "",
+            "last_message": "Muchas gracias por la información. Estaré a la espera de su correo",
+            "last_time": "2023-05-18T02:51:32.554275Z"
+        }
+    }
+}
+```
+### [POST] api/messages/get
+Devuelve los mensajes de un chat dado el emisor y el receptor
+
+> **Note**
+> Auth required
+
+#### Params
+
+``` json
+{
+    "id_emisor": "string",
+    "id_receptor": "string"
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Messages retrieved successfully",
+    "data": {
+        "messages": [
+            {
+                "id_mensaje": 1,
+                "id_emisor": "alb21004@uvg.edu.gt",
+                "id_receptor": "hr@empresa.tec",
+                "mensaje": "Hola, me gustaria aplicar a la oferta de Desarrollador Web Junior. Me pueden dar mas infromación",
+                "tiempo": "2023-05-18T02:38:15.841209Z",
+                "emisor_nombre": "Mark",
+                "emisor_foto": "foto",
+                "receptor_nombre": "Empresa INC",
+                "receptor_foto": "",
+                "archivo": ""
+            },
+            {
+                "id_mensaje": 2,
+                "id_emisor": "hr@empresa.tec",
+                "id_receptor": "alb21004@uvg.edu.gt",
+                "mensaje": "Hola, gracias por su interes. Le enviaré a su correo más detalles de la propuesta",
+                "tiempo": "2023-05-18T02:48:48.644355Z",
+                "emisor_nombre": "Mark",
+                "emisor_foto": "foto",
+                "receptor_nombre": "Empresa INC",
+                "receptor_foto": "",
+                "archivo": ""
+            },
+            {
+                "id_mensaje": 3,
+                "id_emisor": "alb21004@uvg.edu.gt",
+                "id_receptor": "hr@empresa.tec",
+                "mensaje": "Muchas gracias por la información. Estaré a la espera de su correo",
+                "tiempo": "2023-05-18T02:51:32.554275Z",
+                "emisor_nombre": "Mark",
+                "emisor_foto": "foto",
+                "receptor_nombre": "Empresa INC",
+                "receptor_foto": "",
+                "archivo": ""
+            }
+        ]
+    }
+}
+```
+
 ## Empresas
 ### [POST] api/companies
 Crea una compañia
@@ -236,6 +328,32 @@ Crea una oferta de trabajo
 	"Status":  200,
 	"Message": "Offer created successfully",
 	"Data":    null
+}
+```
+
+### [PUT] api/offers/
+Actualiza una oferta de trabajo
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "id_oferta"     : "int" 
+    "puesto"	    : "string"
+    "descripcion"   : "string"
+    "requisitos"    : "string" 
+    "salario"	    : "double"
+    "id_carreras"   : "[]string"
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Offer updated successfully",
+    "data": null
 }
 ```
 
@@ -455,7 +573,7 @@ Crea un administrador
 }
 ```
 
-## POstulaciones
+## Postulaciones
 ### [POST] api/Getpostulations
 
 ## Params

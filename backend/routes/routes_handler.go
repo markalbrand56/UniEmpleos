@@ -24,6 +24,8 @@ func Routes(router *gin.Engine) {
 	messages.Use(middlewares.JwtAuthentication())
 
 	messages.POST("/send", controllers.SendMessage)
+	messages.POST("/get", controllers.GetMessages)
+	messages.POST("/getLast", controllers.GetLastChat)
 
 	// Usuarios
 	users := router.Group("api/users")
@@ -62,6 +64,7 @@ func Routes(router *gin.Engine) {
 	offers.Use(middlewares.JwtAuthentication())
 
 	offers.POST("/", controllers.NewOffer)
+	offers.PUT("/", controllers.UpdateOffer)
 	offers.POST("/all", controllers.GetOffer)
 	offers.POST("/company", controllers.GetOfferByCompany)
 
