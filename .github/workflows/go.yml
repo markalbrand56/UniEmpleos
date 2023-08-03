@@ -21,6 +21,8 @@ jobs:
       PG_PASSWORD: ${{ vars.PG_PASSWORD }}
       PG_RDS_HOST: ${{ vars.PG_RDS_HOST }}
       PG_RDS_PORT: ${{ vars.PG_RDS_PORT }}
+      API_SECRET: ${{ vars.API_SECRET }}
+      TOKEN_HOUR_LIFESPAN: ${{ vars.TOKEN_HOUR_LIFESPAN }}
     steps:
     - uses: actions/checkout@v3
 
