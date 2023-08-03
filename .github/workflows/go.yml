@@ -28,4 +28,4 @@ jobs:
       run: cd backend && go build
 
     - name: Test
-      run: go test -v ./backend/tests
+      run: cd backend/tests && go test
