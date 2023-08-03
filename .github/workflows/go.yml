@@ -30,6 +30,9 @@ jobs:
     - name: Build
       run: cd backend && go build
 
+    - name: Print Secret Key
+      run: echo "Secret Key: ${{ vars.PG_USER }}"
+      
     - name: Test
       run: |
         cd backend/tests
