@@ -6,6 +6,7 @@ import (
 	"backend/responses"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 	"time"
 )
 
@@ -61,6 +62,15 @@ func NewStudent(c *gin.Context) {
 	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
 
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
+			c.JSON(409, responses.StandardResponse{
+				Status:  409,
+				Message: "User with this email already exists",
+				Data:    nil,
+			})
+			return
+		}
+
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
 			Message: "Error creating user. " + err.Error(),

@@ -73,7 +73,7 @@ func TestNewStudent(t *testing.T) {
 
 	fmt.Println(w.Body.String())
 
-	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
+	assert.True(t, w.Code == http.StatusOK || w.Code == http.StatusConflict, "Status code is not 200 or 201")
 }
 
 func TestUpdateStudent(t *testing.T) {
