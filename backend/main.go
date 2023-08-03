@@ -9,15 +9,6 @@ import (
 func main() {
 	router := gin.Default()
 
-	//config := cors.DefaultConfig()
-
-	//config.AllowAllOrigins = true
-	//config.AddAllowHeaders("Authorization")
-	//config.AddAllowHeaders("Access-Control-Allow-Origin")
-	//config.AddAllowMethods("OPTIONS") // Agregar OPTIONS como método permitido
-
-	//router.Use(cors.New(config))
-
 	router.Use(CORS())
 
 	routes.Routes(router)
