@@ -31,4 +31,7 @@ jobs:
       run: cd backend && go build
 
     - name: Test
-      run: cd backend/tests && go test
+      run: |
+        cd backend/tests
+        PG_USER=$PG_USER PG_PASSWORD=$PG_PASSWORD PG_RDS_HOST=$PG_RDS_HOST PG_RDS_PORT=$PG_RDS_PORT go test
+
