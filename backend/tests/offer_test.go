@@ -114,6 +114,8 @@ func TestNewOffer(t *testing.T) {
 	req2 := httptest.NewRequest("POST", "/api/offers/", body2)
 	req2.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
 
+	fmt.Println("Token" + loginResponse.Data.Token)
+
 	router.ServeHTTP(w, req2)
 
 	fmt.Println("************* Creating a new Offer *************")
