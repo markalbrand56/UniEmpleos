@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
 import style from "./Postulacion.module.css"
 import { Header } from "../../components/Header/Header"
@@ -7,14 +6,41 @@ import OfertaInfo from "../../components/ofertaInfo/OfertaInfo"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import { useQuill } from "react-quilljs"
 
 const Postulacion = ({ id }) => {
   const { user } = useStoreon("user")
   const api = useApi()
+  const { quill, quillRef } = useQuill({
+    readOnly: true, // Establecer el editor Quill en modo de solo lectura
+    modules: {
+      toolbar: false, // Ocultar la barra de herramientas
+    },
+  })
+
+  const [detalles, setDetalles] = useState("")
 
   useEffect(() => {
     api.handleRequest("POST", "/offers/all", { id_oferta: id })
   }, [])
+
+  useEffect(() => {
+    if (api.data) {
+      const { offer } = api.data
+      console.log("offer", offer)
+      setDetalles(offer.descripcion)
+    }
+  }, [api.data])
+
+  useEffect(() => {
+    if (quill && detalles) {
+      try {
+        quill.setContents(JSON.parse(detalles))
+      } catch (error) {
+        quill.setText(detalles)
+      }
+    }
+  }, [quill, detalles])
 
   const handlePostularme = () => {
     api.handleRequest("POST", "/postulations/", {
@@ -28,6 +54,7 @@ const Postulacion = ({ id }) => {
   const handleRegresar = () => {
     navigate("/profile")
   }
+
   return (
     <div className={style.container}>
       <Header userperson="student" />
@@ -55,10 +82,10 @@ const Postulacion = ({ id }) => {
               img="/images/salario.svg"
               label={api.data.offer.salario.toString()}
             />
-            <OfertaInfo
-              img="/images/descripcion.svg"
-              label={api.data.offer.descripcion}
-            />
+          </div>
+          <div className={style.label}>
+            Detalles
+            <div ref={quillRef} />
           </div>
           <div className={style.buttonContainer}>
             <Button

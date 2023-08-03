@@ -43,3 +43,15 @@
   width: 75%;
 }
 
+.label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.imgLabel {
+  width: 30px;
+  height: 30px;
+}
