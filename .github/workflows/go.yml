@@ -13,11 +13,18 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: production-whole-letisha/is-proyecto
+    env:
+      # Define las variables de entorno específicas para este flujo de trabajo
+      PG_USER: ${{ vars.PG_USER }}
+      PG_PASSWORD: ${{ vars.PG_PASSWORD }}
+      PG_RDS_HOST: ${{ vars.PG_RDS_HOST }}
+      PG_RDS_PORT: ${{ vars.PG_RDS_PORT }}
+      API_SECRET: ${{ vars.API_SECRET }}
+      TOKEN_HOUR_LIFESPAN: ${{ vars.TOKEN_HOUR_LIFESPAN }}
     steps:
     - uses: actions/checkout@v3
-
-    - name: Change to backend directory
-      run: ls -a && cd backend
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -25,7 +32,13 @@ jobs:
         go-version: '1.19'
 
     - name: Build
-      run: go build
+      run: cd backend && go build
 
+    - name: Print Secret Key
+      run: echo Secret Key = ${{ vars.PG_USER }}
+      
     - name: Test
-      run: go test -v ./backend/tests
+      run: |
+        cd backend/tests
+        PG_USER=$PG_USER PG_PASSWORD=$PG_PASSWORD PG_RDS_HOST=$PG_RDS_HOST PG_RDS_PORT=$PG_RDS_PORT go test
+
