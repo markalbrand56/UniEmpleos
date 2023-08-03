@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import style from "./SignUpEmpresa.module.css"
 import ComponentInput from "../../components/Input/Input"
 import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
