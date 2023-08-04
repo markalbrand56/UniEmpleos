@@ -3,9 +3,12 @@ import { render, fireEvent, waitFor } from "@testing-library/react"
 import { StoreContext } from "storeon/react"
 import React from "react"
 import { routerNavigate } from "@storeon/router"
+import fetch from "node-fetch"
 import SignUpEmpresa from "./SignUpEmpresa"
 import store, { navigate } from "../../store"
 import API_URL from "../../api"
+
+global.fetch = fetch
 
 it("should call API and navigate to login page when valid form data is submitted", async () => {
   const fetchSpy = vi.spyOn(window, "fetch").mockResolvedValue({
