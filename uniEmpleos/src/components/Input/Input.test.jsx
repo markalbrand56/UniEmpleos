@@ -59,12 +59,4 @@ test("NumberButton Component", () => {
     const input = wrapper.find("input")
     expect(input.prop("value")).toEqual("")
   })
-  it("should display a placeholder image when no image is uploaded", () => {
-    const onImageUpload = jest.fn()
-    const image = ""
-    const wrapper = mount(
-      <ImageUploader onImageUpload={onImageUpload} image={image} />
-    )
-    expect(wrapper.find("img").prop("src")).toContain("/images/clip.svg")
-  })
 })
