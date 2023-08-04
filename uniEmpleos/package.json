@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "test": "vitest",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
@@ -18,7 +19,6 @@
     "@testing-library/jest-dom": "^5.17.0",
     "eslint": "^7.32.0 || ^8.2.0",
     "joi": "^17.9.2",
-    "test": "vitest",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
