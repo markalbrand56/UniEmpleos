@@ -30,11 +30,5 @@ jobs:
         node --version
         yarn --version
 
-    - name: List installed Node.js modules
-      run: ls node_modules
-
-    - name: List
-      run: ls -a
-
     - name: Run tests 
       run: cd uniEmpleos && yarn test
