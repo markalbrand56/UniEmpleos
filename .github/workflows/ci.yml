@@ -36,5 +36,5 @@ jobs:
     - name: List installed Node.js modules
       run: ls node_modules
 
-    - name: Run tests with verbose output
-      run: cd uniEmpleos && yarn test --verbose
+    - name: Run tests 
+      run: cd uniEmpleos && yarn test
