@@ -1,6 +1,5 @@
-import { test, expect,it  } from 'vitest'
-import useApi from './useApi'
-
+import { test, expect, it } from "vitest"
+import useApi from "./useApi"
 
 test("useApi", () => {
   // Prueba que se llama a la función handleRequest con parámetros válidos y devuelve los datos esperados
