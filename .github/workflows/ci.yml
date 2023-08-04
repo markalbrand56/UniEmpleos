@@ -23,7 +23,18 @@ jobs:
         node-version: '16.x'
 
     - name: Install dependencies
-      run: yarn install --frozen-lockfile
+      run: yarn
 
-    - name: Run tests
-      run: cd uniEmpleos && yarn test
+    - name: Install vitest globally
+      run: yarn global add vitest
+
+    - name: Check Node.js and npm versions
+      run: |
+        node --version
+        yarn --version
+
+    - name: List installed Node.js modules
+      run: ls node_modules
+
+    - name: Run tests with verbose output
+      run: cd uniEmpleos && yarn test --verbose
