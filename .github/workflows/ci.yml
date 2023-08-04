@@ -26,7 +26,10 @@ jobs:
       run: yarn
 
     - name: Install vitest globally
-      run: yarn global add vitest
+      run: yarn global add vitest 
+
+    - name: Install jsdom globally
+      run: yarn global add jsdom
 
     - name: Check Node.js and npm versions
       run: |
