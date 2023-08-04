@@ -23,13 +23,7 @@ jobs:
         node-version: '16.x'
 
     - name: Install dependencies
-      run: yarn
-
-    - name: Install vitest globally
-      run: yarn global add vitest 
-
-    - name: Install jsdom globally
-      run: yarn global add jsdom
+      run: cd uniEmpleos && yarn
 
     - name: Check Node.js and npm versions
       run: |
