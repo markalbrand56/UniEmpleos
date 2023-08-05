@@ -34,28 +34,12 @@ const OfferDetails = ({ id }) => {
     theme: "snow",
   })
 
-  const handleCarrera = (e) => {
-    setCarrera(e.target.value)
-  }
-
-  const handleInputsValue = (e) => {
-    switch (e.target.name) {
-      case "salario":
-        setSalario(e.target.value.toString())
-        break
-      case "detalles":
-        setDetalles(e.target.value)
-        break
-      case "requisitos":
-        setRequisitos(e.target.value)
-        break
-      case "puesto":
-        setPuesto(e.target.value)
-        break
-      default:
-        break
-    }
-  }
+  useEffect(() => {
+    apiCareers.handleRequest("GET", "/careers")
+    api.handleRequest("POST", "/offers/company", {
+      id_empresa: user.id_user,
+    })
+  }, [])
 
   useEffect(() => {
     if (apiCareers.data) {
@@ -69,41 +53,21 @@ const OfferDetails = ({ id }) => {
   }, [apiCareers.data])
 
   useEffect(() => {
-    api.handleRequest("GET", "/users/")
-    apiCareers.handleRequest("GET", "/careers")
-  }, [])
-
-  const handleRegresar = () => {
-    navigate("/postulacionempresa")
-  }
-
-  const [dataa, setData] = useState([])
-
-  useEffect(() => {
     if (api.data) {
-      const { offers } = api.data
-      setData(offers)
-    }
-    if (dataa) {
+      const dataa = api.data.offers
       for (let i = 0; i < dataa.length; i++) {
         if (dataa[i].id_oferta === parseInt(id, 10)) {
           setPuesto(dataa[i].puesto)
           setSalario(dataa[i].salario)
           setRequisitos(dataa[i].requisitos)
           setDetalles(dataa[i].descripcion)
-          setCarrera(dataa[i].id_carrera)
+          
         } else {
           console.log("not changing", id)
         }
       }
     }
   }, [api.data])
-
-  useEffect(() => {
-    api.handleRequest("POST", "/offers/company", {
-      id_empresa: user.id_user,
-    })
-  }, [])
 
   const updateOffer = () => {
     const details = JSON.stringify(quill.getContents())   
@@ -126,7 +90,34 @@ const OfferDetails = ({ id }) => {
         console.log("Error al cargar detalles", error)
       }
     }
-  }, [quill, detalles])  
+  }, [quill, detalles])
+
+  const handleRegresar = () => {
+    navigate("/postulacionempresa")
+  }
+  
+  const handleCarrera = (e) => {
+    setCarrera(e.target.value)
+  }
+
+  const handleInputsValue = (e) => {
+    switch (e.target.name) {
+      case "salario":
+        setSalario(e.target.value.toString())
+        break
+      case "detalles":
+        setDetalles(e.target.value)
+        break
+      case "requisitos":
+        setRequisitos(e.target.value)
+        break
+      case "puesto":
+        setPuesto(e.target.value)
+        break
+      default:
+        break
+    }
+  }
 
   return (
     <div className={styles.container}>
