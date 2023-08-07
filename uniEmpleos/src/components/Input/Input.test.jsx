@@ -1,38 +1,70 @@
 import React from "react"
-import { render, screen, fireEvent } from "@testing-library/react"
-
-import { vi, it, expect, userEvent} from "vitest"
+import { test, it } from "vitest"
 import Input from "./Input"
 
-// Renderiza el input con props 
-it('debería renderizar el input con los props dados', () => {
-  render(<Input name="test" type="text" placeholder="Test" />)
-
-  expect(screen.getByLabelText('Test')).toBeInTheDocument()
-})
-
-// Llama la función onChange cuando cambia
-it('debería llamar a onChange cuando el input cambia', () => {
-  const onChange = vi.fn()
-  render(<Input name="test" onChange={onChange} />)
-
-  userEvent.type(screen.getByLabelText('test'), 'hola')
-
-  expect(onChange).toHaveBeenCalled() 
-})
-
-// Renders con el valor dado
-it('debería renderizar el input con el valor dado', () => {
-  render(<Input name="test" value="hola" />)
-  
-  expect(screen.getByLabelText('test')).toHaveValue('hola')
-})
-
-// Valida el tipo de prop name 
-it('debería lanzar error si no se pasa prop name', () => {
-  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
-  
-  render(<Input />)
-
-  expect(consoleError).toHaveBeenCalled()
+test("NumberButton Component", () => {
+  it("Renders correctly", () => {
+    render(<Input />)
+  })
+  it("should render input with correct props", () => {
+    const wrapper = mount(
+      <ComponentInput
+        name="test"
+        type="text"
+        placeholder="test"
+        onChange={() => {}}
+        min={0}
+        max={10}
+        value=""
+      />
+    )
+    const input = wrapper.find("input")
+    expect(input.prop("name")).toEqual("test")
+    expect(input.prop("type")).toEqual("text")
+    expect(input.prop("placeholder")).toEqual("test")
+    expect(input.prop("onChange")).toBeDefined()
+    expect(input.prop("min")).toEqual(0)
+    expect(input.prop("max")).toEqual(10)
+  })
+  it("should update input value when changed", () => {
+    const onChange = jest.fn()
+    const wrapper = mount(
+      <ComponentInput
+        name="test"
+        type="text"
+        placeholder="test"
+        onChange={onChange}
+        min={0}
+        max={10}
+        value=""
+      />
+    )
+    const input = wrapper.find("input")
+    input.simulate("change", { target: { value: "new value" } })
+    expect(onChange).toHaveBeenCalled()
+    expect(input.prop("value")).toEqual("new value")
+  })
+  it("should render input with empty value prop", () => {
+    const wrapper = mount(
+      <ComponentInput
+        name="test"
+        type="text"
+        placeholder="test"
+        onChange={() => {}}
+        min={0}
+        max={10}
+        value=""
+      />
+    )
+    const input = wrapper.find("input")
+    expect(input.prop("value")).toEqual("")
+  })
+  it("should display a placeholder image when no image is uploaded", () => {
+    const onImageUpload = jest.fn()
+    const image = ""
+    const wrapper = mount(
+      <ImageUploader onImageUpload={onImageUpload} image={image} />
+    )
+    expect(wrapper.find("img").prop("src")).toContain("/images/clip.svg")
+  })
 })

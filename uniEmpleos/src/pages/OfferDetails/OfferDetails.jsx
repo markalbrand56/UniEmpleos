@@ -30,7 +30,9 @@ const OfferDetails = ({ id }) => {
   const [detalles, setDetalles] = useState("")
   const [carrera, setCarrera] = useState("1")
   const [carreras, setCarreras] = useState([])
-  const { quill, quillRef } = useQuill()
+  const { quill, quillRef } = useQuill({
+    theme: "snow",
+  })
 
   const handleCarrera = (e) => {
     setCarrera(e.target.value)
