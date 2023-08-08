@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react"
 import Dropzone from "react-dropzone"
 import styles from "./ImageUploader.module.css"
 
-const ImageUploader = ({ onImageUpload, image }) => {
+const ImageUploader = ({ onImageUpload, image, height, width, placeholderImage }) => {
   // Paso 3: Añadir prop onImageUpload
   const [uploadedImage, setUploadedImage] = useState("")
+
+  const placeholder = placeholderImage || "/images/clip.svg"
 
   useEffect(() => {
     setUploadedImage(image)
@@ -22,6 +24,14 @@ const ImageUploader = ({ onImageUpload, image }) => {
     reader.readAsDataURL(file)
   }
 
+  const imageStyle = {};
+  if (height) {
+    imageStyle.height = height;
+  }
+  if (width) {
+    imageStyle.width = width;
+  }
+
   return (
     <div className={styles.container}>
       <Dropzone onDrop={handleDrop}>
@@ -36,9 +46,10 @@ const ImageUploader = ({ onImageUpload, image }) => {
               />
             ) : (
               <img
-                src="/images/clip.svg"
+                src={placeholder}
                 alt="Placeholder"
                 className={styles.placeholderImage}
+                style={imageStyle}
               />
             )}
           </div>

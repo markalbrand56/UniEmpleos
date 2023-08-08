@@ -5,6 +5,7 @@ import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
+import ImageUploader from "../../components/ImageUploader/ImageUploader"
 
 const SignUpEstudiante = () => {
   const [nombre, setNombre] = useState("")
@@ -21,6 +22,7 @@ const SignUpEstudiante = () => {
   // const [fotoPerfil, setFotoPerfil] = React.useState("")
 
   const [carreras, setCarreras] = useState([])
+  const [uploadedImage, setUploadedImage] = useState("")
 
   const semestres = [
     { value: "1", label: "1" },
@@ -168,6 +170,10 @@ const SignUpEstudiante = () => {
     }
   }
 
+  const handleUploadFile = (uploadedImage) => {
+    setUploadedImage(uploadedImage)
+  }
+
   return (
     <div className={style.signUpCointainer}>
       <h1>UniEmpleos</h1>
@@ -264,6 +270,18 @@ const SignUpEstudiante = () => {
               value={semestre}
               onChange={handleSemestre}
             />
+          </div>
+          <div className={style.inputSubContainerDataGroup1}>
+            <span>Foto de perfil</span>
+            <div className={style.imageUploaderContainer}>
+              <ImageUploader
+                onImageUpload={handleUploadFile}
+                image={uploadedImage}
+                width="30px"
+                height="30px"
+                placeholderImage="/images/pfp.svg"
+              />
+            </div>
           </div>
         </div>
         <div className={style.buttonContainer}>

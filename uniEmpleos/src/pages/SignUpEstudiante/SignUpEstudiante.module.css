@@ -109,6 +109,11 @@
   width: 230px;
 }
 
+.imageUploaderContainer {
+  display: flex;
+  justify-content: center;
+}
+
 .buttonContainer {
   display: flex;
   justify-content: center;
