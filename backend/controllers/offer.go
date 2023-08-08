@@ -257,11 +257,12 @@ func GetOfferByCompany(c *gin.Context) {
 	    JOIN
 	        oferta_carrera oc ON o.id_oferta = oc.id_oferta
 	    WHERE
-	        o.id_empresa = ?;
+	        o.id_empresa = ?
+	    ORDER BY
+	        o.id_oferta ASC;
 	`
 
-	err := configs.DB.Raw(query, input.Id_Empresa).Scan(&offersResponse).Error
-
+	rows, err := configs.DB.Raw(query, input.Id_Empresa).Rows()
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
@@ -269,6 +270,48 @@ func GetOfferByCompany(c *gin.Context) {
 			Data:    nil,
 		})
 		return
+	}
+	defer rows.Close()
+
+	// Create a map to store offer details and associated career IDs
+	offerMap := make(map[int]GetOfferByCompanyResponse)
+
+	for rows.Next() {
+		var offer GetOfferByCompanyResponse
+		var idOferta int
+		var idCarrera int
+
+		if err := rows.Scan(
+			&idOferta,
+			&offer.IDEmpresa,
+			&offer.Puesto,
+			&offer.Descripcion,
+			&offer.Requisitos,
+			&idCarrera,
+		); err != nil {
+			c.JSON(400, responses.StandardResponse{
+				Status:  400,
+				Message: "Error scanning rows: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		// Check if the offer already exists in the map
+		existingOffer, exists := offerMap[idOferta]
+		if exists {
+			existingOffer.IdCarreras = append(existingOffer.IdCarreras, idCarrera)
+			offerMap[idOferta] = existingOffer
+		} else {
+			offer.Id_Oferta = idOferta
+			offer.IdCarreras = []int{idCarrera}
+			offerMap[idOferta] = offer
+		}
+	}
+
+	// Convert the map values to a slice
+	for _, offer := range offerMap {
+		offersResponse = append(offersResponse, offer)
 	}
 
 	data = map[string]interface{}{
