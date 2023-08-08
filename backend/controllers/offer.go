@@ -222,15 +222,17 @@ type GetOfferByCompanyInput struct {
 }
 
 type GetOfferByCompanyResponse struct {
-	Id_Oferta   int    `json:"id_oferta"`
-	IDEmpresa   string `json:"id_empresa"`
-	Puesto      string `json:"puesto"`
-	Descripcion string `json:"descripcion"`
-	Requisitos  string `json:"requisitos"`
-	IdCarreras  []int  `json:"id_carreras"`
+	Id_Oferta   int     `json:"id_oferta"`
+	IDEmpresa   string  `json:"id_empresa"`
+	Puesto      string  `json:"puesto"`
+	Descripcion string  `json:"descripcion"`
+	Requisitos  string  `json:"requisitos"`
+	Salario     float64 `json:"salario"`
+	IdCarreras  []int   `json:"id_carreras"`
 }
 
 func GetOfferByCompany(c *gin.Context) {
+	var offers []models.OfertaGet
 	var offersResponse []GetOfferByCompanyResponse
 	var data map[string]interface{}
 	var input GetOfferByCompanyInput
@@ -244,25 +246,8 @@ func GetOfferByCompany(c *gin.Context) {
 		return
 	}
 
-	query := `
-	    SELECT
-	        o.id_oferta,
-	        o.id_empresa,
-	        o.puesto,
-	        o.descripcion,
-	        o.requisitos,
-	        oc.id_carrera
-	    FROM
-	        oferta o
-	    JOIN
-	        oferta_carrera oc ON o.id_oferta = oc.id_oferta
-	    WHERE
-	        o.id_empresa = ?
-	    ORDER BY
-	        o.id_oferta ASC;
-	`
+	err := configs.DB.Where("id_empresa = ?", input.Id_Empresa).Find(&offers).Error
 
-	rows, err := configs.DB.Raw(query, input.Id_Empresa).Rows()
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
@@ -271,47 +256,33 @@ func GetOfferByCompany(c *gin.Context) {
 		})
 		return
 	}
-	defer rows.Close()
 
-	// Create a map to store offer details and associated career IDs
-	offerMap := make(map[int]GetOfferByCompanyResponse)
+	// para cada carrera, encontrar en la tabla oferta-carrera las carreras a las que aplica
+	for _, offer := range offers {
+		var offerResponse GetOfferByCompanyResponse
+		var idCarreras []int
+		offerResponse = GetOfferByCompanyResponse{
+			Id_Oferta:   offer.Id_Oferta,
+			IDEmpresa:   offer.IDEmpresa,
+			Puesto:      offer.Puesto,
+			Descripcion: offer.Descripcion,
+			Requisitos:  offer.Requisitos,
+			Salario:     offer.Salario,
+		}
 
-	for rows.Next() {
-		var offer GetOfferByCompanyResponse
-		var idOferta int
-		var idCarrera int
+		err = configs.DB.Raw("SELECT id_carrera FROM oferta_carrera WHERE id_oferta = ?", offer.Id_Oferta).Pluck("id_carrera", &idCarreras).Error
 
-		if err := rows.Scan(
-			&idOferta,
-			&offer.IDEmpresa,
-			&offer.Puesto,
-			&offer.Descripcion,
-			&offer.Requisitos,
-			&idCarrera,
-		); err != nil {
+		if err != nil {
 			c.JSON(400, responses.StandardResponse{
 				Status:  400,
-				Message: "Error scanning rows: " + err.Error(),
+				Message: "Error getting offer_carrera: " + err.Error(),
 				Data:    nil,
 			})
 			return
 		}
 
-		// Check if the offer already exists in the map
-		existingOffer, exists := offerMap[idOferta]
-		if exists {
-			existingOffer.IdCarreras = append(existingOffer.IdCarreras, idCarrera)
-			offerMap[idOferta] = existingOffer
-		} else {
-			offer.Id_Oferta = idOferta
-			offer.IdCarreras = []int{idCarrera}
-			offerMap[idOferta] = offer
-		}
-	}
-
-	// Convert the map values to a slice
-	for _, offer := range offerMap {
-		offersResponse = append(offersResponse, offer)
+		offerResponse.IdCarreras = idCarreras
+		offersResponse = append(offersResponse, offerResponse)
 	}
 
 	data = map[string]interface{}{
