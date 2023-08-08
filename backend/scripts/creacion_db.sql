@@ -113,4 +113,4 @@ create table mensaje
 );
 
 
-
+create INDEX on oferta_carrera (id_oferta);

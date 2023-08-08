@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -221,8 +222,17 @@ type GetOfferByCompanyInput struct {
 	Id_Empresa string `json:"id_empresa"`
 }
 
+type GetOfferByCompanyResponse struct {
+	Id_Oferta   int    `json:"id_oferta"`
+	IDEmpresa   string `json:"id_empresa"`
+	Puesto      string `json:"puesto"`
+	Descripcion string `json:"descripcion"`
+	Requisitos  string `json:"requisitos"`
+	IdCarreras  []int  `json:"id_carreras"`
+}
+
 func GetOfferByCompany(c *gin.Context) {
-	var offers []models.OfertaGet
+	var offersResponse []GetOfferByCompanyResponse
 	var data map[string]interface{}
 	var input GetOfferByCompanyInput
 
@@ -235,8 +245,24 @@ func GetOfferByCompany(c *gin.Context) {
 		return
 	}
 
-	err := configs.DB.Where("id_empresa = ?", input.Id_Empresa).Find(&offers).Error
+	query := `
+	SELECT
+		o.id_oferta,
+		o.id_empresa,
+		o.puesto,
+		o.descripcion,
+		o.requisitos,
+		oc.id_carrera
+	FROM
+		oferta o
+	LEFT JOIN
+		oferta_carrera oc ON o.id_oferta = oc.id_oferta
+	WHERE
+		o.id_empresa = ?;
 
+	`
+
+	rows, err := configs.DB.Raw(query, input.Id_Empresa).Rows()
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
@@ -245,9 +271,60 @@ func GetOfferByCompany(c *gin.Context) {
 		})
 		return
 	}
+	defer rows.Close()
+
+	// Create a map to store offer details and associated career IDs
+	offerMap := make(map[int]GetOfferByCompanyResponse)
+
+	// ...
+
+	for rows.Next() {
+		var offer GetOfferByCompanyResponse
+		var idOferta int
+		var idCarrera sql.NullInt64
+
+		if err := rows.Scan(
+			&idOferta,
+			&offer.IDEmpresa,
+			&offer.Puesto,
+			&offer.Descripcion,
+			&offer.Requisitos,
+			&idCarrera,
+		); err != nil {
+			c.JSON(400, responses.StandardResponse{
+				Status:  400,
+				Message: "Error scanning rows: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		// Check if the offer already exists in the map
+		existingOffer, exists := offerMap[idOferta]
+		if exists {
+			if idCarrera.Valid {
+				existingOffer.IdCarreras = append(existingOffer.IdCarreras, int(idCarrera.Int64))
+			}
+			offerMap[idOferta] = existingOffer
+		} else {
+			offer.Id_Oferta = idOferta
+			offer.IdCarreras = nil
+			if idCarrera.Valid {
+				offer.IdCarreras = []int{int(idCarrera.Int64)}
+			}
+			offerMap[idOferta] = offer
+		}
+	}
+
+	// ...
+
+	// Convert the map values to a slice
+	for _, offer := range offerMap {
+		offersResponse = append(offersResponse, offer)
+	}
 
 	data = map[string]interface{}{
-		"offers": offers,
+		"offers": offersResponse,
 	}
 
 	c.JSON(200, responses.StandardResponse{
