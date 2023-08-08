@@ -222,17 +222,15 @@ type GetOfferByCompanyInput struct {
 }
 
 type GetOfferByCompanyResponse struct {
-	Id_Oferta   int     `json:"id_oferta"`
-	IDEmpresa   string  `json:"id_empresa"`
-	Puesto      string  `json:"puesto"`
-	Descripcion string  `json:"descripcion"`
-	Requisitos  string  `json:"requisitos"`
-	Salario     float64 `json:"salario"`
-	IdCarreras  []int   `json:"id_carreras"`
+	Id_Oferta   int    `json:"id_oferta"`
+	IDEmpresa   string `json:"id_empresa"`
+	Puesto      string `json:"puesto"`
+	Descripcion string `json:"descripcion"`
+	Requisitos  string `json:"requisitos"`
+	IdCarreras  []int  `json:"id_carreras"`
 }
 
 func GetOfferByCompany(c *gin.Context) {
-	var offers []models.OfertaGet
 	var offersResponse []GetOfferByCompanyResponse
 	var data map[string]interface{}
 	var input GetOfferByCompanyInput
@@ -246,7 +244,23 @@ func GetOfferByCompany(c *gin.Context) {
 		return
 	}
 
-	err := configs.DB.Where("id_empresa = ?", input.Id_Empresa).Find(&offers).Error
+	query := `
+	    SELECT
+	        o.id_oferta,
+	        o.id_empresa,
+	        o.puesto,
+	        o.descripcion,
+	        o.requisitos,
+	        oc.id_carrera
+	    FROM
+	        oferta o
+	    JOIN
+	        oferta_carrera oc ON o.id_oferta = oc.id_oferta
+	    WHERE
+	        o.id_empresa = ?;
+	`
+
+	err := configs.DB.Raw(query, input.Id_Empresa).Scan(&offersResponse).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
@@ -255,34 +269,6 @@ func GetOfferByCompany(c *gin.Context) {
 			Data:    nil,
 		})
 		return
-	}
-
-	// para cada carrera, encontrar en la tabla oferta-carrera las carreras a las que aplica
-	for _, offer := range offers {
-		var offerResponse GetOfferByCompanyResponse
-		var idCarreras []int
-		offerResponse = GetOfferByCompanyResponse{
-			Id_Oferta:   offer.Id_Oferta,
-			IDEmpresa:   offer.IDEmpresa,
-			Puesto:      offer.Puesto,
-			Descripcion: offer.Descripcion,
-			Requisitos:  offer.Requisitos,
-			Salario:     offer.Salario,
-		}
-
-		err = configs.DB.Raw("SELECT id_carrera FROM oferta_carrera WHERE id_oferta = ?", offer.Id_Oferta).Pluck("id_carrera", &idCarreras).Error
-
-		if err != nil {
-			c.JSON(400, responses.StandardResponse{
-				Status:  400,
-				Message: "Error getting offer_carrera: " + err.Error(),
-				Data:    nil,
-			})
-			return
-		}
-
-		offerResponse.IdCarreras = idCarreras
-		offersResponse = append(offersResponse, offerResponse)
 	}
 
 	data = map[string]interface{}{
