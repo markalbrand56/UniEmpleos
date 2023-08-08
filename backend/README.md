@@ -422,20 +422,24 @@ Devuelve las ofertas de trabajo publicadas por una compañia
     "data": {
         "offers": [
             {
-                "id_oferta": 1,
-                "id_empresa": "hr@empresa.tec",
-                "puesto": "Desarrollador Web Junior",
-                "descripcion": "Desarrollador web junior encargado de Diseñar, desarrollar, dar mantenimiento y soporte a las aplicaciones web",
-                "requisitos": "Conocimientos en HTML, CSS, Javascript, PHP, MySQL, React, NodeJS",
-                "salario": 5000
+                "id_oferta": 52,
+                "id_empresa": "reclutamiento@sarita.com",
+                "puesto": "puesto dummy",
+                "descripcion": "descripcion dummy",
+                "requisitos": "requisitos dummy",
+                "id_carreras": [
+                    1,
+                    2,
+                    3
+                ]
             },
             {
-                "id_oferta": 2,
-                "id_empresa": "hr@empresa.tec",
-                "puesto": "Desarrollador Full Stack",
-                "descripcion": "Desarrollador web full stack encargado de Diseñar, desarrollar, dar mantenimiento y soporte a las aplicaciones web",
-                "requisitos": "Conocimientos en HTML, CSS, Javascript, PHP, MySQL, React, NodeJS, Java, C#",
-                "salario": 10000
+                "id_oferta": 60,
+                "id_empresa": "reclutamiento@sarita.com",
+                "puesto": "puesto dummy",
+                "descripcion": "{\"ops\":[{\"insert\":\"Puesto Dummy\"},{\"attributes\":{\"align\":\"center\"},\"insert\":\"\\n\"}]}",
+                "requisitos": "requisitos dummy",
+                "id_carreras": null
             }
         ]
     }
