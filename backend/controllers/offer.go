@@ -223,12 +223,13 @@ type GetOfferByCompanyInput struct {
 }
 
 type GetOfferByCompanyResponse struct {
-	Id_Oferta   int    `json:"id_oferta"`
-	IDEmpresa   string `json:"id_empresa"`
-	Puesto      string `json:"puesto"`
-	Descripcion string `json:"descripcion"`
-	Requisitos  string `json:"requisitos"`
-	IdCarreras  []int  `json:"id_carreras"`
+	Id_Oferta   int     `json:"id_oferta"`
+	IDEmpresa   string  `json:"id_empresa"`
+	Puesto      string  `json:"puesto"`
+	Descripcion string  `json:"descripcion"`
+	Requisitos  string  `json:"requisitos"`
+	Salario     float64 `json:"salario"`
+	IdCarreras  []int   `json:"id_carreras"`
 }
 
 func GetOfferByCompany(c *gin.Context) {
@@ -252,6 +253,7 @@ func GetOfferByCompany(c *gin.Context) {
 		o.puesto,
 		o.descripcion,
 		o.requisitos,
+		o.salario,
 		oc.id_carrera
 	FROM
 		oferta o
@@ -289,6 +291,7 @@ func GetOfferByCompany(c *gin.Context) {
 			&offer.Puesto,
 			&offer.Descripcion,
 			&offer.Requisitos,
+			&offer.Salario,
 			&idCarrera,
 		); err != nil {
 			c.JSON(400, responses.StandardResponse{
