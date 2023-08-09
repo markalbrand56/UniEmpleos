@@ -5,6 +5,8 @@ import (
 	"backend/models"
 	"backend/responses"
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
+	"net/http"
 )
 
 type EmpresaInput struct {
@@ -45,7 +47,16 @@ func NewCompany(c *gin.Context) {
 	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
+		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
+			c.JSON(http.StatusConflict, responses.StandardResponse{
+				Status:  409,
+				Message: "User with this email already exists",
+				Data:    nil,
+			})
+			return
+		}
+
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
 			Message: "Error creating user. " + err.Error(),
 			Data:    nil,
