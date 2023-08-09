@@ -50,6 +50,7 @@ const SignUpEmpresa = () => {
       correo,
       telefono,
       contra: password,
+      foto: uploadedImage,
     }
     const response = await fetch(`${API_URL}/api/companies`, {
       method: "POST",

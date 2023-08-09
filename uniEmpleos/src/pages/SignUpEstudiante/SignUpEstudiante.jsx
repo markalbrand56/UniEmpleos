@@ -73,7 +73,7 @@ const SignUpEstudiante = () => {
         setEdad(e.target.value)
         break
       case "dpi":
-        if (e.target.value.length < 13) {
+        if (e.target.value.length < 14) {
           setDpi(e.target.value)
         }
         break
