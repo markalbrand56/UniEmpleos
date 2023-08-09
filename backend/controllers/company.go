@@ -22,7 +22,7 @@ func NewCompany(c *gin.Context) {
 	var input EmpresaInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
 			Message: "Error binding JSON: " + err.Error(),
 			Data:    nil,
@@ -67,7 +67,7 @@ func NewCompany(c *gin.Context) {
 	err = configs.DB.Create(&e).Error // Se agrega la empresa a la base de datos
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
 			Message: "Error creating company. " + err.Error(),
 			Data:    nil,
@@ -75,7 +75,7 @@ func NewCompany(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, responses.StandardResponse{
+	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  200,
 		Message: "Company created successfully",
 		Data:    nil,
@@ -106,7 +106,7 @@ func UpdateCompanies(c *gin.Context) {
 	err := configs.DB.Model(&e).Where("id_empresa = ?", input.Correo).Updates(&e).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
 			Message: "Error updating",
 			Data:    nil,
@@ -114,7 +114,7 @@ func UpdateCompanies(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, responses.StandardResponse{
+	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  200,
 		Message: "Company updated successfully",
 		Data:    nil,
