@@ -10,6 +10,7 @@ import (
 type EmpresaInput struct {
 	Nombre   string `json:"nombre"`
 	Detalles string `json:"detalles"`
+	Foto     string `json:"foto"`
 	Correo   string `json:"correo"`
 	Telefono string `json:"telefono"`
 	Contra   string `json:"contra"`
@@ -30,6 +31,7 @@ func NewCompany(c *gin.Context) {
 	e := models.Empresa{
 		IdEmpresa: input.Correo,
 		Nombre:    input.Nombre,
+		Foto:      input.Foto,
 		Detalles:  input.Detalles,
 		Correo:    input.Correo,
 		Telefono:  input.Telefono,

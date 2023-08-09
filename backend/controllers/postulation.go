@@ -6,6 +6,7 @@ import (
 	"backend/responses"
 	"github.com/gin-gonic/gin"
 	"strings"
+	"time"
 )
 
 type PostulationInput struct {
@@ -43,6 +44,17 @@ func NewPostulation(c *gin.Context) {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
 			Message: "Error creating. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Nuevo query
+	err = configs.DB.Exec("INSERT INTO mensaje (id_postulacion, id_emisor, id_receptor, mensaje, tiempo) VALUES (?, ?, (SELECT id_empresa FROM oferta WHERE id_oferta = ?), 'Hola, me acabo de postular a esta oferta.', ?)", inserted.IdPostulacion, inserted.IdEstudiante, inserted.IdOferta, time.Now()).Error
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error creating initial message. " + err.Error(),
 			Data:    nil,
 		})
 		return
