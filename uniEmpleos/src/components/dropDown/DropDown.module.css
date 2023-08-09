@@ -19,6 +19,11 @@
   transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
+.selectedOption {
+  background-color: #a08ae5; /* o cualquier otro color que prefieras */
+  color: white; /* color del texto, si es necesario */
+}
+
 .dropDownContainer select:focus {
   border-color: #a08ae5;
   box-shadow: 0 0 0 3px rgba(160, 138, 229, 0.25);
