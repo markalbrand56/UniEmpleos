@@ -3,9 +3,9 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    margin-top: 20px;
 }
 
 .container{
-    background-color: #fff;
     width: 100%;
 }

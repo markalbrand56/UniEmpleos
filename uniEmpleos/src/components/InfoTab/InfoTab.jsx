@@ -11,7 +11,7 @@ const InfoTab = ({ title, area, salary, company, labelbutton, onClick }) => {
       </div>
       <div className={styles.containerinfosecond}>
         <p>{company}</p>
-        <p>{area}</p>
+        {area && <p>{area}</p>}
       </div>
       <div className={styles.containerinfothird}>
         <p>{salary}</p>

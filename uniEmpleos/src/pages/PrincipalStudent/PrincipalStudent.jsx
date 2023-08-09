@@ -54,7 +54,6 @@ const PrincipalStudent = () => {
           {dataa.data.postulations.map((postulation) => (
             <InfoTab
               title={postulation.puesto}
-              area={postulation.nombre_carreras}
               salary={`Q.${postulation.salario}.00`}
               company={postulation.nombre_empresa}
               labelbutton="Postularme"

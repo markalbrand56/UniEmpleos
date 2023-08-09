@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
 import Joi from "joi"
+import { useQuill } from "react-quilljs"
 import styles from "./OfferDetails.module.css"
 import { Header } from "../../components/Header/Header"
 import Button from "../../components/Button/Button"
@@ -9,7 +10,6 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import { useQuill } from "react-quilljs"
 import "react-quill/dist/quill.snow.css"
 import useConfig from "../../Hooks/Useconfig"
 
@@ -28,7 +28,7 @@ const OfferDetails = ({ id }) => {
   const [salario, setSalario] = useState("")
   const [puesto, setPuesto] = useState("")
   const [detalles, setDetalles] = useState("")
-  const [carrera, setCarrera] = useState("1")
+  const [carrera, setCarrera] = useState([])
   const [carreras, setCarreras] = useState([])
   const { quill, quillRef } = useQuill({
     theme: "snow",
@@ -57,11 +57,16 @@ const OfferDetails = ({ id }) => {
       const dataa = api.data.offers
       for (let i = 0; i < dataa.length; i++) {
         if (dataa[i].id_oferta === parseInt(id, 10)) {
+          console.log("changing", dataa[i])
           setPuesto(dataa[i].puesto)
           setSalario(dataa[i].salario)
           setRequisitos(dataa[i].requisitos)
           setDetalles(dataa[i].descripcion)
-          
+          if (dataa[i].id_carreras !== null) {
+            setCarrera(dataa[i].id_carreras.map((num) => num.toString()))
+          } else {
+            setCarrera(["1"])
+          }
         } else {
           console.log("not changing", id)
         }
@@ -70,14 +75,15 @@ const OfferDetails = ({ id }) => {
   }, [api.data])
 
   const updateOffer = () => {
-    const details = JSON.stringify(quill.getContents())   
+    const details = JSON.stringify(quill.getContents())
+    console.log("carreer", carrera)
     api.handleRequest("PUT", "/offers/", {
       id_oferta: parseInt(id, 10),
       puesto,
       descripcion: details,
       requisitos,
       salario: parseFloat(salario),
-      id_carrera: carrera ?? "1",
+      id_carreras: carrera,
     })
     navigate("/postulacionempresa")
   }
@@ -95,9 +101,12 @@ const OfferDetails = ({ id }) => {
   const handleRegresar = () => {
     navigate("/postulacionempresa")
   }
-  
+
   const handleCarrera = (e) => {
-    setCarrera(e.target.value)
+    const selectedOptions = Array.from(e.target.selectedOptions).map(
+      (option) => option.value
+    )
+    setCarrera(selectedOptions)
   }
 
   const handleInputsValue = (e) => {

@@ -1,14 +1,21 @@
-/* eslint-disable arrow-body-style */
 import React from "react"
-import PropTypes, { string } from "prop-types"
+import PropTypes from "prop-types"
 import styles from "./DropDown.module.css"
 
 const DropDown = ({ opciones, value, onChange }) => {
   return (
     <div className={styles.dropDownContainer}>
-      <select id="dropdown" onChange={onChange} value={value}>
+      <select id="dropdown" onChange={onChange} value={value} multiple>
         {opciones.map((skin) => (
-          <option key={skin.value} value={skin.value}>
+          <option
+            key={skin.value}
+            value={skin.value}
+            className={
+              value && Array.isArray(value) && value.includes(skin.value)
+                ? styles.selectedOption
+                : ""
+            }
+          >
             {skin.label}
           </option>
         ))}
@@ -20,11 +27,11 @@ const DropDown = ({ opciones, value, onChange }) => {
 DropDown.propTypes = {
   opciones: PropTypes.arrayOf(
     PropTypes.shape({
-      value: string.isRequired,
-      label: string.isRequired,
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
     })
   ).isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func.isRequired,
 }
 
