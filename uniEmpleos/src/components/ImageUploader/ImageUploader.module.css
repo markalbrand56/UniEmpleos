@@ -8,6 +8,7 @@
   align-items: center;
   width: calc(100% - 2px);
   height: calc(100% - 2px);
+  cursor: pointer;
 }
 
 .imageContainer {
@@ -15,6 +16,9 @@
   height: 90%;
   overflow: hidden;
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .imagePreview {
