@@ -106,33 +106,7 @@ const SignUpEstudiante = () => {
   const handleSemestre = (e) => {
     setSemestre(e.target.value)
   }
-
-  /* useEffect(() => {
-    console.log(
-      nombre,
-      apellido,
-      edad,
-      dpi,
-      correo,
-      password,
-      carrera,
-      universidad,
-      telefono,
-      semestre
-    )
-  }, [
-    nombre,
-    apellido,
-    edad,
-    dpi,
-    correo,
-    password,
-    carrera,
-    universidad,
-    telefono,
-    semestre,
-  ]) */
-
+  
   const handleButton = () => {
     navigate("/login")
   }
@@ -148,10 +122,11 @@ const SignUpEstudiante = () => {
       carrera: parseInt(carrera, 10),
       semestre: parseInt(semestre, 10),
       cv: " ",
-      foto: " ",
+      foto: uploadedImage,
       contra: password,
       universidad,
     }
+    console.log(body)
     const response = await fetch(`${API_URL}/api/students`, {
       method: "POST",
       body: JSON.stringify(body),
