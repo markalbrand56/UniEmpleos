@@ -29,9 +29,21 @@ body {
   place-items: center;
 }
 
-h1 {
+h1,h2,h3 {
   font-size: 3.2em;
   line-height: 1.1;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
+
+p, button{
+  font-size: 1.2em;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+span {
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif !important;
 }
 
 button {

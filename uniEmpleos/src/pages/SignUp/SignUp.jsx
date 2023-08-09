@@ -14,7 +14,7 @@ const LogIn = () => {
   return (
     <div className={styles.signUpCointainer}>
       <div className={styles.logo}>
-        <Logo src="/images/Ue_1.svg" size={200} />
+        <Logo src="/images/Ue_2.svg" size={200} />
       </div>
       <div className={styles.opciones}>
         <ButtonImage

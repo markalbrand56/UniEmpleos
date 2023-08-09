@@ -15,6 +15,26 @@
     background-color: transparent;
 }
 
+.topcontent img{
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.button{
+    margin-left: auto;
+    width: 30%;
+    margin-right: 20px;
+}
+
+.topcontent{
+    display: flex;
+    gap: 20px;
+    background-color: #fff;
+    align-items: center;
+    width: 100%;
+}
+
 .image img{
     width: 100%;
     max-height: 800px;
@@ -60,6 +80,12 @@
     justify-content: space-around;
     height: 60px;
     background-color: transparent;
+}
+
+span.text{
+    font-size: 40px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
 }
 
 
