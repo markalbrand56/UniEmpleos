@@ -228,3 +228,72 @@ func CurrentUser(c *gin.Context) {
 	},
 	)
 }
+
+type UserDetailsInput struct {
+	Correo string `json:"correo"`
+}
+
+func GetUserDetails(c *gin.Context) {
+	var input UserDetailsInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, responses.StandardResponse{Status: 400, Message: "Invalid input", Data: nil})
+		return
+	}
+
+	var estudiante models.Estudiante
+	var empresa models.Empresa
+	var administrador models.Administrador
+
+	err := configs.DB.Where("correo = ?", input.Correo).First(&estudiante).Error
+	if err == nil {
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  200,
+			Message: "User found",
+			Data: map[string]interface{}{
+				"estudiante": estudiante,
+			},
+		})
+		return
+	}
+
+	err = configs.DB.Where("correo = ?", input.Correo).First(&empresa).Error
+
+	if err == nil {
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  200,
+			Message: "User found",
+			Data: map[string]interface{}{
+				"empresa": empresa,
+			},
+		})
+		return
+	}
+
+	err = configs.DB.Where("correo = ?", input.Correo).First(&administrador).Error
+
+	if err == nil {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  401,
+			Message: "Access denied",
+			Data:    nil,
+		})
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
+			Message: "User not found. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  400,
+		Message: "User not found",
+		Data:    nil,
+	},
+	)
+}

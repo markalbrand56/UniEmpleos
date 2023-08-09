@@ -32,6 +32,7 @@ func Routes(router *gin.Engine) {
 	users.Use(middlewares.JwtAuthentication())
 
 	users.GET("/", controllers.CurrentUser)
+	users.POST("/details", controllers.GetUserDetails)
 
 	// Estudiantes
 	students := router.Group("api/students")

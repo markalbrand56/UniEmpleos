@@ -1,7 +1,6 @@
 # Documentación API
-
+---
 ## Usuario
-
 ### [POST] api/login
 Login de usuario.
 
@@ -30,6 +29,7 @@ Obtener el usuario actual.
 > Auth required
 
 #### Response
+Estudiante
 ``` json
 {
     "status": 200,
@@ -54,6 +54,8 @@ Obtener el usuario actual.
 }
 
 ```
+
+Empresa
 ```json
 {
   "status": 200,
@@ -70,6 +72,36 @@ Obtener el usuario actual.
   }
 }
 ```
+### [POST] api/users/details
+Obtener los detalles públicos de un usuario, dado su correo
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "correo": "string"
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "User found",
+    "data": {
+        "empresa": {
+            "id_empresa": "prueba@prueba",
+            "nombre": "pruebaEmpresa",
+            "foto": "foto",
+            "detalles": "empresa de prueba",
+            "correo": "prueba@prueba",
+            "telefono": "12344433"
+        }
+    }
+}
+```
+---
 ## Estudiante
 ### [POST] api/students
 Crea un estudiante
@@ -134,7 +166,7 @@ Actualiza un estudiante
     "data": null
 }
 ```
-
+---
 ## Mensajes
 ### [POST] api/messages
 Crea un mensaje
@@ -252,7 +284,7 @@ Devuelve los mensajes de un chat dado el emisor y el receptor
     }
 }
 ```
-
+---
 ## Empresas
 ### [POST] api/companies
 Crea una compañia
@@ -303,7 +335,7 @@ Actualiza una compañia
     "data": null
 }
 ```
-
+---
 ## Ofertas de trabajo
 ### [POST] api/offers
 Crea una oferta de trabajo
@@ -492,11 +524,10 @@ Devuelve todos los detalles de una oferta según el ID. Devuelve además la info
 	"Data": "nil"
 }
 ```
-
+---
 ## Carreras
 ### [GET] api/careers
 Devuelve todas las carreras
-
 
 #### Response
 ``` json
@@ -529,7 +560,7 @@ Devuelve todas las carreras
     }
 }
 ```
-
+---
 ## Postulaciones
 ### [POST] api/postulation
 Crea una postulacíón de trabajo, cuando un estudiante se postula a una oferta
@@ -554,7 +585,7 @@ Crea una postulacíón de trabajo, cuando un estudiante se postula a una oferta
 	"Data": "nil"
 }
 ```
-
+---
 ## Administradores
 ### [POST] api/admins
 Crea un administrador
@@ -577,7 +608,7 @@ Crea un administrador
 	"Data": "nil"
 }
 ```
-
+---
 ## Postulaciones
 ### [POST] api/Getpostulations
 
