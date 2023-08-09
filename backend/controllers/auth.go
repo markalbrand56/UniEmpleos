@@ -61,8 +61,8 @@ func Login(c *gin.Context) {
 	token, err := verifyLogin(u)
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  401,
 			Message: "Invalid credentials: " + err.Error(),
 			Data:    nil,
 		})
@@ -72,8 +72,8 @@ func Login(c *gin.Context) {
 	role, err := role(u)
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusNotFound, responses.StandardResponse{
+			Status:  404,
 			Message: "Invalid credentials: " + err.Error(),
 			Data:    nil,
 		})
