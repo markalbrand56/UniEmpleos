@@ -70,11 +70,7 @@ export const Header = () => {
       <div className="wrapper">
         <div className="headercontainer">
           <div className="logo">
-            <button
-              onClick={handleHome}
-              type="button"
-              style={{ border: "none", background: "none" }}
-            >
+            <button className="buttonlogo" onClick={handleHome} type="button">
               <Logo src="/images/Ue_2.svg" size={80} />
             </button>
           </div>
