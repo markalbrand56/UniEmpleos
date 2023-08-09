@@ -12,7 +12,22 @@ const handleClick = () => {
 
 export const Header = () => {
   const { user } = useStoreon("user")
-
+  const handleHome = () => {
+    switch (user.role) {
+      case "student":
+        navigate("/profile")
+        break
+      case "enterprise":
+        navigate("/profilecompany")
+        break
+      case "admin":
+        navigate("/profile")
+        break
+      default:
+        navigate("/jobs")
+        break
+    }
+  }
   const renderActions = () => {
     switch (user.role) {
       case "student":
@@ -55,7 +70,13 @@ export const Header = () => {
       <div className="wrapper">
         <div className="headercontainer">
           <div className="logo">
-            <Logo src="/images/Ue_2.svg" size={80} />
+            <button
+              onClick={handleHome}
+              type="button"
+              style={{ border: "none", background: "none" }}
+            >
+              <Logo src="/images/Ue_2.svg" size={80} />
+            </button>
           </div>
           {renderActions()}
         </div>
