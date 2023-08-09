@@ -30,9 +30,7 @@ const OfferDetails = ({ id }) => {
   const [detalles, setDetalles] = useState("")
   const [carrera, setCarrera] = useState([])
   const [carreras, setCarreras] = useState([])
-  const { quill, quillRef } = useQuill({
-    theme: "snow",
-  })
+  const { quill, quillRef } = useQuill()
 
   useEffect(() => {
     apiCareers.handleRequest("GET", "/careers")
