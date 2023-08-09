@@ -7,6 +7,7 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import ImageUploader from "../../components/ImageUploader/ImageUploader"
 
 const EditProfileEmpresa = () => {
   const api = useApi()
@@ -17,6 +18,7 @@ const EditProfileEmpresa = () => {
   const [detalles, setDetalles] = useState("")
   const [telefono, setTelefono] = useState("")
   const [password, setPassword] = useState("")
+  const [uploadedImage, setUploadedImage] = useState("")
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -47,6 +49,7 @@ const EditProfileEmpresa = () => {
       setCorreo(api.data.usuario.correo)
       setDetalles(api.data.usuario.detalles)
       setTelefono(parseInt(api.data.usuario.telefono, 10))
+      setUploadedImage(api.data.usuario.foto)
     }
   }, [api.data])
 
@@ -60,10 +63,15 @@ const EditProfileEmpresa = () => {
     correo,
     telefono: telefono.toString(),
     contra: " ",
+    // foto: uploadedImage,
   }
   const handleButton = () => {
     api.handleRequest("PUT", "/companies/update", body)
     navigate("/profilecompany")
+  }
+
+  const handleUploadFile = (uploadedImage) => {
+    setUploadedImage(uploadedImage)
   }
 
   return (
@@ -73,7 +81,15 @@ const EditProfileEmpresa = () => {
       </div>
       <div className={style.contentContainer}>
         <div className={style.imgContainer}>
-          <img src="/images/Ue_2.svg" alt="Foto de perfil" />
+          <div className={style.imageUploaderContainer}>
+            <ImageUploader
+              onImageUpload={handleUploadFile}
+              image={uploadedImage}
+              width="30px"
+              height="30px"
+              placeholderImage="/images/pfp.svg"
+            />
+          </div>
         </div>
         <div className={style.editProfileContainer}>
           <div className={style.inputsContainer}>
