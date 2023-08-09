@@ -69,7 +69,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	role, err := role(u)
+	role, err := Role(u)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, responses.StandardResponse{
@@ -115,7 +115,7 @@ func verifyLogin(usuario models.Usuario) (string, error) {
 	return token, nil
 }
 
-func role(usuario models.Usuario) (string, error) {
+func Role(usuario models.Usuario) (string, error) {
 	var err error
 	var role string
 
