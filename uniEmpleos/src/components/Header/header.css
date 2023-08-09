@@ -59,3 +59,22 @@ button + button {
   font-size: 14px;
   margin-right: 10px;
 }
+
+button.buttonlogo{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button.buttonlogo:hover{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button.buttonlogo:focus{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
