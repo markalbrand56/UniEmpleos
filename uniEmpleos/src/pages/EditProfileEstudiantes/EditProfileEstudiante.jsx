@@ -7,6 +7,7 @@ import DropDown from "../../components/dropDown/DropDown"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import ImageUploader from "../../components/ImageUploader/ImageUploader"
 
 const EditProfileEstudiante = () => {
   const { user } = useStoreon("user")
@@ -21,6 +22,7 @@ const EditProfileEstudiante = () => {
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
   const [semestre, setSemestre] = useState("1")
+  const [uploadedImage, setUploadedImage] = useState("")
 
   const [carreras, setCarreras] = useState([])
 
@@ -63,6 +65,7 @@ const EditProfileEstudiante = () => {
       setUniversidad(usuario.universidad)
       setTelefono(usuario.telefono)
       setSemestre(usuario.semestre)
+      setUploadedImage(usuario.foto)
     }
   }, [api.data])
 
@@ -119,10 +122,14 @@ const EditProfileEstudiante = () => {
       telefono,
       semestre,
       cv: "",
-      foto: "",
+      foto: uploadedImage,
       correo: user.id_user,
     })
     navigate("/profile")
+  }
+
+  const handleUploadFile = (uploadedImage) => {
+    setUploadedImage(uploadedImage)
   }
 
   return (
@@ -131,7 +138,15 @@ const EditProfileEstudiante = () => {
         <Header userperson="student" />
       </div>
       <div className={style.imgContainer}>
-        <img src="/images/Ue_2.svg" alt="Foto de perfil" />
+        <div className={style.imageUploaderContainer}>
+          <ImageUploader
+            onImageUpload={handleUploadFile}
+            image={uploadedImage}
+            width="30px"
+            height="30px"
+            placeholderImage="/images/pfp.svg"
+          />
+        </div>
       </div>
       <div className={style.editProfileContainer}>
         <div className={style.inputsContainer}>
