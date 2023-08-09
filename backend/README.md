@@ -8,8 +8,8 @@ Login de usuario.
 #### Request Body
 ``` json
 {
-    "usuario": "ejemplo",
-    "contra": "ejemploContraseña"
+    "usuario": "string",
+    "contra": "string"
 }
 ```
 
@@ -287,11 +287,11 @@ Actualiza una compañia
 #### Params
 ``` json
 {
-    "nombre"        : "ejemplo" 
-    "detalles"      : "detalles"
-    "correo"    	: "correo@gmail.com"
-    "telefono"    	: "12345678" 
-    "contra" 	    : "contrasena"
+    "nombre"        : "string" 
+    "detalles"      : "string"
+    "correo"    	: "string"
+    "telefono"    	: "string" 
+    "contra" 	    : "string"
 }
 ```
 
