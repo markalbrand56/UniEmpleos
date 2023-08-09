@@ -263,6 +263,7 @@ Crea una compañia
 {
 	"nombre"        : "string" 
 	"detalles"      : "string"
+	"foto"   	: "string"
 	"correo"    	: "string"
 	"telefono"    	: "string" 
 	"contra" 	: "string"
