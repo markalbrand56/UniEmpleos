@@ -14,12 +14,12 @@ const Home = () => {
     <div className={styles.homeContainer}>
       <div className={styles.homeContent}>
         <div className={styles.topcontent}>
-          <img src="/images/Ue_1.svg" alt="Logo" />
+          <img src="/images/Ue_2.svg" alt="Logo" />
           <div className={styles.button}>
             <Button
               primary
               label="Iniciar Sesión"
-              backgroundColor="#A08AE5"
+              backgroundColor="transparent"
               size="large"
               onClick={(event) => {
                 event.preventDefault()
@@ -31,6 +31,7 @@ const Home = () => {
               label="Registrarse"
               backgroundColor="#A08AE5"
               size="large"
+              noborder
               onClick={(event) => {
                 event.preventDefault()
                 handleNav("/signup")
@@ -39,8 +40,8 @@ const Home = () => {
           </div>
         </div>
         <div className={styles.image}>
-            <img src="/images/Uniempleos.png" alt="Uniempleos" />
-          </div>
+          <img src="/images/Uniempleos.png" alt="Uniempleos" />
+        </div>
         <div className={styles.info}>
           <Infocontainer
             title="¿Qué es UniEmpleos?"
