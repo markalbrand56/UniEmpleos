@@ -1,36 +1,23 @@
 import React, { useState, useEffect } from "react"
-import "./Popup.css"
+import style from "./Popup.module.css"
+import Button from "../Button/Button"
 
-const Popup = ({ message, setWarning, closable }) => {
-  const [mensaje, setMensaje] = useState(message)
+const Popup = ({ message, status, closePopup }) => {
 
-  useEffect(() => {
-    setMensaje(message)
-  }, [message])
-
+  // Si showPopup es false, el componente no se renderizará
+  if (!status) {
+    return null
+  }
 
   return (
-    <div className="popup-container">
-      {closable && (
-        <img
-          className="close-img"
-          src="/images/close.svg"
-          alt="close"
-          onClick={(event) => {
-            event.preventDefault()
-            setWarning(false)
-          }}
-        />
-      )}
-      <div className="popup-subcontainer1">
-        <h1 className="popup-title">Advertencia</h1>
-      </div>
-      <div className="popup-subcontainer2">
-        <img className="warning-img" src="/images/warning.svg" alt="warning" />
-        <p className="popup-mensaje">{mensaje}</p>
+    <div className={style.mainContainer}>
+      <span className={style.span}>{message}</span>
+      <div className={style.buttonContainer}>
+        <Button label="Ok" onClick={closePopup} textColor="#000" />
       </div>
     </div>
   )
 }
 
 export default Popup
+

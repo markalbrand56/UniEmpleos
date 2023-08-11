@@ -1,0 +1,15 @@
+.mainContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #e25959!important;
+    padding: 20px;
+    border: 1px solid #9c8bdf;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 3 !important;
+}
+
+.span {
+    color: #000;
+}

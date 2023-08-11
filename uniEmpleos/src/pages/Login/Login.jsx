@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { navigate } from "../../store"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
@@ -46,8 +46,12 @@ const LogIn = () => {
         navigate("/profileadmin")
       }
     } else {
-      setWarning(() => true)
+      setWarning(true)
     }
+  }
+
+  const closePopup = () => {
+    setWarning(false)
   }
 
   const handleCorreo = (event) => {
@@ -60,13 +64,11 @@ const LogIn = () => {
 
   return (
     <div className={styles.logInCointainer}>
-      {warning && (
-        <Popup
-          message="Credenciales incorrectas. Inténtelo de nuevo"
-          setWarning={setWarning}
-          closable
-        />
-      )}
+      <Popup
+        message="Credenciales incorrectas. Inténtelo de nuevo"
+        status={warning}
+        closePopup={closePopup}
+      />
       <h1>UniEmpleos</h1>
       <div className={styles.inputsContainer}>
         <div className={styles.usuarioContainer}>
