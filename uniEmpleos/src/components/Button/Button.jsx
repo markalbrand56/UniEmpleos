@@ -2,11 +2,15 @@ import React from "react"
 import PropTypes from "prop-types"
 import style from "./Button.module.css"
 
-const Button = ({ label, backgroundColor, textColor, onClick }) => (
+const Button = ({ label, backgroundColor, textColor, onClick, noborder }) => (
   <div className={style.buttonContainer}>
     <button
       type="button"
-      style={{ backgroundColor, color: textColor }}
+      style={
+        noborder
+          ? { backgroundColor, color: textColor, border: "none" }
+          : { backgroundColor, color: textColor }
+      }
       onClick={onClick}
     >
       {label}
@@ -19,11 +23,13 @@ Button.propTypes = {
   backgroundColor: PropTypes.string,
   textColor: PropTypes.string,
   onClick: PropTypes.func.isRequired,
+  noborder: PropTypes.bool,
 }
 
 Button.defaultProps = {
   backgroundColor: "#fff",
   textColor: "#000",
+  noborder: false,
 }
 
 export default Button
