@@ -16,14 +16,14 @@
 }
 
 .topcontent img{
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
 }
 
 .button{
     margin-left: auto;
-    width: 30%;
+    width: 20%;
     margin-right: 20px;
 }
 
@@ -33,6 +33,7 @@
     background-color: #fff;
     align-items: center;
     width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .image img{
@@ -93,9 +94,12 @@ span.text{
     .homeContainer{
         display: flex;
         flex-direction: column;
-        height: 100%;
         width: 100%;
         background-color: #f5f5f5;
+    }
+
+    .button{
+        width: 50%;
     }
 
 

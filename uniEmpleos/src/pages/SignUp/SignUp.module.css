@@ -21,3 +21,14 @@
   width: fit-content;
   height: auto;
 }
+
+@media screen and (max-width: 768px) {
+  .opciones {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+}
+  
+
