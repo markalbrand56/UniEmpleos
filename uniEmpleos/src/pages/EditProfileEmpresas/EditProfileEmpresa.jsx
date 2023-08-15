@@ -7,10 +7,13 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import useIsImage from "../../Hooks/useIsImage"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
+import Popup from "../../components/Popup/Popup"
 
 const EditProfileEmpresa = () => {
   const api = useApi()
+  const isImage = useIsImage()
   const { user } = useStoreon("user")
 
   const [nombre, setNombre] = useState("")
@@ -19,6 +22,8 @@ const EditProfileEmpresa = () => {
   const [telefono, setTelefono] = useState("")
   const [password, setPassword] = useState("")
   const [uploadedImage, setUploadedImage] = useState("")
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -63,19 +68,43 @@ const EditProfileEmpresa = () => {
     correo,
     telefono: telefono.toString(),
     contra: " ",
-    // foto: uploadedImage,
+    foto: uploadedImage,
   }
-  const handleButton = () => {
-    api.handleRequest("PUT", "/companies/update", body)
-    navigate("/profilecompany")
+
+  // Con esto se pueden hacer las llamadas al status
+  const handleButton = async () => {
+    const apiResponse = await api.handleRequest(
+      "PUT",
+      "/companies/update",
+      body
+    )
+    console.log(apiResponse.status)
+    if (apiResponse.status === 200) {
+      navigate("/profilecompany")
+    } else {
+      setError("Upss... Algo salio mal atras, intenta mas tarde")
+      setWarning(true)
+    }
   }
 
   const handleUploadFile = (uploadedImage) => {
-    setUploadedImage(uploadedImage)
+    const fileType = isImage(uploadedImage)
+    if (fileType) {
+      setUploadedImage(uploadedImage)
+    } else {
+      setUploadedImage("")
+      setError("El archivo debe ser una imagen")
+      setWarning(true)
+    }
+  }
+
+  const handelPopupStatus = () => {
+    setWarning(false)
   }
 
   return (
     <div className={style.defaultContainer}>
+      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
       <div className={style.headerContainer}>
         <Header userperson="company" />
       </div>
@@ -111,16 +140,6 @@ const EditProfileEmpresa = () => {
                   name="telefono"
                   type="number"
                   placeholder="21212413"
-                  onChange={handleInputsValue}
-                />
-              </div>
-              <div className={style.inputSubContainer}>
-                <span>Correo</span>
-                <ComponentInput
-                  value={correo}
-                  name="correo"
-                  type="text"
-                  placeholder="empresa@org.com"
                   onChange={handleInputsValue}
                 />
               </div>
