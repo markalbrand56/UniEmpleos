@@ -94,16 +94,13 @@ func UpdateCompanies(c *gin.Context) {
 		return
 	}
 
-	e := models.Empresa{
-		IdEmpresa: input.Correo,
-		Nombre:    input.Nombre,
-		Detalles:  input.Detalles,
-		Correo:    input.Correo,
-		Telefono:  input.Telefono,
-	}
-
-	// update the row of the given id
-	err := configs.DB.Model(&e).Where("id_empresa = ?", input.Correo).Updates(&e).Error
+	// No se puede actualizar el correo/id de la empresa
+	err := configs.DB.Model(&models.Empresa{}).Where("id_empresa = ?", input.Correo).Updates(models.Empresa{
+		Nombre:   input.Nombre,
+		Detalles: input.Detalles,
+		Foto:     input.Foto,
+		Telefono: input.Telefono,
+	}).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
