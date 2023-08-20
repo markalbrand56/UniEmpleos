@@ -7,11 +7,14 @@ import DropDown from "../../components/dropDown/DropDown"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import useIsImage from "../../Hooks/useIsImage"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
+import Popup from "../../components/Popup/Popup"
 
 const EditProfileEstudiante = () => {
   const { user } = useStoreon("user")
   const api = useApi()
+  const isImage = useIsImage()
   const apiCareers = useApi()
   const publishChanges = useApi()
 
@@ -23,6 +26,8 @@ const EditProfileEstudiante = () => {
   const [telefono, setTelefono] = useState("")
   const [semestre, setSemestre] = useState("1")
   const [uploadedImage, setUploadedImage] = useState("")
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
 
   const [carreras, setCarreras] = useState([])
 
@@ -112,28 +117,63 @@ const EditProfileEstudiante = () => {
     }
   }
 
-  const handleButton = () => {
-    publishChanges.handleRequest("PUT", "/students/update", {
-      nombre,
-      apellido,
-      nacimiento: edad,
-      carrera,
-      universidad,
-      telefono,
-      semestre,
-      cv: "",
-      foto: uploadedImage,
-      correo: user.id_user,
-    })
-    navigate("/profile")
+  const handleButton = async () => {
+    if (
+      nombre === "" ||
+      apellido === "" ||
+      edad === "" ||
+      carrera === "" ||
+      universidad === "" ||
+      telefono === ""
+    ) {
+      setError("Todos los campos son obligatorios")
+      setWarning(true)
+    } else if (telefono.length < 8) {
+      setError("Telefono invalido")
+      setWarning(true)
+    } else {
+      const apiResponse = await publishChanges.handleRequest(
+        "PUT",
+        "/students/update",
+        {
+          nombre,
+          apellido,
+          nacimiento: edad,
+          carrera,
+          universidad,
+          telefono,
+          semestre,
+          cv: "",
+          foto: uploadedImage,
+          correo: user.id_user,
+        }
+      )
+      if (apiResponse.status === 200) {
+        navigate("/profile")
+      } else {
+        setError("Upss... Algo salio mal atras, intenta mas tarde")
+        setWarning(true)
+      }
+    }
   }
 
   const handleUploadFile = (uploadedImage) => {
-    setUploadedImage(uploadedImage)
+    const fileType = isImage(uploadedImage)
+    if (fileType) {
+      setUploadedImage(uploadedImage)
+    } else {
+      setError("El archivo debe ser una imagen")
+      setWarning(true)
+    }
+  }
+
+  const handelPopupStatus = () => {
+    setWarning(false)
   }
 
   return (
     <div className={style.defaultContainer}>
+      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
       <div className={style.headerContainer}>
         <Header userperson="student" />
       </div>

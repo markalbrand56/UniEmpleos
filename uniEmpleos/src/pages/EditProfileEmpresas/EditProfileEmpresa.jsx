@@ -20,7 +20,6 @@ const EditProfileEmpresa = () => {
   const [correo, setCorreo] = useState("")
   const [detalles, setDetalles] = useState("")
   const [telefono, setTelefono] = useState("")
-  const [password, setPassword] = useState("")
   const [uploadedImage, setUploadedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
@@ -40,9 +39,6 @@ const EditProfileEmpresa = () => {
         break
       case "correo":
         setCorreo(e.target.value)
-        break
-      case "password":
-        setPassword(e.target.value)
         break
       default:
         break
@@ -67,23 +63,29 @@ const EditProfileEmpresa = () => {
     detalles,
     correo,
     telefono: telefono.toString(),
-    contra: " ",
     foto: uploadedImage,
   }
 
   // Con esto se pueden hacer las llamadas al status
   const handleButton = async () => {
-    const apiResponse = await api.handleRequest(
-      "PUT",
-      "/companies/update",
-      body
-    )
-    console.log(apiResponse.status)
-    if (apiResponse.status === 200) {
-      navigate("/profilecompany")
-    } else {
-      setError("Upss... Algo salio mal atras, intenta mas tarde")
+    if (nombre === "" || detalles === "" || telefono === "") {
+      setError("Todos los campos son obligatorios")
       setWarning(true)
+    } else if (telefono.length < 8) {
+      setError("El numero de telefono no es valido")
+      setWarning(true)
+    }else {
+      const apiResponse = await api.handleRequest(
+        "PUT",
+        "/companies/update",
+        body
+      )
+      if (apiResponse.status === 200) {
+        navigate("/profilecompany")
+      } else {
+        setError("Upss... Algo salio mal atras, intenta mas tarde")
+        setWarning(true)
+      }
     }
   }
 

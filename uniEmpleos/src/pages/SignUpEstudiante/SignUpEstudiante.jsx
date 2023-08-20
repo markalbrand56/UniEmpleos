@@ -6,8 +6,14 @@ import { navigate } from "../../store"
 import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
+import Popup from "../../components/Popup/Popup"
+import useIsImage from "../../Hooks/useIsImage"
+import useApi from "../../Hooks/useApi"
 
 const SignUpEstudiante = () => {
+  const isImage = useIsImage()
+  const api = useApi()
+
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
   const [edad, setEdad] = useState("")
@@ -18,8 +24,8 @@ const SignUpEstudiante = () => {
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
   const [semestre, setSemestre] = useState("1")
-  // const [cv, setCv] = React.useState("")
-  // const [fotoPerfil, setFotoPerfil] = React.useState("")
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
 
   const [carreras, setCarreras] = useState([])
   const [uploadedImage, setUploadedImage] = useState("")
@@ -106,51 +112,70 @@ const SignUpEstudiante = () => {
   const handleSemestre = (e) => {
     setSemestre(e.target.value)
   }
-  
+
   const handleButton = () => {
     navigate("/login")
   }
 
-  const signup = async () => {
-    const body = {
-      dpi,
-      nombre,
-      apellido,
-      nacimiento: edad,
-      correo,
-      telefono,
-      carrera: parseInt(carrera, 10),
-      semestre: parseInt(semestre, 10),
-      cv: " ",
-      foto: uploadedImage,
-      contra: password,
-      universidad,
-    }
-    console.log(body)
-    const response = await fetch(`${API_URL}/api/students`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-
-    const datos = await response.json() // Recibidos
-
-    if (datos.status === 200) {
-      // Estado global
-      handleButton()
+  const handleSignUp = async () => {
+    if (
+      dpi === "" ||
+      nombre === "" ||
+      apellido === "" ||
+      edad === "" ||
+      correo === "" ||
+      telefono === "" ||
+      carrera === "" ||
+      semestre === "" ||
+      password === "" ||
+      universidad === ""
+    ) {
+      setError("Todos los campos son obligatorios")
+      setWarning(true)
+    } else if (telefono.length < 8) {
+      setError("Telefono invalido")
+      setWarning(true)
     } else {
-      prompt("Error al crear el usuario")
+      const apiResponse = await api.handleRequest("POST", "/students", {
+        dpi,
+        nombre,
+        apellido,
+        nacimiento: edad,
+        correo,
+        telefono,
+        carrera: parseInt(carrera, 10),
+        semestre: parseInt(semestre, 10),
+        cv: " ",
+        foto: uploadedImage,
+        contra: password,
+        universidad,
+      })
+      if (apiResponse.status === 200) {
+        navigate("/login")
+      } else {
+        setError("Upss algo salio mal")
+        setWarning(true)
+      }
     }
   }
 
-  const handleUploadFile = (uploadedImage) => {
-    setUploadedImage(uploadedImage)
+  const handleUploadFile = (image) => {
+    const fileType = isImage(image)
+    if (fileType) {
+      setUploadedImage(image)
+    } else {
+      setError("El archivo debe ser una imagen")
+      setWarning(true)
+    }
+  }
+
+  const handelPopupStatus = () => {
+    setWarning(false)
   }
 
   return (
     <div className={style.signUpCointainer}>
+      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
       <h1>UniEmpleos</h1>
       <div className={style.inputsContainer}>
         <div className={style.inputSubContainer}>
@@ -260,7 +285,7 @@ const SignUpEstudiante = () => {
           </div>
         </div>
         <div className={style.buttonContainer}>
-          <Button label="Registrarse" onClick={signup} />
+          <Button label="Registrarse" onClick={handleSignUp} />
         </div>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">

@@ -6,14 +6,22 @@ import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import API_URL from "../../api"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
+import Popup from "../../components/Popup/Popup"
+import useIsImage from "../../Hooks/useIsImage"
+import useApi from "../../Hooks/useApi"
 
 const SignUpEmpresa = () => {
+  const isImage = useIsImage()
+  const api = useApi()
+
   const [nombre, setNombre] = useState("")
   const [correo, setCorreo] = useState("")
   const [detalles, setDetalles] = useState("")
   const [telefono, setTelefono] = useState("")
   const [password, setPassword] = useState("")
   const [uploadedImage, setUploadedImage] = useState("")
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -44,42 +52,53 @@ const SignUpEmpresa = () => {
   }
 
   const signup = async () => {
-    const body = {
-      nombre,
-      detalles,
-      correo,
-      telefono,
-      contra: password,
-      foto: uploadedImage,
-    }
-    const response = await fetch(`${API_URL}/api/companies`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-
-    const datos = await response.json() // Recibidos
-
-    if (datos.status === 200) {
-      // Estado global
-      handleButton()
+    if (
+      nombre === "" ||
+      correo === "" ||
+      detalles === "" ||
+      telefono === "" ||
+      password === ""
+    ) {
+      setError("Todos los campos son obligatorios")
+      setWarning(true)
+    } else if (telefono.length < 8) {
+      setError("El numero de telefono debe tener 8 digitos")
+      setWarning(true)
     } else {
-      prompt("Error al crear el usuario")
+      const apiResponse = await api.handleRequest("POST", "/companies", {
+        nombre,
+        detalles,
+        correo,
+        telefono,
+        contra: password,
+        foto: uploadedImage,
+      })
+      if (apiResponse.status === 200) {
+        navigate("/login")
+      } else {
+        setError("Upss algo salio mal")
+        setWarning(true)
+      }
     }
   }
 
   const handleUploadFile = (uploadedImage) => {
-    setUploadedImage(uploadedImage)
+    const fileType = isImage(uploadedImage)
+    if (fileType) {
+      setUploadedImage(uploadedImage)
+    } else {
+      setError("El archivo debe ser una imagen")
+      setWarning(true)
+    }
   }
 
-  /* useEffect(() => {
-    console.log(nombre, correo, detalles, telefono, password)
-  }, [nombre, correo, detalles, telefono, password]) */
+  const handelPopupStatus = () => {
+    setWarning(false)
+  }
 
   return (
     <div className={style.signUpCointainer}>
+      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
       <h1>UniEmpleos</h1>
       <div className={style.inputsContainer}>
         <div className={style.grupoDatos1}>
