@@ -152,7 +152,11 @@ const SignUpEstudiante = () => {
       })
       if (apiResponse.status === 200) {
         navigate("/login")
-      } else {
+      } else if (apiResponse.status === 409) {
+        setError("El correo ya esta en uso")
+        setWarning(true)
+      } 
+      else {
         setError("Upss algo salio mal")
         setWarning(true)
       }

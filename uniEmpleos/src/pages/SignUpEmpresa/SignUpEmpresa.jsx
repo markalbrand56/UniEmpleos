@@ -75,6 +75,9 @@ const SignUpEmpresa = () => {
       })
       if (apiResponse.status === 200) {
         navigate("/login")
+      } else if (apiResponse.status === 409) {
+        setError("El correo ya esta registrado")
+        setWarning(true)
       } else {
         setError("Upss algo salio mal")
         setWarning(true)

@@ -9,6 +9,7 @@ import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import { useQuill } from "react-quilljs"
+import Popup from "../../components/Popup/Popup"
 
 const Postulacion = () => {
   const { user } = useStoreon("user")
@@ -21,18 +22,35 @@ const Postulacion = () => {
   const [carrera, setCarrera] = useState("")
   const [carreras, setCarreras] = useState([])
   const { quill, quillRef } = useQuill()
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
 
-  const postOffer = () => {
-    const details = JSON.stringify(quill.getContents())
-    api.handleRequest("POST", "/offers/", {
-      id_empresa: user.id_user,
-      puesto,
-      salario: parseFloat(salario),
-      descripcion: details,
-      requisitos,
-      id_carreras: [carrera],
-    })
-    navigate("/postulacionempresa")
+  const postOffer = async () => {
+    if (
+      puesto === "" ||
+      salario === "" ||
+      requisitos === "" ||
+      carrera === ""
+    ) {
+      setError("Solamente el campo de descripción puede estar vacío")
+      setWarning(true)
+    } else {
+      const details = JSON.stringify(quill.getContents())
+      const apiResponse = await api.handleRequest("POST", "/offers/", {
+        id_empresa: user.id_user,
+        puesto,
+        salario: parseFloat(salario),
+        descripcion: details,
+        requisitos,
+        id_carreras: [carrera],
+      })
+      if (apiResponse.status === 200) {
+        navigate("/postulacionempresa")
+      } else {
+        setError("Upss algo salió mal, intentalo de nuevo")
+        setWarning(true)
+      }
+    }
   }
 
   const handleCarrera = (e) => {
@@ -78,9 +96,14 @@ const Postulacion = () => {
     postOffer()
   }
 
+  const handelPopupStatus = () => {
+    setWarning(false)
+  }
+
   return (
     <div className={style.container}>
       <Header userperson="student" />
+      <Popup status={warning} message={error} closePopup={handelPopupStatus} />
       <div className={style.postulacionContainer}>
         <div className={style.titleContainer}>Nueva oferta laboral</div>
         <div className={style.dataContainer}>
