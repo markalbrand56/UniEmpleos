@@ -110,6 +110,18 @@ func GetLastChat(c *gin.Context) {
 		return
 	}
 
+	// Ver si el usuario es válido
+	_, err := models.GetUserByUsername(inputID.ID_usuario)
+
+	if err != nil {
+		c.JSON(404, responses.StandardResponse{
+			Status:  404,
+			Message: "Error getting messages. User not found",
+			Data:    nil,
+		})
+		return
+	}
+
 	var chats []models.ChatInfo
 
 	// Consulta SQL pura con alias y parámetro ?
@@ -132,7 +144,7 @@ func GetLastChat(c *gin.Context) {
 			  ORDER BY m.tiempo DESC`
 
 	// Ejecutamos la consulta SQL pura con parámetros inputID.ID_usuario
-	err := configs.DB.Raw(query, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario).Scan(&chats).Error
+	err = configs.DB.Raw(query, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario).Scan(&chats).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
