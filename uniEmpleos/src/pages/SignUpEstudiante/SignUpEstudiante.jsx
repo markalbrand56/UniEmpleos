@@ -5,6 +5,7 @@ import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
+import ImageUploader from "../../components/ImageUploader/ImageUploader"
 
 const SignUpEstudiante = () => {
   const [nombre, setNombre] = useState("")
@@ -21,6 +22,7 @@ const SignUpEstudiante = () => {
   // const [fotoPerfil, setFotoPerfil] = React.useState("")
 
   const [carreras, setCarreras] = useState([])
+  const [uploadedImage, setUploadedImage] = useState("")
 
   const semestres = [
     { value: "1", label: "1" },
@@ -71,7 +73,7 @@ const SignUpEstudiante = () => {
         setEdad(e.target.value)
         break
       case "dpi":
-        if (e.target.value.length < 13) {
+        if (e.target.value.length < 14) {
           setDpi(e.target.value)
         }
         break
@@ -104,33 +106,7 @@ const SignUpEstudiante = () => {
   const handleSemestre = (e) => {
     setSemestre(e.target.value)
   }
-
-  /* useEffect(() => {
-    console.log(
-      nombre,
-      apellido,
-      edad,
-      dpi,
-      correo,
-      password,
-      carrera,
-      universidad,
-      telefono,
-      semestre
-    )
-  }, [
-    nombre,
-    apellido,
-    edad,
-    dpi,
-    correo,
-    password,
-    carrera,
-    universidad,
-    telefono,
-    semestre,
-  ]) */
-
+  
   const handleButton = () => {
     navigate("/login")
   }
@@ -146,10 +122,11 @@ const SignUpEstudiante = () => {
       carrera: parseInt(carrera, 10),
       semestre: parseInt(semestre, 10),
       cv: " ",
-      foto: " ",
+      foto: uploadedImage,
       contra: password,
       universidad,
     }
+    console.log(body)
     const response = await fetch(`${API_URL}/api/students`, {
       method: "POST",
       body: JSON.stringify(body),
@@ -166,6 +143,10 @@ const SignUpEstudiante = () => {
     } else {
       prompt("Error al crear el usuario")
     }
+  }
+
+  const handleUploadFile = (uploadedImage) => {
+    setUploadedImage(uploadedImage)
   }
 
   return (
@@ -264,6 +245,18 @@ const SignUpEstudiante = () => {
               value={semestre}
               onChange={handleSemestre}
             />
+          </div>
+          <div className={style.inputSubContainerDataGroup1}>
+            <span>Foto de perfil</span>
+            <div className={style.imageUploaderContainer}>
+              <ImageUploader
+                onImageUpload={handleUploadFile}
+                image={uploadedImage}
+                width="30px"
+                height="30px"
+                placeholderImage="/images/pfp.svg"
+              />
+            </div>
           </div>
         </div>
         <div className={style.buttonContainer}>

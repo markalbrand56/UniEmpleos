@@ -13,6 +13,32 @@ const Home = () => {
   return (
     <div className={styles.homeContainer}>
       <div className={styles.homeContent}>
+        <div className={styles.topcontent}>
+          <img src="/images/Ue_2.svg" alt="Logo" />
+          <div className={styles.button}>
+            <Button
+              primary
+              label="Iniciar Sesión"
+              backgroundColor="transparent"
+              size="large"
+              onClick={(event) => {
+                event.preventDefault()
+                handleNav("/login")
+              }}
+            />
+            <Button
+              primary
+              label="Registrarse"
+              backgroundColor="#A08AE5"
+              size="large"
+              noborder
+              onClick={(event) => {
+                event.preventDefault()
+                handleNav("/signup")
+              }}
+            />
+          </div>
+        </div>
         <div className={styles.image}>
           <img src="/images/Uniempleos.png" alt="Uniempleos" />
         </div>
@@ -31,41 +57,6 @@ const Home = () => {
             backgroundColor="#94BD0F"
             textColor="#fff"
           />
-        </div>
-        <div className={styles.waveup}>
-          <img src="/images/waveup.svg" alt="wave" />
-        </div>
-        <div className={styles.infobutton}>
-          <Infocontainer
-            title="¿Qué esperas para encontrar tu oportunidad?"
-            backgroundColor="transparent"
-            textColor="#000"
-          />
-          <div className={styles.button}>
-            <Button
-              primary
-              label="Iniciar Sesión"
-              backgroundColor="#A08AE5"
-              size="large"
-              onClick={(event) => {
-                event.preventDefault()
-                handleNav("/login")
-              }}
-            />
-            <Button
-              primary
-              label="Registrarse"
-              backgroundColor="#A08AE5"
-              size="large"
-              onClick={(event) => {
-                event.preventDefault()
-                handleNav("/signup")
-              }}
-            />
-          </div>
-        </div>
-        <div className={styles.waveup}>
-          <img src="/images/wave.svg" alt="waveup" />
         </div>
       </div>
     </div>

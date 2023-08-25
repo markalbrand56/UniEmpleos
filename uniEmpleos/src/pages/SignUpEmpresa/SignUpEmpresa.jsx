@@ -1,17 +1,19 @@
-import React from "react"
+import React, { useState } from "react"
 import style from "./SignUpEmpresa.module.css"
 import ComponentInput from "../../components/Input/Input"
 import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import API_URL from "../../api"
+import ImageUploader from "../../components/ImageUploader/ImageUploader"
 
 const SignUpEmpresa = () => {
-  const [nombre, setNombre] = React.useState("")
-  const [correo, setCorreo] = React.useState("")
-  const [detalles, setDetalles] = React.useState("")
-  const [telefono, setTelefono] = React.useState("")
-  const [password, setPassword] = React.useState("")
+  const [nombre, setNombre] = useState("")
+  const [correo, setCorreo] = useState("")
+  const [detalles, setDetalles] = useState("")
+  const [telefono, setTelefono] = useState("")
+  const [password, setPassword] = useState("")
+  const [uploadedImage, setUploadedImage] = useState("")
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -48,6 +50,7 @@ const SignUpEmpresa = () => {
       correo,
       telefono,
       contra: password,
+      foto: uploadedImage,
     }
     const response = await fetch(`${API_URL}/api/companies`, {
       method: "POST",
@@ -65,6 +68,10 @@ const SignUpEmpresa = () => {
     } else {
       prompt("Error al crear el usuario")
     }
+  }
+
+  const handleUploadFile = (uploadedImage) => {
+    setUploadedImage(uploadedImage)
   }
 
   /* useEffect(() => {
@@ -115,6 +122,18 @@ const SignUpEmpresa = () => {
               value={password}
               onChange={handleInputsValue}
             />
+          </div>
+          <div className={style.inputSubContainer}>
+            <span>Foto de perfil</span>
+            <div className={style.imageUploaderContainer}>
+              <ImageUploader
+                onImageUpload={handleUploadFile}
+                image={uploadedImage}
+                width="30px"
+                height="30px"
+                placeholderImage="/images/pfp.svg"
+              />
+            </div>
           </div>
           <div className={style.inputTextArea}>
             <span>Detalles</span>

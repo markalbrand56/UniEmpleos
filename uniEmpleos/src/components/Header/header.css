@@ -30,6 +30,7 @@
   color: #333;
   font-size: 16px;
   font-weight: 700;
+  font-family: 'Poppins', sans-serif;
 }
 
 .actions a:hover {
@@ -58,4 +59,23 @@ button + button {
   color: #333;
   font-size: 14px;
   margin-right: 10px;
+}
+
+button.buttonlogo{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button.buttonlogo:hover{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button.buttonlogo:focus{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
 }

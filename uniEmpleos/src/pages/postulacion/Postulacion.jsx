@@ -85,7 +85,7 @@ const Postulacion = ({ id }) => {
           </div>
           <div className={style.label}>
             Detalles
-            <div ref={quillRef} />
+            <div ref={quillRef} className={style.Editor}/>
           </div>
           <div className={style.buttonContainer}>
             <Button

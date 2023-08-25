@@ -49,6 +49,12 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+  width: 75%;
+}
+
+.Editor {
+  width: 100%;
+  border: 0 solid #ccc !important;
 }
 
 .imgLabel {

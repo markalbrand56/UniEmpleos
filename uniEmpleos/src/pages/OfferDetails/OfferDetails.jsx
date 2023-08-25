@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
 import Joi from "joi"
+import { useQuill } from "react-quilljs"
 import styles from "./OfferDetails.module.css"
 import { Header } from "../../components/Header/Header"
 import Button from "../../components/Button/Button"
@@ -9,7 +10,6 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import { useQuill } from "react-quilljs"
 import "react-quill/dist/quill.snow.css"
 import useConfig from "../../Hooks/Useconfig"
 
@@ -28,14 +28,83 @@ const OfferDetails = ({ id }) => {
   const [salario, setSalario] = useState("")
   const [puesto, setPuesto] = useState("")
   const [detalles, setDetalles] = useState("")
-  const [carrera, setCarrera] = useState("1")
+  const [carrera, setCarrera] = useState([])
   const [carreras, setCarreras] = useState([])
-  const { quill, quillRef } = useQuill({
-    theme: "snow",
-  })
+  const { quill, quillRef } = useQuill()
+
+  useEffect(() => {
+    apiCareers.handleRequest("GET", "/careers")
+    api.handleRequest("POST", "/offers/company", {
+      id_empresa: user.id_user,
+    })
+  }, [])
+
+  useEffect(() => {
+    if (apiCareers.data) {
+      const { careers } = apiCareers.data
+      const dataCarreras = careers.map((e) => ({
+        value: e.id_carrera.toString(),
+        label: e.nombre,
+      }))
+      setCarreras(dataCarreras)
+    }
+  }, [apiCareers.data])
+
+  useEffect(() => {
+    if (api.data) {
+      const dataa = api.data.offers
+      for (let i = 0; i < dataa.length; i++) {
+        if (dataa[i].id_oferta === parseInt(id, 10)) {
+          console.log("changing", dataa[i])
+          setPuesto(dataa[i].puesto)
+          setSalario(dataa[i].salario)
+          setRequisitos(dataa[i].requisitos)
+          setDetalles(dataa[i].descripcion)
+          if (dataa[i].id_carreras !== null) {
+            setCarrera(dataa[i].id_carreras.map((num) => num.toString()))
+          } else {
+            setCarrera(["1"])
+          }
+        } else {
+          console.log("not changing", id)
+        }
+      }
+    }
+  }, [api.data])
+
+  const updateOffer = () => {
+    const details = JSON.stringify(quill.getContents())
+    console.log("carreer", carrera)
+    api.handleRequest("PUT", "/offers/", {
+      id_oferta: parseInt(id, 10),
+      puesto,
+      descripcion: details,
+      requisitos,
+      salario: parseFloat(salario),
+      id_carreras: carrera,
+    })
+    navigate("/postulacionempresa")
+  }
+
+  useEffect(() => {
+    if (quill && detalles) {
+      try {
+        quill.setContents(JSON.parse(detalles))
+      } catch (error) {
+        console.log("Error al cargar detalles", error)
+      }
+    }
+  }, [quill, detalles])
+
+  const handleRegresar = () => {
+    navigate("/postulacionempresa")
+  }
 
   const handleCarrera = (e) => {
-    setCarrera(e.target.value)
+    const selectedOptions = Array.from(e.target.selectedOptions).map(
+      (option) => option.value
+    )
+    setCarrera(selectedOptions)
   }
 
   const handleInputsValue = (e) => {
@@ -56,77 +125,6 @@ const OfferDetails = ({ id }) => {
         break
     }
   }
-
-  useEffect(() => {
-    if (apiCareers.data) {
-      const { careers } = apiCareers.data
-      const dataCarreras = careers.map((e) => ({
-        value: e.id_carrera.toString(),
-        label: e.nombre,
-      }))
-      setCarreras(dataCarreras)
-    }
-  }, [apiCareers.data])
-
-  useEffect(() => {
-    api.handleRequest("GET", "/users/")
-    apiCareers.handleRequest("GET", "/careers")
-  }, [])
-
-  const handleRegresar = () => {
-    navigate("/postulacionempresa")
-  }
-
-  const [dataa, setData] = useState([])
-
-  useEffect(() => {
-    if (api.data) {
-      const { offers } = api.data
-      setData(offers)
-    }
-    if (dataa) {
-      for (let i = 0; i < dataa.length; i++) {
-        if (dataa[i].id_oferta === parseInt(id, 10)) {
-          setPuesto(dataa[i].puesto)
-          setSalario(dataa[i].salario)
-          setRequisitos(dataa[i].requisitos)
-          setDetalles(dataa[i].descripcion)
-          setCarrera(dataa[i].id_carrera)
-        } else {
-          console.log("not changing", id)
-        }
-      }
-    }
-  }, [api.data])
-
-  useEffect(() => {
-    api.handleRequest("POST", "/offers/company", {
-      id_empresa: user.id_user,
-    })
-  }, [])
-
-  const updateOffer = () => {
-    const details = JSON.stringify(quill.getContents())   
-    api.handleRequest("PUT", "/offers/", {
-      id_oferta: parseInt(id, 10),
-      puesto,
-      descripcion: details,
-      requisitos,
-      salario: parseFloat(salario),
-      id_carrera: carrera ?? "1",
-    })
-    navigate("/postulacionempresa")
-  }
-
-  useEffect(() => {
-    if (quill && detalles) {
-      try {
-        quill.setContents(JSON.parse(detalles))
-      } catch (error) {
-        console.log("Error al cargar detalles", error)
-      }
-    }
-  }, [quill, detalles])  
 
   return (
     <div className={styles.container}>

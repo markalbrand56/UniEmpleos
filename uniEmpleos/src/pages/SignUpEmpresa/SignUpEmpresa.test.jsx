@@ -50,6 +50,7 @@ it("should call API and navigate to login page when valid form data is submitted
       correo: "test@test.com",
       telefono: "12345678",
       contra: "testpassword",
+      foto: "",
     }),
     headers: {
       "Content-Type": "application/json",
