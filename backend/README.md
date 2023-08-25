@@ -524,6 +524,27 @@ Devuelve todos los detalles de una oferta según el ID. Devuelve además la info
 	"Data": "nil"
 }
 ```
+### [DELETE] api/offers/
+Elimina una oferta de trabajo. También elimina cualquier postulación asociada a la oferta
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "id_oferta"    : int
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Offer deleted successfully",
+    "data": null
+}
+```
+
 ---
 ## Carreras
 ### [GET] api/careers

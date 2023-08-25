@@ -336,3 +336,48 @@ func GetOfferByCompany(c *gin.Context) {
 		Data:    data,
 	})
 }
+
+type DeleteOfferInput struct {
+	Id_Oferta int `json:"id_oferta"`
+}
+
+func DeleteOffer(c *gin.Context) {
+	var input DeleteOfferInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Invalid input: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Delete oferta_carrera
+	err := configs.DB.Where("id_oferta = ?", input.Id_Oferta).Delete(&models.OfertaCarrera{}).Error
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error deleting oferta_carrera: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Delete oferta
+	err = configs.DB.Where("id_oferta = ?", input.Id_Oferta).Delete(&models.Oferta{}).Error
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error deleting oferta: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Offer deleted successfully",
+		Data:    nil,
+	})
+}
