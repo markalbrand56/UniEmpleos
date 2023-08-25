@@ -126,6 +126,7 @@ func GetLastChat(c *gin.Context) {
 
 	// Consulta SQL pura con alias y parámetro ?
 	query := `SELECT p.id_postulacion as chat_id,
+       				o.id_empresa as user_id,
 					CASE WHEN p.id_estudiante = ? THEN e2.nombre ELSE e.nombre END as user_name,
 					CASE WHEN p.id_estudiante = ? THEN e2.foto ELSE e.foto END as user_photo,
 					m.mensaje as last_message,
