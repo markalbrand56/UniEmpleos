@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 // Mensaje es la estructura de la tabla mensaje en la base de datos
 type Mensaje struct {
@@ -28,6 +30,7 @@ type MensajeGet struct {
 
 type ChatInfo struct {
 	ChatID      int       `json:"chat_id"`
+	UserId      string    `json:"user_id"`
 	UserName    string    `json:"user_name"`
 	UserPhoto   string    `json:"user_photo"`
 	LastMessage string    `json:"last_message"`
