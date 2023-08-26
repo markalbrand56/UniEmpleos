@@ -7,6 +7,7 @@ import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import { useQuill } from "react-quilljs"
+import Popup from "../../components/Popup/Popup"
 
 const Postulacion = ({ id }) => {
   const { user } = useStoreon("user")
@@ -17,6 +18,8 @@ const Postulacion = ({ id }) => {
       toolbar: false, // Ocultar la barra de herramientas
     },
   })
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
 
   const [detalles, setDetalles] = useState("")
 
@@ -42,22 +45,33 @@ const Postulacion = ({ id }) => {
     }
   }, [quill, detalles])
 
-  const handlePostularme = () => {
-    api.handleRequest("POST", "/postulations/", {
+  const handlePostularme = async () => {
+    const apiResponse = await api.handleRequest("POST", "/postulations/", {
       id_oferta: parseInt(id, 10),
       id_estudiante: user.id_user,
       estado: "enviada",
     })
-    navigate("/profile")
+    if (apiResponse.status === 200) {
+      navigate("/profile")
+    } else {
+      setError("Upss algo salió mal, intentalo de nuevo")
+      setWarning(true)
+    }
+    
   }
 
   const handleRegresar = () => {
     navigate("/profile")
   }
 
+  const handelPopupStatus = () => {
+    setWarning(false)
+  }
+
   return (
     <div className={style.container}>
       <Header userperson="student" />
+      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
       {api.data ? (
         <div className={style.postulacionContainer}>
           <div className={style.titleContainer}>{api.data.offer.puesto}</div>
@@ -85,7 +99,7 @@ const Postulacion = ({ id }) => {
           </div>
           <div className={style.label}>
             Detalles
-            <div ref={quillRef} className={style.Editor}/>
+            <div ref={quillRef} className={style.Editor} />
           </div>
           <div className={style.buttonContainer}>
             <Button

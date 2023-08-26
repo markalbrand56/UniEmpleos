@@ -12,6 +12,7 @@ import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import "react-quill/dist/quill.snow.css"
 import useConfig from "../../Hooks/Useconfig"
+import Popup from "../../components/Popup/Popup"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -31,6 +32,8 @@ const OfferDetails = ({ id }) => {
   const [carrera, setCarrera] = useState([])
   const [carreras, setCarreras] = useState([])
   const { quill, quillRef } = useQuill()
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
 
   useEffect(() => {
     apiCareers.handleRequest("GET", "/careers")
@@ -72,18 +75,32 @@ const OfferDetails = ({ id }) => {
     }
   }, [api.data])
 
-  const updateOffer = () => {
-    const details = JSON.stringify(quill.getContents())
-    console.log("carreer", carrera)
-    api.handleRequest("PUT", "/offers/", {
-      id_oferta: parseInt(id, 10),
-      puesto,
-      descripcion: details,
-      requisitos,
-      salario: parseFloat(salario),
-      id_carreras: carrera,
-    })
-    navigate("/postulacionempresa")
+  const updateOffer = async () => {
+    if (
+      puesto === "" ||
+      salario === "" ||
+      requisitos === "" ||
+      carrera === ""
+    ) {
+      setError("Solamente el campo de descripción puede estar vacío")
+      setWarning(true)
+    } else {
+      const details = JSON.stringify(quill.getContents())
+      const apiResponse = await api.handleRequest("PUT", "/offers/", {
+        id_oferta: parseInt(id, 10),
+        puesto,
+        descripcion: details,
+        requisitos,
+        salario: parseFloat(salario),
+        id_carreras: carrera,
+      })
+      if (apiResponse.status === 200) {
+        navigate("/postulacionempresa")
+      } else {
+        setError("Upss algo salió mal, intentalo de nuevo")
+        setWarning(true)
+      }
+    }
   }
 
   useEffect(() => {
@@ -126,9 +143,14 @@ const OfferDetails = ({ id }) => {
     }
   }
 
+  const handelPopupStatus = () => {
+    setWarning(false)
+  }
+
   return (
     <div className={styles.container}>
       <Header userperson="student" />
+      <Popup status={warning} message={error} closePopup={handelPopupStatus} />
       <div className={styles.postulacionContainer}>
         <div className={styles.titleContainer}>Detalles de la oferta</div>
         <div className={styles.dataContainer}>
