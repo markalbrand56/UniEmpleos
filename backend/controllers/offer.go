@@ -342,19 +342,21 @@ type DeleteOfferInput struct {
 }
 
 func DeleteOffer(c *gin.Context) {
-	var input DeleteOfferInput
+	// Obtén el valor del parámetro "id_oferta" desde los query parameters
+	idOferta := c.Query("id_oferta")
 
-	if err := c.ShouldBindJSON(&input); err != nil {
+	// Verifica si el valor del parámetro está presente
+	if idOferta == "" {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
-			Message: "Invalid input: " + err.Error(),
+			Message: "Missing id_oferta parameter",
 			Data:    nil,
 		})
 		return
 	}
 
 	// Delete oferta_carrera
-	err := configs.DB.Where("id_oferta = ?", input.Id_Oferta).Delete(&models.OfertaCarrera{}).Error
+	err := configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.OfertaCarrera{}).Error
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
@@ -365,7 +367,7 @@ func DeleteOffer(c *gin.Context) {
 	}
 
 	// Delete oferta
-	err = configs.DB.Where("id_oferta = ?", input.Id_Oferta).Delete(&models.Oferta{}).Error
+	err = configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
