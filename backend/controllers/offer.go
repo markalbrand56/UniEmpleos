@@ -338,7 +338,7 @@ func GetOfferByCompany(c *gin.Context) {
 }
 
 type DeleteOfferInput struct {
-	Id_Oferta int `json:"id_oferta"`
+	Id_Oferta string `json:"id_oferta"`
 }
 
 func DeleteOffer(c *gin.Context) {
