@@ -33,6 +33,7 @@ const OfferDetails = ({ id }) => {
   const [carreras, setCarreras] = useState([])
   const { quill, quillRef } = useQuill()
   const [warning, setWarning] = useState(false)
+  const [deletejob, setdeleteJob] = useState(false)
   const [error, setError] = useState("")
 
   useEffect(() => {
@@ -143,16 +144,61 @@ const OfferDetails = ({ id }) => {
     }
   }
 
-  const handelPopupStatus = () => {
+  const handlePopupStatus = () => {
     setWarning(false)
+  }
+
+  const handleCancelJob = () => {
+    setdeleteJob(false)
+  }
+
+  const deleteJobOffer = () => {
+    setdeleteJob(true)
+    setError("¿Está seguro que desea eliminar la oferta?")
+    console.log("delete")
+  }
+
+  const succcessJobOffer = () => {
+    setdeleteJob(false)
+    setError("Oferta eliminada con éxito")
+    setWarning(true)
+    setTimeout(() => {
+      navigate("/postulacionempresa")
+    }, 4000)
+  }
+
+  const onclickAccept = async () => {
+    const variableApi = `/offers/?id_oferta=${id}`
+    const apiResponse = await api.handleRequest("DELETE", variableApi)
+    if (apiResponse.status === 200) {
+      succcessJobOffer()
+    } else {
+      setError("Upss algo salió mal, intentalo de nuevo")
+      setWarning(true)
+    }
   }
 
   return (
     <div className={styles.container}>
-      <Header userperson="student" />
-      <Popup status={warning} message={error} closePopup={handelPopupStatus} />
+      <Popup status={warning} message={error} closePopup={handlePopupStatus} />
+      <Popup
+        status={deletejob}
+        message={error}
+        closePopup={onclickAccept}
+        onClickcancel={handleCancelJob}
+        canceloption
+      />
+      <Header userperson="enterprise" />
       <div className={styles.postulacionContainer}>
-        <div className={styles.titleContainer}>Detalles de la oferta</div>
+        <div className={styles.headertittlecontainer}>
+          <div className={styles.titleContainer}>
+            <h4>Detalles de la oferta</h4>
+            <button onClick={deleteJobOffer} type="button">
+              <img src="/images/delete.svg" alt="trash" />
+            </button>
+          </div>
+        </div>
+
         <div className={styles.dataContainer}>
           <div className={styles.inputContainer}>
             <span>Puesto</span>
