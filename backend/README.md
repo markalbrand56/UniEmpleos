@@ -213,7 +213,7 @@ Devuelve el último mensaje de un chat dado el usuario
     "message": "Message retrieved successfully",
     "data": {
         "message": {
-            "chat_id": 1,
+            "postulation_id": 1,
             "user_name": "Empresa INC",
             "user_photo": "",
             "last_message": "Muchas gracias por la información. Estaré a la espera de su correo",

@@ -54,7 +54,7 @@ func GetEstudiantes(c *gin.Context) {
 
 	// Realiza la consulta para obtener la información de los estudiantes con la suspensión
 	err := configs.DB.Table("estudiante e").
-		Select("e.id_estudiante, e.foto, e.nombre, e.apellido, e.nacimiento, u.suspendido").
+		Select("e.id_estudiante, e.nombre, e.apellido, e.nacimiento, u.suspendido").
 		Joins("INNER JOIN usuario u ON e.id_estudiante = u.usuario").
 		Scan(&estudiantes).Error
 
