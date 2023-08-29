@@ -48,3 +48,31 @@ func NewAdmin(c *gin.Context) {
 		Data:    nil,
 	})
 }
+
+func GetEstudiantes(c *gin.Context) {
+	var estudiantes []models.EstudianteGetAdmin
+
+	// Realiza la consulta para obtener la información de los estudiantes con la suspensión
+	err := configs.DB.Table("estudiante e").
+		Select("e.id_estudiante, e.foto, e.nombre, e.apellido, e.nacimiento, u.suspendido").
+		Joins("INNER JOIN usuario u ON e.id_estudiante = u.usuario").
+		Scan(&estudiantes).Error
+
+	if err != nil {
+		c.JSON(500, responses.StandardResponse{
+			Status:  500,
+			Message: "Error retrieving students: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Convertimos el resultado en un mapa
+	messageMap := map[string]interface{}{"studets": estudiantes}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Students Retrieved Successfully",
+		Data:    messageMap,
+	})
+}
