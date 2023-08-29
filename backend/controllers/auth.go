@@ -69,7 +69,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	role, err := Role(u)
+	role, err := RoleFromUser(u)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, responses.StandardResponse{
@@ -106,7 +106,9 @@ func verifyLogin(usuario models.Usuario) (string, error) {
 		return "", err
 	}
 
-	token, err := utils.GenerateToken(found.Usuario)
+	role, err := RoleFromUser(found)
+
+	token, err := utils.GenerateToken(found.Usuario, role)
 
 	if err != nil {
 		return "", err
@@ -115,7 +117,7 @@ func verifyLogin(usuario models.Usuario) (string, error) {
 	return token, nil
 }
 
-func Role(usuario models.Usuario) (string, error) {
+func RoleFromUser(usuario models.Usuario) (string, error) {
 	var err error
 	var role string
 
@@ -142,6 +144,28 @@ func Role(usuario models.Usuario) (string, error) {
 
 	return "", err
 
+}
+
+func RoleFromToken(c *gin.Context) (string, error) {
+	username, err := utils.ExtractTokenUsername(c)
+
+	if err != nil {
+		return "", err
+	}
+
+	u, err := models.GetUserByUsername(username)
+
+	if err != nil {
+		return "", err
+	}
+
+	role, err := RoleFromUser(u)
+
+	if err != nil {
+		return "", err
+	}
+
+	return role, nil
 }
 
 func CurrentUser(c *gin.Context) {
