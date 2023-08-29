@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Administrador struct {
 	IdAdministrador string `json:"id_administrador"`
 	Nombre          string `json:"nombre"`
@@ -7,12 +9,11 @@ type Administrador struct {
 }
 
 type EstudianteGetAdmin struct {
-	IdEstudiante string `json:"id_estudiante"`
-	Foto         string `json:"foto"`
-	Nombre       string `json:"nombre"`
-	Apellido     string `json:"apellido"`
-	Nacimiento   string `json:"nacimiento"`
-	Suspendido   bool   `json:"suspendido"`
+	IdEstudiante string    `json:"id_estudiante"`
+	Nombre       string    `json:"nombre"`
+	Apellido     string    `json:"apellido"`
+	Nacimiento   time.Time `json:"nacimiento"`
+	Suspendido   bool      `json:"suspendido"`
 }
 
 func (Administrador) TableName() string {
