@@ -10,109 +10,77 @@ import Input from "../../components/Input/Input"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
+import Popup from "../../components/Popup/Popup"
+import useIsImage from "../../Hooks/useIsImage"
 
 const ChatPage = () => {
   const { user } = useStoreon("user")
   const apiLastChats = useApi()
   const apiMessages = useApi()
   const apiSendMessage = useApi()
+  const isImage = useIsImage()
 
-  const [lastChats, setLastChats] = useState([
-    {
-      chat_id: 1,
-      user_name: "Empresa INC",
-      user_photo: "/images/usuario.png",
-      last_message:
-        "Muchas gracias por la información. Estaré a la espera de su correo",
-      last_time: "2023-05-18T02:51:32.554275Z",
-    },
-  ])
-  const [messages, setMessages] = useState([
-    {
-      id_mensaje: 1,
-      id_emisor: "cas21700@uvg.edu.gt",
-      id_receptor: "hr@empresa.tec",
-      mensaje:
-        "Hola, me gustaria aplicar a la oferta de Desarrollador Web Junior. Me pueden dar mas infromación",
-      tiempo: "2023-05-18T02:38:15.841209Z",
-      emisor_nombre: "Mark",
-      emisor_foto: "/images/usuario.png",
-      receptor_nombre: "Empresa INC",
-      receptor_foto: "",
-      archivo: "",
-    },
-    {
-      id_mensaje: 2,
-      id_emisor: "hr@empresa.tec",
-      id_receptor: "cas21700@uvg.edu.gt",
-      mensaje:
-        "Hola, gracias por su interés. Le enviaré a su correo más detalles de la propuesta",
-      tiempo: "2023-05-18T02:48:48.644355Z",
-      emisor_nombre: "Mark",
-      emisor_foto: "/images/usuario.png",
-      receptor_nombre: "Empresa INC",
-      receptor_foto: "",
-      archivo: "",
-    },
-  ])
   const [currentChat, setCurrentChat] = useState("")
   const [textMessage, setTextMessage] = useState("")
   const [uploadedImage, setUploadedImage] = useState("")
+  const [idCurrentChat, setIdCurrentChat] = useState()
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
 
   const obtainLastChats = () => {
     apiLastChats.handleRequest("POST", "/messages/getLast", {
-      id_user: user.id_user,
+      id_usuario: user.id_user,
     })
-    console.log("console", apiLastChats.data)
-    if (apiLastChats.data) {
-      console.log("Entro")
-      setLastChats(apiLastChats.data.message)
-    }
-  }
-
-  const obtainMessages = () => {
-    apiMessages.handleRequest("POST", "/messages/get", {
-      id_emisor: user.id_user,
-      id_receptor: currentChat,
-    })
-    if (apiMessages.data) {
-      setMessages(apiMessages.data.messages)
-    }
-  }
-
-  const sendMessage = (id_postulacion) => {
-    apiSendMessage.handleRequest("POST", "/messages/send", {
-      id_emisor: user.id_user,
-      id_receptor: currentChat,
-      mensaje: textMessage,
-      id_postulacion,
-    })
-    if (apiSendMessage.data) {
-      setMessages(apiSendMessage.data.messages)
-    }
-  }
-
-  const setObtainLastChats = () => {
-    setTimeout(() => {
-      obtainLastChats()
-    }, 1000)
   }
 
   useEffect(() => {
-    // setObtainLastChats()
-    // obtainLastChats()
-  }, [])
+    obtainMessages()
+  }, [currentChat])
 
-  const setObtainMessages = () => {
-    setTimeout(() => {
-      obtainMessages()
-    }, 1000)
+  const obtainMessages = () => {
+    if (currentChat !== "") {
+      apiMessages.handleRequest("POST", "/messages/get", {
+        id_emisor: user.id_user,
+        id_receptor: currentChat,
+      })
+    }
   }
 
-  const handleChat = (receptor) => {
-    setCurrentChat(receptor)
+  const sendMessage = async () => {
+    if (uploadedImage !== "" && textMessage !== "") {
+      await apiSendMessage.handleRequest("POST", "/messages/send", {
+        id_emisor: user.id_user,
+        id_receptor: currentChat,
+        mensaje: textMessage,
+        id_postulacion: idCurrentChat,
+      })
+      await apiSendMessage.handleRequest("POST", "/messages/send", {
+        id_emisor: user.id_user,
+        id_receptor: currentChat,
+        mensaje: uploadedImage,
+        id_postulacion: idCurrentChat,
+      })
+    } else if (uploadedImage === "") {
+      await apiSendMessage.handleRequest("POST", "/messages/send", {
+        id_emisor: user.id_user,
+        id_receptor: currentChat,
+        mensaje: textMessage,
+        id_postulacion: idCurrentChat,
+      })
+    } else if (textMessage === "") {
+      await apiSendMessage.handleRequest("POST", "/messages/send", {
+        id_emisor: user.id_user,
+        id_receptor: currentChat,
+        mensaje: uploadedImage,
+        id_postulacion: idCurrentChat,
+      })
+    }
     obtainMessages()
-    setObtainMessages()
+  }
+
+  const handleChat = (receptor, id) => {
+    setCurrentChat(receptor)
+    setIdCurrentChat(id)
   }
 
   const handleInputChange = (e) => {
@@ -120,49 +88,125 @@ const ChatPage = () => {
   }
 
   const handleUploadFile = (uploadedImage) => {
-    setUploadedImage(uploadedImage)
+    const fileType = isImage(uploadedImage)
+    if (fileType) {
+      setUploadedImage(uploadedImage)
+    } else {
+      setError("El archivo debe ser una imagen")
+      setWarning(true)
+    }
   }
 
-  const handleSendMessage = (e) => {
-    //sendMessage(e.target.value)
+  const handleSendMessage = () => {
+    sendMessage()
     setTextMessage("")
     setUploadedImage("")
   }
 
+  const handelPopupStatus = () => {
+    setWarning(false)
+  }
+
+  //Intervals
+  // Actualizar lista de chats
+
+  useEffect(() => {
+    obtainLastChats()
+    const intervalListadeChats = setInterval(() => {
+      obtainLastChats()
+    }, 10000)
+    return () => clearInterval(intervalListadeChats)
+  }, [])
+
+  // Actualizar mensajes de chat actual
+
+  useEffect(() => {
+    const intervalMensajesChatActual = setInterval(() => {
+      obtainMessages()
+    }, 10000)
+    return () => clearInterval(intervalMensajesChatActual)
+  }, [])
+
   return (
     <div className={style.container}>
       <Header userperson="student" />
+      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
       <div className={style.generalChatContainer}>
         <div className={style.chatsContainer}>
-          {lastChats.length > 0 ? (
-            lastChats.map((chat) => (
-              <Chat
-                pfp={chat.user_photo}
-                name={chat.user_name}
-                lastChat={chat.last_message}
-                key={["reclutamiento@sarita", chat.chat_id]}
-                onClick={() => handleChat("reclutamiento@sarita")}
-              />
-            ))
+          {apiLastChats.data && apiLastChats.data.messages.length > 0 ? (
+            apiLastChats.data.messages.map((chat) => {
+              if (chat.last_message.length === 0) {
+                return null
+              } else {
+                const fileType = isImage(chat.last_message)
+                if (fileType) {
+                  return (
+                    <Chat
+                      pfp={
+                        chat.user_photo ? chat.user_photo : "/images/pfp.svg"
+                      }
+                      name={chat.user_name}
+                      lastChat="Foto"
+                      key={chat.postulation_id}
+                      id_postulacion={chat.postulation_id.toString()}
+                      onClick={() =>
+                        handleChat(chat.user_id, chat.postulation_id)
+                      }
+                    />
+                  )
+                } else {
+                  return (
+                    <Chat
+                      pfp={
+                        chat.user_photo ? chat.user_photo : "/images/pfp.svg"
+                      }
+                      name={chat.user_name}
+                      lastChat={chat.last_message}
+                      key={chat.postulation_id}
+                      id_postulacion={chat.postulation_id.toString()}
+                      onClick={() =>
+                        handleChat(chat.user_id, chat.postulation_id)
+                      }
+                    />
+                  )
+                }
+              }
+            })
           ) : (
             <div className={style.noUsersMessage}>No hay chats recientes.</div>
           )}
         </div>
         <div className={style.currentChatContainer}>
-          {messages.length > 0 ? (
-            messages.map((message) => {
+          {apiMessages.data && apiMessages.data.messages.length > 0 ? (
+            apiMessages.data.messages.map((message, number) => {
               const side = message.id_emisor === user.id_user ? "right" : "left"
-              return (
-                <Message
-                  key={message.id}
-                  pfp={message.emisor_foto}
-                  name={message.emisor_nombre}
-                  time={message.tiempo}
-                  message={message.mensaje}
-                  file={message.archivo}
-                  side={side}
-                />
-              )
+              number += 1
+              const fileType = isImage(message.mensaje)
+              if (fileType) {
+                return (
+                  <Message
+                    key={[message.id, message.id_emisor, number]}
+                    pfp={message.emisor_foto}
+                    name={message.emisor_nombre}
+                    time={message.tiempo}
+                    message=""
+                    file={message.mensaje}
+                    side={side}
+                  />
+                )
+              } else {
+                return (
+                  <Message
+                    key={[message.id, message.id_emisor, number]}
+                    pfp={message.emisor_foto}
+                    name={message.emisor_nombre}
+                    time={message.tiempo}
+                    message={message.mensaje}
+                    file=""
+                    side={side}
+                  />
+                )
+              }
             })
           ) : (
             <div className={style.noMessagesMessage}>No hay mensajes.</div>
@@ -177,16 +221,40 @@ const ChatPage = () => {
                 onChange={handleInputChange}
               />
             </div>
-            <div className={style.buttonFile}>
-              <ImageUploader onImageUpload={handleUploadFile} image={uploadedImage} />
+            <div
+              className={style.buttonFile}
+              style={uploadedImage === "" ? { width: "5%" } : { width: "15%" }}
+            >
+              {uploadedImage === "" ? null : (
+                <button
+                  type="button"
+                  className={style.deleteImageButton}
+                  onClick={() => setUploadedImage("")}
+                  alt="Eliminar imagen"
+                >
+                  <img src="/images/delete.svg" alt="delete" />
+                </button>
+              )}
+              <ImageUploader
+                onImageUpload={handleUploadFile}
+                image={uploadedImage}
+              />
             </div>
             <div className={style.buttonSend}>
               <button
                 type="button"
                 className={style.button}
                 style={{
-                  backgroundColor: "#9c8bdf", // Opcional: color de fondo
+                  backgroundColor:
+                    (textMessage === "" && uploadedImage === "") ||
+                    currentChat === ""
+                      ? "#D6CFF2"
+                      : "#9c8bdf",
                 }}
+                disabled={
+                  (textMessage === "" && uploadedImage === "") ||
+                  currentChat === ""
+                }
                 onClick={handleSendMessage}
               >
                 <img src="/images/send.svg" alt="send" />
