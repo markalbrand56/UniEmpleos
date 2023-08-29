@@ -68,6 +68,7 @@ func Routes(router *gin.Engine) {
 	offers.PUT("/", controllers.UpdateOffer)
 	offers.POST("/all", controllers.GetOffer)
 	offers.POST("/company", controllers.GetOfferByCompany)
+	offers.DELETE("/", controllers.DeleteOffer)
 
 	// Postulaciones
 	postulations := router.Group("api/postulations")

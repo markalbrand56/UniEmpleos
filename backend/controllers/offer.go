@@ -336,3 +336,50 @@ func GetOfferByCompany(c *gin.Context) {
 		Data:    data,
 	})
 }
+
+type DeleteOfferInput struct {
+	Id_Oferta string `json:"id_oferta"`
+}
+
+func DeleteOffer(c *gin.Context) {
+	// Obtén el valor del parámetro "id_oferta" desde los query parameters
+	idOferta := c.Query("id_oferta")
+
+	// Verifica si el valor del parámetro está presente
+	if idOferta == "" {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Missing id_oferta parameter",
+			Data:    nil,
+		})
+		return
+	}
+
+	// Delete oferta_carrera
+	err := configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.OfertaCarrera{}).Error
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error deleting oferta_carrera: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Delete oferta
+	err = configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error deleting oferta: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Offer deleted successfully",
+		Data:    nil,
+	})
+}
