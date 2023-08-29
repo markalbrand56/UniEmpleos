@@ -19,11 +19,14 @@
   }
   
   .titleContainer{
-    width: 75%;
+    width: 80%;
     background-color: transparent;
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
     padding: 15px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
   }
   
   .buttonContainer {
@@ -33,6 +36,42 @@
     width: 75%;
     gap: 25px;
     padding: 25px 0;
+  }
+
+  .headertittlecontainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .headertittlecontainer button {
+    background-color: transparent;
+    margin-left: auto;
+  }
+
+  .headertittlecontainer button:hover, .headertittlecontainer button:focus, .headertittlecontainer button:active {
+    background-color: transparent;
+    border: none;
+  }
+
+  .headertittlecontainer h4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    left: 40%;
+  }
+
+
+  .headertittlecontainer img {
+    width: 30px;
+    height: 30px;
+  }
+
+  button.icontrash{
+    width: 10px;
+    height: 10px;
   }
   
   .dataContainer {
