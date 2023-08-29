@@ -4,6 +4,7 @@
   justify-content: space-between;
   margin: 5px;
   width: auto;
+  border-radius: 10px;
   /* Sombras más pronunciadas */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

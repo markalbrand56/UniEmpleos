@@ -23,11 +23,11 @@ const useApi = () => {
     if (user.token) {
       options.headers.Authorization = `Bearer ${user.token}`
     }
-    console.info("API CALLL:", `${API_URL}/api${path}`, options)
+    // console.info("API CALLL:", `${API_URL}/api${path}`, options)
     setLoading(true)
     const response = await fetch(`${API_URL}/api${path}`, options)
     const datos = await response.json() // Recibidos
-    console.log("API RESPONSE:", datos.message)
+    // console.log("API RESPONSE:", datos.message)
     setLoading(false)
     setData(datos.data)
 

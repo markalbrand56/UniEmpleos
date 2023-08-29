@@ -7,7 +7,6 @@ const Chat = ({
   pfp,
   lastChat,
   name,
-  id_receptor,
   id_postulacion,
   onClick,
 }) => (
@@ -16,7 +15,7 @@ const Chat = ({
       type="button"
       onClick={onClick}
       className={style.button}
-      key={[id_receptor, id_postulacion]}
+      key={id_postulacion}
     >
       <div className={style.pfp}>
         <img src={pfp} alt={name} />
@@ -34,7 +33,6 @@ Chat.propTypes = {
   pfp: PropTypes.string.isRequired,
   lastChat: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  id_receptor: PropTypes.string.isRequired,
   id_postulacion: PropTypes.string.isRequired,
 }
 

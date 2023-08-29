@@ -93,11 +93,34 @@
 
 .buttonSend {
   width: 10%;
+  height: 41.5px;
 }
 
 .buttonFile {
-  width: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
   margin: 0;
+  height: 41.5px;
+}
+
+.deleteImageButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+  height: 50%;
+  padding: 0;
+}
+
+.deleteImageButton:focus {
+  outline: none;
+}
+
+.deleteImageButton img {
+  width: 100%;
+  height: 100%;
 }
 
 .button {
@@ -107,6 +130,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .button img {
