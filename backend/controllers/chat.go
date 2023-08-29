@@ -126,7 +126,7 @@ func GetLastChat(c *gin.Context) {
 
 	// Consulta SQL pura con alias y parámetro ?
 	query := `SELECT p.id_postulacion as chat_id,
-       				o.id_empresa as user_id,
+       				CASE WHEN p.id_estudiante = ? THEN e2.id_empresa ELSE e.id_estudiante END as user_id,
 					CASE WHEN p.id_estudiante = ? THEN e2.nombre ELSE e.nombre END as user_name,
 					CASE WHEN p.id_estudiante = ? THEN e2.foto ELSE e.foto END as user_photo,
 					m.mensaje as last_message,
@@ -145,7 +145,7 @@ func GetLastChat(c *gin.Context) {
 			  ORDER BY m.tiempo DESC`
 
 	// Ejecutamos la consulta SQL pura con parámetros inputID.ID_usuario
-	err = configs.DB.Raw(query, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario).Scan(&chats).Error
+	err = configs.DB.Raw(query, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario).Scan(&chats).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
