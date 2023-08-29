@@ -168,7 +168,7 @@ Actualiza un estudiante
 ```
 ---
 ## Mensajes
-### [POST] api/messages
+### [POST] api/messages/send
 Crea un mensaje
 > **Note**
 > Auth required
@@ -628,6 +628,26 @@ Crea un administrador
 	"Message": "Admin Created Successfully",
 	"Data": "nil"
 }
+```
+### [GET] api/admins/students
+Retorna información de estudiantes para el panel de administradores
+
+#### Response
+``` json
+"status": 200,
+    "message": "Students Retrieved Successfully",
+    "data": {
+        "studets": [
+            {
+                "id_estudiante": "alb21004@uvg.edu.gt",
+                "foto": "",
+                "nombre": "Mark",
+                "apellido": "Albrand",
+                "nacimiento": "2002-05-06T00:00:00Z",
+                "suspendido": false
+            }
+	  ]
+     }
 ```
 ---
 ## Postulaciones
