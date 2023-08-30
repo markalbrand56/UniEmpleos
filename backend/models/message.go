@@ -24,7 +24,6 @@ type MensajeGet struct {
 	EmisorNombre   string    `json:"emisor_nombre"`
 	EmisorFoto     string    `json:"emisor_foto"`
 	ReceptorNombre string    `json:"receptor_nombre"`
-	ReceptorFoto   string    `json:"receptor_foto"`
 	Archivo        string    `json:"archivo"`
 }
 

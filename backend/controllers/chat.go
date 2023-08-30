@@ -69,10 +69,12 @@ func GetMessages(c *gin.Context) {
 	}
 
 	var messages []models.MensajeGet
-	query := `Select CASE WHEN m.id_emisor = ? THEN es.nombre ELSE em.nombre END as emisor_nombre,
-       CASE WHEN m.id_receptor = ? THEN es.nombre ELSE em.nombre END as receptor_nombre,
-       CASE WHEN m.id_emisor = ? THEN es.foto ELSE em.foto END as emisor_foto,
-       CASE WHEN m.id_receptor = ? THEN es.foto ELSE em.foto END as receptor_foto,
+	query := `Select CASE WHEN (m.id_emisor = ? AND es.id_estudiante = ?) OR (m.id_emisor = ? AND es.id_estudiante = ?) THEN es.nombre
+       WHEN (m.id_emisor = ? AND em.id_empresa = ?) OR (m.id_emisor = ? AND em.id_empresa = ?) THEN em.nombre END as emisor_nombre,
+       CASE WHEN (m.id_receptor = ? AND es.id_estudiante = ?) OR (m.id_receptor = ? AND es.id_estudiante = ?) THEN es.nombre
+       WHEN (m.id_receptor = ? and em.id_empresa = ?) OR (m.id_receptor = ? and em.id_empresa = ?) THEN em.nombre END as receptor_nombre,
+       CASE WHEN (m.id_emisor = ? and es.id_estudiante = ?) OR (m.id_emisor = ? and es.id_estudiante = ?) THEN es.foto
+       WHEN (m.id_emisor = ? and em.id_empresa = ?) OR (m.id_emisor = ? and em.id_empresa = ?) THEN em.foto END as emisor_foto,
        m.*
        from mensaje m
          join estudiante es on m.id_emisor = es.id_estudiante or m.id_receptor = es.id_estudiante
@@ -81,7 +83,15 @@ func GetMessages(c *gin.Context) {
          or (id_emisor = ? and id_receptor = ?);`
 
 	// Ejecutamos la consulta SQL pura con parámetros inputID.ID_usuario
-	err := configs.DB.Raw(query, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor, inputID.ID_emisor).Scan(&messages).Error
+	err := configs.DB.Raw(query, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
+		inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
+		inputID.ID_receptor, inputID.ID_receptor, inputID.ID_emisor, inputID.ID_emisor,
+		inputID.ID_receptor, inputID.ID_receptor, inputID.ID_emisor, inputID.ID_emisor,
+		inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
+		inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
+		inputID.ID_emisor, inputID.ID_receptor,
+		inputID.ID_receptor, inputID.ID_emisor,
+	).Scan(&messages).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
