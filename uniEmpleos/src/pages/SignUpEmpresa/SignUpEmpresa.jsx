@@ -22,6 +22,7 @@ const SignUpEmpresa = () => {
   const [uploadedImage, setUploadedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -99,6 +100,14 @@ const SignUpEmpresa = () => {
     setWarning(false)
   }
 
+  const handlePassword = () => {
+    setShowPassword(!showPassword)
+  }
+
+  const handlePass = (event) => {
+    setPassInput(event.target.value)
+  }
+
   return (
     <div className={style.signUpCointainer}>
       <Popup message={error} status={warning} closePopup={handelPopupStatus} />
@@ -138,12 +147,14 @@ const SignUpEmpresa = () => {
           <div className={style.inputSubContainer}>
             <span>Contraseña</span>
             <ComponentInput
-              name="password"
-              type="password"
-              placeholder="miContraseña"
-              value={password}
-              onChange={handleInputsValue}
-            />
+            name="password"
+            type="password"
+            placeholder="micontraseña123"
+            onChange={handlePass}
+            eye = {true}
+            onClickButton = {handlePassword}
+            isOpen={showPassword}
+          />
           </div>
           <div className={style.inputSubContainer}>
             <span>Foto de perfil</span>

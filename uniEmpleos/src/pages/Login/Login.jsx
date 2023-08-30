@@ -13,6 +13,7 @@ const LogIn = () => {
   const [emailInput, setEmailInput] = useState("")
   const [passInput, setPassInput] = useState("")
   const [warning, setWarning] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   // Teniendo el DPI y la contraseña,necesitamos que nos devuelva un objeto usuario
   const logIn = async () => {
@@ -62,6 +63,10 @@ const LogIn = () => {
     setPassInput(event.target.value)
   }
 
+  const handlePassword = () => {
+    setShowPassword(!showPassword)
+  }
+
   return (
     <div className={styles.logInCointainer}>
       <Popup
@@ -87,6 +92,9 @@ const LogIn = () => {
             type="password"
             placeholder="micontraseña123"
             onChange={handlePass}
+            eye = {true}
+            onClickButton = {handlePassword}
+            isOpen={showPassword}
           />
         </div>
         <Button
