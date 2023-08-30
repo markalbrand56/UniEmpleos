@@ -122,10 +122,6 @@ const SignUpEstudiante = () => {
     setShowPassword(!showPassword)
   }
 
-  const handlePass = (event) => {
-    setPassInput(event.target.value)
-  }
-
   const handleSignUp = async () => {
     if (
       dpi === "" ||
@@ -256,7 +252,7 @@ const SignUpEstudiante = () => {
             name="password"
             type="password"
             placeholder="micontraseña123"
-            onChange={handlePass}
+            onChange={handleInputsValue}
             eye = {true}
             onClickButton = {handlePassword}
             isOpen={showPassword}

@@ -16,7 +16,6 @@ const ComponentInput = ({
   onClickButton,
 }) => {
   if(eye){
-    console.log(isOpen)
     if(isOpen){
       return (
         <div className={styles.inputContainer}>

@@ -104,10 +104,6 @@ const SignUpEmpresa = () => {
     setShowPassword(!showPassword)
   }
 
-  const handlePass = (event) => {
-    setPassInput(event.target.value)
-  }
-
   return (
     <div className={style.signUpCointainer}>
       <Popup message={error} status={warning} closePopup={handelPopupStatus} />
@@ -150,7 +146,7 @@ const SignUpEmpresa = () => {
             name="password"
             type="password"
             placeholder="micontraseña123"
-            onChange={handlePass}
+            onChange={handleInputsValue}
             eye = {true}
             onClickButton = {handlePassword}
             isOpen={showPassword}
