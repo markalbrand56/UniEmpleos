@@ -1,9 +1,7 @@
 .inputContainer {
   font-family: Arial;
   font-size: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  height: 40px;
   user-select: none;
 }
 
@@ -13,6 +11,7 @@
   border: 2px solid #ccc;
   border-radius: 5px;
   background-color: #fff;
+  width: calc(100% - 20px);
   color: #000;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -34,4 +33,30 @@
 .inputContainer input[type="date"]::-webkit-datetime-edit-text {
   background-color: transparent;
   color: #000; /* Cambia el color del texto en el calendario */
+}
+
+.eyeContainer {
+  display: flex;
+  position: relative;
+  right: 15px;
+  bottom: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  margin-left: auto;
+  cursor: pointer;
+  background-color: transparent;
+  width: 15px;
+  height: 15px;
+}
+
+.eyeContainer:hover {
+  transform: scale(0.85);
+  border: none;
+}
+
+.eyeContainer img {
+  width: 15px;
+  height: 15px;
 }

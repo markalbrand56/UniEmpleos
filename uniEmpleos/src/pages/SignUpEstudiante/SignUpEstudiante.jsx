@@ -29,6 +29,7 @@ const SignUpEstudiante = () => {
 
   const [carreras, setCarreras] = useState([])
   const [uploadedImage, setUploadedImage] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
 
   const semestres = [
     { value: "1", label: "1" },
@@ -115,6 +116,10 @@ const SignUpEstudiante = () => {
 
   const handleButton = () => {
     navigate("/login")
+  }
+
+  const handlePassword = () => {
+    setShowPassword(!showPassword)
   }
 
   const handleSignUp = async () => {
@@ -244,11 +249,14 @@ const SignUpEstudiante = () => {
           <div className={style.inputSubContainerDataGroup1}>
             <span>Contraseña</span>
             <ComponentInput
-              name="password"
-              type="password"
-              placeholder="micontraseña"
-              onChange={handleInputsValue}
-            />
+            name="password"
+            type="password"
+            placeholder="micontraseña123"
+            onChange={handleInputsValue}
+            eye = {true}
+            onClickButton = {handlePassword}
+            isOpen={showPassword}
+          />
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Carrera</span>

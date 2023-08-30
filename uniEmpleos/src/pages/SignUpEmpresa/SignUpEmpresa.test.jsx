@@ -33,7 +33,7 @@ it("should call API and navigate to login page when valid form data is submitted
   fireEvent.change(getByPlaceholderText("empresa@org.com"), {
     target: { value: "test@test.com" },
   })
-  fireEvent.change(getByPlaceholderText("miContraseña"), {
+  fireEvent.change(getByPlaceholderText("micontraseña123"), {
     target: { value: "testpassword" },
   })
   fireEvent.change(getByPlaceholderText("Detalles de la empresa"), {

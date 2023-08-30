@@ -81,6 +81,7 @@
   bottom: 0;
   padding: 10px;
   width: calc(66% - 20px);
+  height: calc(60px - 20px);
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -93,24 +94,25 @@
 
 .buttonSend {
   width: 10%;
-  height: 41.5px;
+  height: 100%;
 }
 
 .buttonFile {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
   margin: 0;
-  height: 41.5px;
+  height: 100%;
+  display: flex;
 }
 
 .deleteImageButton {
+  margin-left: auto;
+  position: relative;
+  right: 10px;
+  bottom: 10px;
   background-color: transparent;
   border: none;
   cursor: pointer;
-  width: 50%;
-  height: 50%;
+  width: 20px;
+  height: 20px;
   padding: 0;
 }
 
