@@ -229,6 +229,10 @@ const ChatPage = () => {
               className={style.buttonFile}
               style={uploadedImage === "" ? { width: "5%" } : { width: "15%" }}
             >
+              <ImageUploader
+                onImageUpload={handleUploadFile}
+                image={uploadedImage}
+              />
               {uploadedImage === "" ? null : (
                 <button
                   type="button"
@@ -239,10 +243,6 @@ const ChatPage = () => {
                   <img src="/images/delete.svg" alt="delete" />
                 </button>
               )}
-              <ImageUploader
-                onImageUpload={handleUploadFile}
-                image={uploadedImage}
-              />
             </div>
             <div className={style.buttonSend}>
               <button
