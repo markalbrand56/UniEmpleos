@@ -253,7 +253,6 @@ Devuelve los mensajes de un chat dado el emisor y el receptor
                 "emisor_nombre": "Mark",
                 "emisor_foto": "foto",
                 "receptor_nombre": "Empresa INC",
-                "receptor_foto": "",
                 "archivo": ""
             },
             {
