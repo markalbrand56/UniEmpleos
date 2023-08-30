@@ -81,7 +81,7 @@ func GetMessages(c *gin.Context) {
          or (id_emisor = ? and id_receptor = ?);`
 
 	// Ejecutamos la consulta SQL pura con parámetros inputID.ID_usuario
-	err := configs.DB.Raw(query, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor, inputID.ID_receptor).Scan(&messages).Error
+	err := configs.DB.Raw(query, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor, inputID.ID_emisor).Scan(&messages).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
