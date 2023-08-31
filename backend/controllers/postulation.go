@@ -5,6 +5,8 @@ import (
 	"backend/models"
 	"backend/responses"
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -38,9 +40,20 @@ func NewPostulation(c *gin.Context) {
 	}
 
 	var inserted models.PostulacionGet
+
+	// TODO: Delete Raw
 	err := configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
 
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
+			c.JSON(http.StatusConflict, responses.StandardResponse{
+				Status:  409,
+				Message: "This postulation already exists",
+				Data:    nil,
+			})
+			return
+		}
+
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
 			Message: "Error creating. " + err.Error(),
