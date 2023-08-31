@@ -33,17 +33,19 @@ describe("Pruebas para la página de registro de estudiantes", () => {
 
   it("debería permitir ingresar datos en los campos de registro", () => {
     // Ingresar datos en los campos de registro
-    cy.get('input[name="nombres"]').type("Juan")
-    cy.get('input[name="apellidos"]').type("Pérez")
+    cy.get('input[name="nombres"]').type("Juan Carlos")
+    cy.get('input[name="apellidos"]').type("Lopez Peralta")
     cy.get('input[name="fechaNacimiento"]').type("2000-01-10")
-    cy.get('input[name="dpi"]').type("1234567890101")
+    cy.get('input[name="dpi"]').type("1234567890404")
     cy.get('input[name="telefono"]').type("12345678")
-    cy.get('input[name="correo"]').type("baeimej@gmail.com")
+    cy.get('input[name="correo"]').type("juanperez20@gmail.com")
     cy.get('input[name="password"]').type("12345678")
     cy.get('input[name="universidad"]').type("Universidad del Valle de Guatemala")
+    cy.get('select[name="carrera"]').eq(0).select("1")
     cy.get('select[name="semester"]').eq(0).select("1")
-    cy.get('select[name="carrera"]').eq(1).select("1")
 
+    //ingresar en el boton signup
+    cy.contains("Registrarse").click()
 
   }
   )
