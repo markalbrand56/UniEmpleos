@@ -5,13 +5,7 @@ import styles from "./DropDown.module.css"
 const DropDown = ({ opciones, value, onChange, name }) => {
   return (
     <div className={styles.dropDownContainer}>
-      <select
-        name="semester"
-        id={name}
-        onChange={onChange}
-        value={value}
-        multiple
-      >
+      <select name={name} id={name} onChange={onChange} value={value} multiple>
         {opciones.map((skin) => (
           <option
             key={skin.value}
