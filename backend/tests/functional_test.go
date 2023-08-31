@@ -17,7 +17,7 @@ type LoginResponse struct {
 	} `json:"data"`
 }
 
-func CaseOne(t *testing.T) {
+func TestCaseOne(t *testing.T) {
 	/*
 		Caso 1:	Un estudiante quiere aplicar a una oferta laboral.
 
