@@ -261,6 +261,8 @@ const SignUpEstudiante = () => {
           <div className={style.inputSubContainerDataGroup1}>
             <span>Carrera</span>
             <DropDown
+              name="carrera"
+              id="carrera"
               opciones={carreras}
               value={carrera}
               onChange={handleDropdown}
@@ -278,6 +280,8 @@ const SignUpEstudiante = () => {
           <div className={style.inputSubContainerDataGroup1}>
             <span>Semestre</span>
             <DropDown
+              name="semester"
+              id="semester"
               opciones={semestres}
               value={semestre}
               onChange={handleSemestre}
