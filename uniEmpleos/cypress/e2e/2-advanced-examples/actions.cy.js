@@ -41,8 +41,9 @@ describe("Pruebas para la página de registro de estudiantes", () => {
     cy.get('input[name="correo"]').type("baeimej@gmail.com")
     cy.get('input[name="password"]').type("12345678")
     cy.get('input[name="universidad"]').type("Universidad del Valle de Guatemala")
-    cy.get('select[name="semester"]').select("1")
-    cy.get('select[name="carrera"]').select("1")
+    cy.get('select[name="semester"]').eq(0).select("1")
+    cy.get('select[name="carrera"]').eq(1).select("1")
+
 
   }
   )
