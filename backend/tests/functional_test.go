@@ -3,17 +3,27 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/assert"
+	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 )
 
-type LoginResponse struct {
+type Offer struct {
+	ID       int    `json:"id_oferta"`
+	Careers  string `json:"nombre_carreras"`
+	Company  string `json:"nombre_empresa"`
+	Position string `json:"puesto"`
+	Salary   int    `json:"salario"`
+}
+
+type Postulations struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 	Data    struct {
-		Role  string `json:"role"`
-		Token string `json:"token"`
+		Postulations []Offer `json:"postulations"`
 	} `json:"data"`
 }
 
@@ -39,9 +49,51 @@ func TestCaseOne(t *testing.T) {
 	req := httptest.NewRequest("POST", "/api/login", body)
 	router.ServeHTTP(w, req)
 
-	login := LoginResponse{}
+	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
 
-	err := json.Unmarshal(w.Body.Bytes(), &login)
+	var loginResponse struct {
+		Status  int    `json:"status"`
+		Message string `json:"message"`
+		Data    struct {
+			Role  string `json:"role"`
+			Token string `json:"token"`
+		} `json:"data"`
+	}
 
-	assert.NoError(t, err, "Error while logging in. "+err.Error())
+	err := json.Unmarshal(w.Body.Bytes(), &loginResponse)
+
+	assert.NoError(t, err, "Se inició sesión correctamente")
+
+	// Paso 2: Ver todas las ofertas laborales
+	// api/postulations/previews
+
+	w = httptest.NewRecorder()
+	req = httptest.NewRequest("GET", "/api/postulations/previews", nil)
+	router.ServeHTTP(w, req)
+
+	postulations := Postulations{}
+
+	err = json.Unmarshal(w.Body.Bytes(), &postulations)
+
+	assert.Equal(t, http.StatusOK, w.Code, "El usuario puede ver todas las ofertas laborales")
+
+	// Paso 3: Ver información de una oferta laboral
+	// api/offers/all
+
+	w = httptest.NewRecorder()
+	req = httptest.NewRequest("POST", "/api/offers/all", nil)
+
+	// de la respuesta en postulations, se toma el primer elemento
+	id_offer := postulations.Data.Postulations[0].ID
+	id_offer_S := strconv.Itoa(id_offer)
+	// añadir el token a la cabecera
+	jsonOffer := `{"id_oferta": "` + id_offer_S + `"}`
+	body = bytes.NewBufferString(jsonOffer)
+	req = httptest.NewRequest("POST", "/api/offers/all", body)
+	req.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
+
+	router.ServeHTTP(w, req)
+
+	fmt.Println(w.Body.String())
+	assert.Equal(t, http.StatusOK, w.Code, "El usuario puede ver la información de una oferta laboral")
 }
