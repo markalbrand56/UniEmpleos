@@ -36,7 +36,6 @@ func TestCaseOne(t *testing.T) {
 		Ver todas las ofertas laborales
 		Ver información de una oferta laboral
 		Aplicar a la oferta laboral
-
 	*/
 
 	router := setupRouter()
@@ -96,4 +95,23 @@ func TestCaseOne(t *testing.T) {
 
 	fmt.Println(w.Body.String())
 	assert.Equal(t, http.StatusOK, w.Code, "El usuario puede ver la información de una oferta laboral")
+
+	// Paso 4: Aplicar a la oferta laboral
+	// api/postulations/
+	w = httptest.NewRecorder()
+	// id_oferta, id_estudiante, estado
+
+	jsonPostulation := `{"id_oferta": ` + id_offer_S + `, "id_estudiante": "alb21004@uvg.edu.gt", "estado": "Enviada"}`
+
+	body = bytes.NewBufferString(jsonPostulation)
+	req = httptest.NewRequest("POST", "/api/postulations/", body)
+
+	req.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
+
+	router.ServeHTTP(w, req)
+
+	fmt.Println(w.Body.String())
+
+	assert.True(t, w.Code == http.StatusOK || w.Code == http.StatusConflict, w.Code, "El usuario puede aplicar a una oferta laboral")
+
 }
