@@ -196,6 +196,8 @@ func TestCaseThree(t *testing.T) {
 
 	w = httptest.NewRecorder()
 
+	// Paso 3: Modificar los campos que se deseen
+
 	// crear el body.
 	jsonUpdate := `{"dpi"	    : "3239183600512", 
 				"nombre"        : "Diego", 
@@ -210,6 +212,7 @@ func TestCaseThree(t *testing.T) {
 				"contra"		: "mora",
 				"universidad"   : "UVG"}`
 	body2 := bytes.NewBufferString(jsonUpdate)
+	// Paso 4: Guardar los cambios
 	req = httptest.NewRequest("PUT", "/api/students/update", body2)
 
 	req.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
