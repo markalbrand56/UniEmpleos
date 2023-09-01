@@ -115,3 +115,51 @@ func TestCaseOne(t *testing.T) {
 	assert.True(t, w.Code == http.StatusOK || w.Code == http.StatusConflict, w.Code, "El usuario puede aplicar a una oferta laboral")
 
 }
+
+func TestCaseTwo(t *testing.T) {
+	/*
+		Una empresa quiere "postear" una oferta laboral.
+		pasos:
+		Iniciar sesión
+	*/
+
+	router := setupRouter()
+	w := httptest.NewRecorder()
+
+	// Paso 1: Iniciar sesión
+	jsonLogin := `{"usuario": "prueba@prueba", "contra": "prueba"}`
+	body := bytes.NewBufferString(jsonLogin)
+	req := httptest.NewRequest("POST", "/api/login", body)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
+	var loginResponse struct {
+		Status  int    `json:"status"`
+		Message string `json:"message"`
+		Data    struct {
+			Role  string `json:"role"`
+			Token string `json:"token"`
+		} `json:"data"`
+	}
+
+	err := json.Unmarshal(w.Body.Bytes(), &loginResponse)
+	assert.NoError(t, err, "Se inició sesión correctamente")
+
+	// Paso 2: Navegar a la pestaña "añadir empleo"
+	// api/offers
+	w = httptest.NewRecorder()
+
+	// crear el body.
+	jsonOffer := `{"id_empresa": "prueba@prueba", "puesto": "FrontEnd Developer", "descripcion": "UX/UI Desing with JS", "requisitos": "Experiencia con JavaScript y Typescript", "salario":100.00, "id_carreras":["1", "2", "3"]}`
+	body2 := bytes.NewBufferString(jsonOffer)
+	req = httptest.NewRequest("POST", "/api/offers/", body2)
+
+	req.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
+
+	router.ServeHTTP(w, req)
+	fmt.Println(w.Body.String())
+
+	assert.True(t, w.Code == http.StatusOK || w.Code == http.StatusConflict, w.Code, "El usuario puede añadir una oferta laboral")
+	assert.Equal(t, http.StatusOK, w.Code, "El usuario puede añadir una oferta laboral")
+
+}
