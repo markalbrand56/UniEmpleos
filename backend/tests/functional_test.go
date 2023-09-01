@@ -163,3 +163,60 @@ func TestCaseTwo(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code, "El usuario puede añadir una oferta laboral")
 
 }
+
+func TestCaseThree(t *testing.T) {
+	/*
+		Un estudiante quiere modificar la informacion de su perfil.
+	*/
+
+	router := setupRouter()
+	w := httptest.NewRecorder()
+
+	// Paso 1: Iniciar sesión
+	jsonLogin := `{"usuario": "mor21146@uvg.edu.gt", "contra": "mora"}`
+	body := bytes.NewBufferString(jsonLogin)
+	req := httptest.NewRequest("POST", "/api/login", body)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
+	var loginResponse struct {
+		Status  int    `json:"status"`
+		Message string `json:"message"`
+		Data    struct {
+			Role  string `json:"role"`
+			Token string `json:"token"`
+		} `json:"data"`
+	}
+
+	err := json.Unmarshal(w.Body.Bytes(), &loginResponse)
+	assert.NoError(t, err, "Se inició sesión correctamente")
+
+	// Paso 2: Navegar a la pestaña "Perfil"
+	// api/students/update
+
+	w = httptest.NewRecorder()
+
+	// crear el body.
+	jsonUpdate := `{"dpi"	    : "3239183600512", 
+				"nombre"        : "Diego", 
+				"apellido"      : "Morales",
+				"nacimiento"    : "2002-10-52", 
+				"correo"        : "mor21146@uvg.edu.gt", 
+				"telefono"      : "55447788", 
+				"carrera"       : 1,   
+				"semestre"      : 4,    
+				"cv"            : "", 
+				"foto"          : "", 
+				"contra"		: "mora",
+				"universidad"   : "UVG"}`
+	body2 := bytes.NewBufferString(jsonUpdate)
+	req = httptest.NewRequest("PUT", "/api/students/update", body2)
+
+	req.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
+
+	router.ServeHTTP(w, req)
+
+	fmt.Println(w.Body.String())
+
+	assert.True(t, w.Code == http.StatusOK || w.Code == http.StatusConflict, w.Code, "El usuario puede editar su perfil")
+}
