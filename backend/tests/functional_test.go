@@ -200,7 +200,7 @@ func TestCaseThree(t *testing.T) {
 	jsonUpdate := `{"dpi"	    : "3239183600512", 
 				"nombre"        : "Diego", 
 				"apellido"      : "Morales",
-				"nacimiento"    : "2002-10-52", 
+				"nacimiento"    : "2002-10-24", 
 				"correo"        : "mor21146@uvg.edu.gt", 
 				"telefono"      : "55447788", 
 				"carrera"       : 1,   
