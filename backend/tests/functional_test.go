@@ -152,7 +152,7 @@ func TestCaseTwo(t *testing.T) {
 	// crear el body.
 	jsonOffer := `{"id_empresa": "prueba@prueba", "puesto": "FrontEnd Developer", "descripcion": "UX/UI Desing with JS", "requisitos": "Experiencia con JavaScript y Typescript", "salario":100.00, "id_carreras":["1", "2", "3"]}`
 	body2 := bytes.NewBufferString(jsonOffer)
-	req = httptest.NewRequest("POST", "/api/offers", body2)
+	req = httptest.NewRequest("POST", "/api/offers/", body2)
 
 	req.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
 
@@ -161,8 +161,5 @@ func TestCaseTwo(t *testing.T) {
 
 	assert.True(t, w.Code == http.StatusOK || w.Code == http.StatusConflict, w.Code, "El usuario puede añadir una oferta laboral")
 	assert.Equal(t, http.StatusOK, w.Code, "El usuario puede añadir una oferta laboral")
-
-	// api/offers/
-	// Create a new offer.
 
 }
