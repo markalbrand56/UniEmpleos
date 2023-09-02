@@ -134,7 +134,12 @@ const ChatPage = () => {
   return (
     <div className={style.container}>
       <Header userperson="student" />
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={2}
+        close={() => setWarning(false)}
+      />
       <div className={style.generalChatContainer}>
         <div className={style.chatsContainer}>
           {apiLastChats.data && apiLastChats.data.messages.length > 0 ? (

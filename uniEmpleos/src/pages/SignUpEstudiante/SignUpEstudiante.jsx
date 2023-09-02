@@ -160,8 +160,7 @@ const SignUpEstudiante = () => {
       } else if (apiResponse.status === 409) {
         setError("El correo ya esta en uso")
         setWarning(true)
-      } 
-      else {
+      } else {
         setError("Upss algo salio mal")
         setWarning(true)
       }
@@ -184,7 +183,12 @@ const SignUpEstudiante = () => {
 
   return (
     <div className={style.signUpCointainer}>
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={2}
+        close={() => setWarning(false)}
+      />
       <h1>UniEmpleos</h1>
       <div className={style.inputsContainer}>
         <div className={style.inputSubContainer}>
@@ -249,14 +253,14 @@ const SignUpEstudiante = () => {
           <div className={style.inputSubContainerDataGroup1}>
             <span>Contraseña</span>
             <ComponentInput
-            name="password"
-            type="password"
-            placeholder="micontraseña123"
-            onChange={handleInputsValue}
-            eye = {true}
-            onClickButton = {handlePassword}
-            isOpen={showPassword}
-          />
+              name="password"
+              type="password"
+              placeholder="micontraseña123"
+              onChange={handleInputsValue}
+              eye={true}
+              onClickButton={handlePassword}
+              isOpen={showPassword}
+            />
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Carrera</span>

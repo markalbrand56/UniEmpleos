@@ -74,7 +74,7 @@ const EditProfileEmpresa = () => {
     } else if (telefono.length < 8) {
       setError("El numero de telefono no es valido")
       setWarning(true)
-    }else {
+    } else {
       const apiResponse = await api.handleRequest(
         "PUT",
         "/companies/update",
@@ -106,7 +106,12 @@ const EditProfileEmpresa = () => {
 
   return (
     <div className={style.defaultContainer}>
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={2}
+        close={() => setWarning(false)}
+      />
       <div className={style.headerContainer}>
         <Header userperson="company" />
       </div>

@@ -57,7 +57,6 @@ const Postulacion = ({ id }) => {
       setError("Upss algo salió mal, intentalo de nuevo")
       setWarning(true)
     }
-    
   }
 
   const handleRegresar = () => {
@@ -71,7 +70,12 @@ const Postulacion = ({ id }) => {
   return (
     <div className={style.container}>
       <Header userperson="student" />
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={2}
+        close={() => setWarning(false)}
+      />
       {api.data ? (
         <div className={style.postulacionContainer}>
           <div className={style.titleContainer}>{api.data.offer.puesto}</div>

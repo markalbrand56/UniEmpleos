@@ -106,7 +106,12 @@ const SignUpEmpresa = () => {
 
   return (
     <div className={style.signUpCointainer}>
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={2}
+        close={() => setWarning(false)}
+      />
       <h1>UniEmpleos</h1>
       <div className={style.inputsContainer}>
         <div className={style.grupoDatos1}>
@@ -143,14 +148,14 @@ const SignUpEmpresa = () => {
           <div className={style.inputSubContainer}>
             <span>Contraseña</span>
             <ComponentInput
-            name="password"
-            type="password"
-            placeholder="micontraseña123"
-            onChange={handleInputsValue}
-            eye = {true}
-            onClickButton = {handlePassword}
-            isOpen={showPassword}
-          />
+              name="password"
+              type="password"
+              placeholder="micontraseña123"
+              onChange={handleInputsValue}
+              eye={true}
+              onClickButton={handlePassword}
+              isOpen={showPassword}
+            />
           </div>
           <div className={style.inputSubContainer}>
             <span>Foto de perfil</span>

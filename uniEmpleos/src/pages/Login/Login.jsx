@@ -51,10 +51,6 @@ const LogIn = () => {
     }
   }
 
-  const closePopup = () => {
-    setWarning(false)
-  }
-
   const handleCorreo = (event) => {
     setEmailInput(event.target.value)
   }
@@ -72,7 +68,8 @@ const LogIn = () => {
       <Popup
         message="Credenciales incorrectas. Inténtelo de nuevo"
         status={warning}
-        closePopup={closePopup}
+        style={1}
+        close = {() => setWarning(false)}
       />
       <h1>UniEmpleos</h1>
       <div className={styles.inputsContainer}>

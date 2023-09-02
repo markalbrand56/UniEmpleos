@@ -173,7 +173,12 @@ const EditProfileEstudiante = () => {
 
   return (
     <div className={style.defaultContainer}>
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={2}
+        close={() => setWarning(false)}
+      />
       <div className={style.headerContainer}>
         <Header userperson="student" />
       </div>

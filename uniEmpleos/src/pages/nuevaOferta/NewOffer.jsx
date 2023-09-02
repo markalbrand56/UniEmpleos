@@ -103,7 +103,9 @@ const Postulacion = () => {
   return (
     <div className={style.container}>
       <Header userperson="student" />
-      <Popup status={warning} message={error} closePopup={handelPopupStatus} />
+      <Popup message={error} status={warning}
+        style={2}
+        close={() => setWarning(false)} />
       <div className={style.postulacionContainer}>
         <div className={style.titleContainer}>Nueva oferta laboral</div>
         <div className={style.dataContainer}>
