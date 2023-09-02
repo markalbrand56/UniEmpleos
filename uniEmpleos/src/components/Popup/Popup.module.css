@@ -10,7 +10,7 @@
     flex-direction: column!important;
     justify-content: center!important;
     align-items: center!important;
-    height: 150px!important;
+    height: 75px!important;
     width: 300px!important;
     gap: 10px!important;
     animation: popupAnimation 5s forwards;
