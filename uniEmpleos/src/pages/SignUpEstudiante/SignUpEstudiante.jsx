@@ -30,6 +30,7 @@ const SignUpEstudiante = () => {
   const [carreras, setCarreras] = useState([])
   const [uploadedImage, setUploadedImage] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const [typeError, setTypeError] = useState(1)
 
   const semestres = [
     { value: "1", label: "1" },
@@ -114,10 +115,6 @@ const SignUpEstudiante = () => {
     setSemestre(e.target.value)
   }
 
-  const handleButton = () => {
-    navigate("/login")
-  }
-
   const handlePassword = () => {
     setShowPassword(!showPassword)
   }
@@ -135,9 +132,11 @@ const SignUpEstudiante = () => {
       password === "" ||
       universidad === ""
     ) {
+      setTypeError(1)
       setError("Todos los campos son obligatorios")
       setWarning(true)
     } else if (telefono.length < 8) {
+      setTypeError(1)
       setError("Telefono invalido")
       setWarning(true)
     } else {
@@ -156,11 +155,18 @@ const SignUpEstudiante = () => {
         universidad,
       })
       if (apiResponse.status === 200) {
-        navigate("/login")
+        setTypeError(3)
+        setError("Registro exitoso")
+        setWarning(true)
+        setTimeout(() => {
+          navigate("/login")
+        }, 5000)
       } else if (apiResponse.status === 409) {
+        setTypeError(2)
         setError("El correo ya esta en uso")
         setWarning(true)
       } else {
+        setTypeError(1)
         setError("Upss algo salio mal")
         setWarning(true)
       }
@@ -172,13 +178,10 @@ const SignUpEstudiante = () => {
     if (fileType) {
       setUploadedImage(image)
     } else {
+      setTypeError(2)
       setError("El archivo debe ser una imagen")
       setWarning(true)
     }
-  }
-
-  const handelPopupStatus = () => {
-    setWarning(false)
   }
 
   return (
@@ -186,7 +189,7 @@ const SignUpEstudiante = () => {
       <Popup
         message={error}
         status={warning}
-        style={2}
+        style={typeError}
         close={() => setWarning(false)}
       />
       <h1>UniEmpleos</h1>

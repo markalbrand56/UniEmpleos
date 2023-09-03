@@ -24,6 +24,7 @@ const Postulacion = () => {
   const { quill, quillRef } = useQuill()
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
+  const [typePopUp, setTypePopUp] = useState(1)
 
   const postOffer = async () => {
     if (
@@ -32,6 +33,7 @@ const Postulacion = () => {
       requisitos === "" ||
       carrera === ""
     ) {
+      setTypePopUp(2)
       setError("Solamente el campo de descripción puede estar vacío")
       setWarning(true)
     } else {
@@ -47,6 +49,7 @@ const Postulacion = () => {
       if (apiResponse.status === 200) {
         navigate("/postulacionempresa")
       } else {
+        setTypePopUp(1)
         setError("Upss algo salió mal, intentalo de nuevo")
         setWarning(true)
       }
@@ -96,16 +99,15 @@ const Postulacion = () => {
     postOffer()
   }
 
-  const handelPopupStatus = () => {
-    setWarning(false)
-  }
-
   return (
     <div className={style.container}>
       <Header userperson="student" />
-      <Popup message={error} status={warning}
-        style={2}
-        close={() => setWarning(false)} />
+      <Popup
+        message={error}
+        status={warning}
+        style={TypeError}
+        close={() => setWarning(false)}
+      />
       <div className={style.postulacionContainer}>
         <div className={style.titleContainer}>Nueva oferta laboral</div>
         <div className={style.dataContainer}>

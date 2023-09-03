@@ -23,6 +23,7 @@ const EditProfileEmpresa = () => {
   const [uploadedImage, setUploadedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
+  const [typePopUp, setTypePopUp] = useState(1)
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -69,9 +70,11 @@ const EditProfileEmpresa = () => {
   // Con esto se pueden hacer las llamadas al status
   const handleButton = async () => {
     if (nombre === "" || detalles === "" || telefono === "") {
+      setTypePopUp(2)
       setError("Todos los campos son obligatorios")
       setWarning(true)
     } else if (telefono.length < 8) {
+      setTypePopUp(2)
       setError("El numero de telefono no es valido")
       setWarning(true)
     } else {
@@ -83,6 +86,7 @@ const EditProfileEmpresa = () => {
       if (apiResponse.status === 200) {
         navigate("/profilecompany")
       } else {
+        setTypePopUp(1)
         setError("Upss... Algo salio mal atras, intenta mas tarde")
         setWarning(true)
       }
@@ -95,13 +99,10 @@ const EditProfileEmpresa = () => {
       setUploadedImage(uploadedImage)
     } else {
       setUploadedImage("")
+      setTypePopUp(2)
       setError("El archivo debe ser una imagen")
       setWarning(true)
     }
-  }
-
-  const handelPopupStatus = () => {
-    setWarning(false)
   }
 
   return (
@@ -109,7 +110,7 @@ const EditProfileEmpresa = () => {
       <Popup
         message={error}
         status={warning}
-        style={2}
+        style={typePopUp}
         close={() => setWarning(false)}
       />
       <div className={style.headerContainer}>

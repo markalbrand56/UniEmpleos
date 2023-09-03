@@ -7,6 +7,45 @@
   height: fit-content;
   padding: 5px;
   flex-direction: column;
+  animation: messageAnimation 1s forwards;
+}
+
+.messageContainerLeft {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100% - 10px);
+  height: fit-content;
+  height: fit-content;
+  padding: 5px;
+  flex-direction: column;
+  animation: messageAnimationLeft 1s forwards;
+}
+
+@keyframes messageAnimation {
+
+  0% {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0); 
+  }
+}
+
+@keyframes messageAnimationLeft {
+
+  0% {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0); 
+  }
 }
 
 .header {

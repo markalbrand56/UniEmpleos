@@ -22,6 +22,7 @@ const Postulacion = ({ id }) => {
   const [error, setError] = useState("")
 
   const [detalles, setDetalles] = useState("")
+  const [typeError, setTypeError] = useState(1)
 
   useEffect(() => {
     api.handleRequest("POST", "/offers/all", { id_oferta: id })
@@ -52,8 +53,14 @@ const Postulacion = ({ id }) => {
       estado: "enviada",
     })
     if (apiResponse.status === 200) {
-      navigate("/profile")
+      setTypeError(3)
+      setError("Postulación enviada con éxito")
+      setWarning(true)
+      setTimeout(() => {
+        navigate("/profile")
+      }, 5000)
     } else {
+      setTypeError(1)
       setError("Upss algo salió mal, intentalo de nuevo")
       setWarning(true)
     }
@@ -63,17 +70,13 @@ const Postulacion = ({ id }) => {
     navigate("/profile")
   }
 
-  const handelPopupStatus = () => {
-    setWarning(false)
-  }
-
   return (
     <div className={style.container}>
       <Header userperson="student" />
       <Popup
         message={error}
         status={warning}
-        style={2}
+        style={typeError}
         close={() => setWarning(false)}
       />
       {api.data ? (

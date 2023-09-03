@@ -23,6 +23,7 @@ const SignUpEmpresa = () => {
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const [typeError, setTypeError] = useState(1)
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -48,10 +49,6 @@ const SignUpEmpresa = () => {
     }
   }
 
-  const handleButton = () => {
-    navigate("/login")
-  }
-
   const signup = async () => {
     if (
       nombre === "" ||
@@ -60,9 +57,11 @@ const SignUpEmpresa = () => {
       telefono === "" ||
       password === ""
     ) {
+      setTypeError(1)
       setError("Todos los campos son obligatorios")
       setWarning(true)
     } else if (telefono.length < 8) {
+      setTypeError(1)
       setError("El numero de telefono debe tener 8 digitos")
       setWarning(true)
     } else {
@@ -75,11 +74,18 @@ const SignUpEmpresa = () => {
         foto: uploadedImage,
       })
       if (apiResponse.status === 200) {
-        navigate("/login")
+        setTypeError(3)
+        setError("Registro exitoso")
+        setWarning(true)
+        setTimeout(() => {
+          navigate("/login")
+        }, 5000)
       } else if (apiResponse.status === 409) {
+        setTypeError(2)
         setError("El correo ya esta registrado")
         setWarning(true)
       } else {
+        setTypeError(1)
         setError("Upss algo salio mal")
         setWarning(true)
       }
@@ -91,13 +97,10 @@ const SignUpEmpresa = () => {
     if (fileType) {
       setUploadedImage(uploadedImage)
     } else {
+      setTypeError(2)
       setError("El archivo debe ser una imagen")
       setWarning(true)
     }
-  }
-
-  const handelPopupStatus = () => {
-    setWarning(false)
   }
 
   const handlePassword = () => {
@@ -109,7 +112,7 @@ const SignUpEmpresa = () => {
       <Popup
         message={error}
         status={warning}
-        style={2}
+        style={typeError}
         close={() => setWarning(false)}
       />
       <h1>UniEmpleos</h1>

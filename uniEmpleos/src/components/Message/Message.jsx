@@ -9,7 +9,7 @@ const Message = ({ pfp, name, time, message, file, side }) => {
 
  return (
   <div
-    className={style.messageContainer}
+    className={side === "right" ? style.messageContainer : style.messageContainerLeft}
     style={{ alignItems: side === "right" ? "flex-end" : "flex-start" }}
   >
     <div className={style.header}>

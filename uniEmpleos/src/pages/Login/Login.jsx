@@ -14,6 +14,8 @@ const LogIn = () => {
   const [passInput, setPassInput] = useState("")
   const [warning, setWarning] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [typePopUp, setTypePopUp] = useState(1)
+  const [error, setError] = useState("")
 
   // Teniendo el DPI y la contraseña,necesitamos que nos devuelva un objeto usuario
   const logIn = async () => {
@@ -47,6 +49,8 @@ const LogIn = () => {
         navigate("/profileadmin")
       }
     } else {
+      setTypePopUp(1)
+      setError("Credenciales incorrectas. Inténtelo de nuevo")
       setWarning(true)
     }
   }
@@ -66,9 +70,9 @@ const LogIn = () => {
   return (
     <div className={styles.logInCointainer}>
       <Popup
-        message="Credenciales incorrectas. Inténtelo de nuevo"
+        message={error}
         status={warning}
-        style={1}
+        style={typePopUp}
         close = {() => setWarning(false)}
       />
       <h1>UniEmpleos</h1>
