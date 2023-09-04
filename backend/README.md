@@ -632,6 +632,9 @@ Crea un administrador
 ### [GET] api/admins/students
 Retorna información de estudiantes para el panel de administradores
 
+> **Note**
+> Auth required
+
 #### Response
 ``` json
 "status": 200,
@@ -649,6 +652,32 @@ Retorna información de estudiantes para el panel de administradores
 	  ]
      }
 ```
+
+### [GET] api/admins/companies
+Retorna información de empresas para el panel de administradores
+
+> **Note**
+> Auth required
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Companies Retrieved Successfully",
+    "data": {
+        "companies": [
+             {
+                    "id_empresa": "hr@empresa.tec",
+                    "nombre": "Empresa INC",
+                    "detalles": "Empresa enfocada a sitios web",
+                    "telefono": "58747474",
+                    "suspendido": false
+            },
+        ]
+    }
+}
+```
+
 ---
 ## Postulaciones
 ### [POST] api/Getpostulations
