@@ -545,6 +545,41 @@ Elimina una oferta de trabajo. También elimina cualquier postulación asociada 
 }
 ```
 
+### [POST] api/offers/applicants
+Retorna los estudiantes que se han postulado a una oferta
+
+## Params
+``` json
+{
+	"id_oferta"    	: int
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Applicants returned successfully",
+	"Data": [
+		{
+		    "apellido": "Albrand",
+		    "carrera": 1,
+		    "correo": "alb21004@uvg.edu.gt",
+		    "cv": "cv",
+		    "dpi": "2806089930101",
+		    "estado": "Enviada",
+		    "foto": "foto",
+		    "id_estudiante": "alb21004@uvg.edu.gt",
+		    "nacimiento": "2002-05-06T00:00:00Z",
+		    "nombre": "Mark",
+		    "semestre": 5,
+		    "telefono": "58748587",
+		    "universidad": "Universidad del Valle de Guatemala"
+		}
+	]
+}
+```
+
 ---
 ## Carreras
 ### [GET] api/careers
@@ -700,42 +735,3 @@ Suspende un usuario
     "data": null
 }
 ```
-
----
-## Postulaciones
-### [POST] api/postulations/applicants
-Retorna los estudiantes que se han postulado a una oferta
-
-## Params
-``` json
-{
-	"id_oferta"    	: int
-}
-```
-
-#### Response
-``` json
-{
-	"Status":  "200",
-	"Message": "Applicants returned successfully",
-	"Data": [
-		{
-		    "apellido": "Albrand",
-		    "carrera": 1,
-		    "correo": "alb21004@uvg.edu.gt",
-		    "cv": "cv",
-		    "dpi": "2806089930101",
-		    "estado": "Enviada",
-		    "foto": "foto",
-		    "id_estudiante": "alb21004@uvg.edu.gt",
-		    "nacimiento": "2002-05-06T00:00:00Z",
-		    "nombre": "Mark",
-		    "semestre": 5,
-		    "telefono": "58748587",
-		    "universidad": "Universidad del Valle de Guatemala"
-		}
-	]
-}
-```
-
-

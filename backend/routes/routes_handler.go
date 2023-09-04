@@ -72,11 +72,11 @@ func Routes(router *gin.Engine) {
 	offers.POST("/all", controllers.GetOffer)
 	offers.POST("/company", controllers.GetOfferByCompany)
 	offers.DELETE("/", controllers.DeleteOffer)
+	offers.POST("/applicants", controllers.GetApplicants)
 
 	// Postulaciones
 	postulations := router.Group("api/postulations")
 	postulations.Use(middlewares.JwtAuthentication())
 
 	postulations.POST("/", controllers.NewPostulation)
-	postulations.POST("/applicants", controllers.GetApplicants)
 }
