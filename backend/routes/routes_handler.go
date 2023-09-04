@@ -61,6 +61,7 @@ func Routes(router *gin.Engine) {
 	admins.POST("/", controllers.NewAdmin)
 	admins.GET("/students", controllers.GetStudents)
 	admins.GET("/companies", controllers.GetCompanies)
+	admins.POST("/suspend", controllers.SuspendAccount)
 
 	// Ofertas
 	offers := router.Group("api/offers")

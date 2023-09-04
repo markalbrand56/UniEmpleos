@@ -19,7 +19,7 @@ func NewAdmin(c *gin.Context) {
 	var input AdministradorInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
 			Message: "Error binding JSON: " + err.Error(),
 			Data:    nil,
@@ -36,15 +36,15 @@ func NewAdmin(c *gin.Context) {
 	err := configs.DB.Create(&a).Error // Se agrega el administrador a la base de datos
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
-			Message: "Error creating",
+			Message: "Error creating. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	c.JSON(200, responses.StandardResponse{
+	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  200,
 		Message: "Admin Created Successfully",
 		Data:    nil,
@@ -80,7 +80,7 @@ func GetStudents(c *gin.Context) {
 	// Convertimos el resultado en un mapa
 	messageMap := map[string]interface{}{"studets": estudiantes}
 
-	c.JSON(200, responses.StandardResponse{
+	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  200,
 		Message: "Students Retrieved Successfully",
 		Data:    messageMap,
@@ -116,9 +116,45 @@ func GetCompanies(c *gin.Context) {
 	// Convertimos el resultado en un mapa
 	messageMap := map[string]interface{}{"companies": empresas}
 
-	c.JSON(200, responses.StandardResponse{
+	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  200,
 		Message: "Companies Retrieved Successfully",
 		Data:    messageMap,
+	})
+}
+
+type SuspendAccountInput struct {
+	IdUsuario string `json:"id_usuario"`
+	Suspender bool   `json:"suspender"` // True para suspender, false para reactivar
+}
+
+func SuspendAccount(c *gin.Context) {
+	var input SuspendAccountInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error binding JSON: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Realiza la consulta para obtener la información de las empresas con la suspensión
+	err := configs.DB.Model(&models.Usuario{}).Where("usuario = ?", input.IdUsuario).Update("suspendido", input.Suspender).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
+			Message: "Error suspending account: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  200,
+		Message: "Account Suspended Successfully",
+		Data:    nil,
 	})
 }
