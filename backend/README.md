@@ -678,6 +678,20 @@ Retorna información de empresas para el panel de administradores
 }
 ```
 
+### [POST] api/admins/suspend
+Suspende un usuario
+
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "id_usuario": string,
+    "suspender": bool
+}
+```
+
 ---
 ## Postulaciones
 ### [POST] api/Getpostulations
@@ -685,7 +699,7 @@ Retorna información de empresas para el panel de administradores
 ## Params
 ``` json
 {
-	"id_oferta"    	: "string" 
+	"id_oferta"    	: string
 }
 ```
 
