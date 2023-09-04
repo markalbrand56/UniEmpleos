@@ -166,7 +166,7 @@ func GetApplicants(c *gin.Context) {
 
 	c.JSON(200, responses.PostulationResponse{
 		Status:  200,
-		Message: "Postulations returned successfully",
+		Message: "Applicants returned successfully",
 		Data:    results,
 	})
 }

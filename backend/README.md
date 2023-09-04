@@ -717,7 +717,7 @@ Retorna los estudiantes que se han postulado a una oferta
 ``` json
 {
 	"Status":  "200",
-	"Message": "Postulations returned successfully",
+	"Message": "Applicants returned successfully",
 	"Data": [
 		{
 		    "apellido": "Albrand",
