@@ -5,6 +5,8 @@ import (
 	"backend/models"
 	"backend/responses"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"time"
 )
 
 type AdministradorInput struct {
@@ -49,8 +51,16 @@ func NewAdmin(c *gin.Context) {
 	})
 }
 
-func GetEstudiantes(c *gin.Context) {
-	var estudiantes []models.EstudianteGetAdmin
+type EstudianteGetAdmin struct {
+	IdEstudiante string    `json:"id_estudiante"`
+	Nombre       string    `json:"nombre"`
+	Apellido     string    `json:"apellido"`
+	Nacimiento   time.Time `json:"nacimiento"`
+	Suspendido   bool      `json:"suspendido"`
+}
+
+func GetStudents(c *gin.Context) {
+	var estudiantes []EstudianteGetAdmin
 
 	// Realiza la consulta para obtener la información de los estudiantes con la suspensión
 	err := configs.DB.Table("estudiante e").
@@ -59,8 +69,8 @@ func GetEstudiantes(c *gin.Context) {
 		Scan(&estudiantes).Error
 
 	if err != nil {
-		c.JSON(500, responses.StandardResponse{
-			Status:  500,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
 			Message: "Error retrieving students: " + err.Error(),
 			Data:    nil,
 		})
@@ -73,6 +83,42 @@ func GetEstudiantes(c *gin.Context) {
 	c.JSON(200, responses.StandardResponse{
 		Status:  200,
 		Message: "Students Retrieved Successfully",
+		Data:    messageMap,
+	})
+}
+
+type EmpresaGetAdmin struct {
+	IdEmpresa  string `json:"id_empresa"`
+	Nombre     string `json:"nombre"`
+	Detalles   string `json:"detalles"`
+	Telefono   string `json:"telefono"`
+	Suspendido bool   `json:"suspendido"`
+}
+
+func GetCompanies(c *gin.Context) {
+	var empresas []EmpresaGetAdmin
+
+	// Realiza la consulta para obtener la información de las empresas con la suspensión
+	err := configs.DB.Table("empresa e").
+		Select("e.id_empresa, e.nombre, e.detalles, e.telefono, u.suspendido").
+		Joins("INNER JOIN usuario u ON e.id_empresa = u.usuario").
+		Scan(&empresas).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
+			Message: "Error retrieving companies: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Convertimos el resultado en un mapa
+	messageMap := map[string]interface{}{"companies": empresas}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Companies Retrieved Successfully",
 		Data:    messageMap,
 	})
 }
