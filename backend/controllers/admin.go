@@ -152,9 +152,19 @@ func SuspendAccount(c *gin.Context) {
 		return
 	}
 
+	// si se suspendio una cuenta el mensaje es diferente
+	if input.Suspender {
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  200,
+			Message: "Account Suspended Successfully",
+			Data:    nil,
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  200,
-		Message: "Account Suspended Successfully",
+		Message: "Account Reactivated Successfully",
 		Data:    nil,
 	})
 }
