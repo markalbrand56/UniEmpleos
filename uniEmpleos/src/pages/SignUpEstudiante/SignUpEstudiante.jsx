@@ -30,6 +30,7 @@ const SignUpEstudiante = () => {
   const [carreras, setCarreras] = useState([])
   const [uploadedImage, setUploadedImage] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const [typeError, setTypeError] = useState(1)
 
   const semestres = [
     { value: "1", label: "1" },
@@ -114,10 +115,6 @@ const SignUpEstudiante = () => {
     setSemestre(e.target.value)
   }
 
-  const handleButton = () => {
-    navigate("/login")
-  }
-
   const handlePassword = () => {
     setShowPassword(!showPassword)
   }
@@ -135,9 +132,11 @@ const SignUpEstudiante = () => {
       password === "" ||
       universidad === ""
     ) {
+      setTypeError(1)
       setError("Todos los campos son obligatorios")
       setWarning(true)
     } else if (telefono.length < 8) {
+      setTypeError(1)
       setError("Telefono invalido")
       setWarning(true)
     } else {
@@ -156,12 +155,18 @@ const SignUpEstudiante = () => {
         universidad,
       })
       if (apiResponse.status === 200) {
-        navigate("/login")
+        setTypeError(3)
+        setError("Registro exitoso")
+        setWarning(true)
+        setTimeout(() => {
+          navigate("/login")
+        }, 5000)
       } else if (apiResponse.status === 409) {
+        setTypeError(2)
         setError("El correo ya esta en uso")
         setWarning(true)
-      } 
-      else {
+      } else {
+        setTypeError(1)
         setError("Upss algo salio mal")
         setWarning(true)
       }
@@ -173,18 +178,20 @@ const SignUpEstudiante = () => {
     if (fileType) {
       setUploadedImage(image)
     } else {
+      setTypeError(2)
       setError("El archivo debe ser una imagen")
       setWarning(true)
     }
   }
 
-  const handelPopupStatus = () => {
-    setWarning(false)
-  }
-
   return (
     <div className={style.signUpCointainer}>
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={typeError}
+        close={() => setWarning(false)}
+      />
       <h1>UniEmpleos</h1>
       <div className={style.inputsContainer}>
         <div className={style.inputSubContainer}>
@@ -249,14 +256,14 @@ const SignUpEstudiante = () => {
           <div className={style.inputSubContainerDataGroup1}>
             <span>Contraseña</span>
             <ComponentInput
-            name="password"
-            type="password"
-            placeholder="micontraseña123"
-            onChange={handleInputsValue}
-            eye = {true}
-            onClickButton = {handlePassword}
-            isOpen={showPassword}
-          />
+              name="password"
+              type="password"
+              placeholder="micontraseña123"
+              onChange={handleInputsValue}
+              eye={true}
+              onClickButton={handlePassword}
+              isOpen={showPassword}
+            />
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Carrera</span>

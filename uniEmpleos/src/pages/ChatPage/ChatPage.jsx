@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { useStoreon } from "storeon/react"
 import style from "./ChatPage.module.css"
 import { Header } from "../../components/Header/Header"
@@ -12,6 +12,7 @@ import useApi from "../../Hooks/useApi"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
 import useIsImage from "../../Hooks/useIsImage"
+import { formatDuration } from "date-fns"
 
 const ChatPage = () => {
   const { user } = useStoreon("user")
@@ -26,6 +27,9 @@ const ChatPage = () => {
   const [idCurrentChat, setIdCurrentChat] = useState()
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
+  const [typePopUp, setTypePopUp] = useState(1)
+  const chatContainerRef = useRef(null)
+  const [cambioChats, setCambioChats] = useState([])
 
   const obtainLastChats = () => {
     apiLastChats.handleRequest("POST", "/messages/getLast", {
@@ -37,14 +41,28 @@ const ChatPage = () => {
     obtainMessages()
   }, [currentChat])
 
-  const obtainMessages = () => {
+  const obtainMessages = async () => {
     if (currentChat !== "") {
-      apiMessages.handleRequest("POST", "/messages/get", {
+      await apiMessages.handleRequest("POST", "/messages/get", {
         id_emisor: user.id_user,
         id_receptor: currentChat,
       })
+      if (cambioChats !== apiMessages.data){
+        setCambioChats(apiMessages.data)
+      }
     }
   }
+
+  const scrollDown = () => {
+    chatContainerRef.current.scrollTo({
+      top: chatContainerRef.current.scrollHeight,
+      behavior: "smooth",
+    })
+  }
+
+  useEffect(() => {
+    scrollDown()
+  }, [cambioChats])
 
   const sendMessage = async () => {
     if (uploadedImage !== "" && textMessage !== "") {
@@ -75,6 +93,7 @@ const ChatPage = () => {
         id_postulacion: idCurrentChat,
       })
     }
+    scrollDown()
     obtainMessages()
   }
 
@@ -92,6 +111,7 @@ const ChatPage = () => {
     if (fileType) {
       setUploadedImage(uploadedImage)
     } else {
+      setTypePopUp(2)
       setError("El archivo debe ser una imagen")
       setWarning(true)
     }
@@ -101,10 +121,6 @@ const ChatPage = () => {
     sendMessage()
     setTextMessage("")
     setUploadedImage("")
-  }
-
-  const handelPopupStatus = () => {
-    setWarning(false)
   }
 
   //Intervals
@@ -134,7 +150,12 @@ const ChatPage = () => {
   return (
     <div className={style.container}>
       <Header userperson="student" />
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={typePopUp}
+        close={() => setWarning(false)}
+      />
       <div className={style.generalChatContainer}>
         <div className={style.chatsContainer}>
           {apiLastChats.data && apiLastChats.data.messages.length > 0 ? (
@@ -180,7 +201,7 @@ const ChatPage = () => {
             <div className={style.noUsersMessage}>No hay chats recientes.</div>
           )}
         </div>
-        <div className={style.currentChatContainer}>
+        <div className={style.currentChatContainer} ref={chatContainerRef}>
           {apiMessages.data && apiMessages.data.messages.length > 0 ? (
             apiMessages.data.messages.map((message, number) => {
               const side = message.id_emisor === user.id_user ? "right" : "left"
