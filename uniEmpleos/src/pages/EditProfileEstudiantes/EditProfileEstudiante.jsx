@@ -34,6 +34,7 @@ const EditProfileEstudiante = () => {
   const [uploadedImage, setUploadedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
+  const [typePopUp, setTypePopUp] = useState(1)
 
   const [carreras, setCarreras] = useState([])
 
@@ -141,9 +142,11 @@ const EditProfileEstudiante = () => {
       universidad === "" ||
       telefono === ""
     ) {
+      setTypePopUp(2)
       setError("Todos los campos son obligatorios")
       setWarning(true)
     } else if (telefono.length < 8) {
+      setTypePopUp(2)
       setError("Telefono invalido")
       setWarning(true)
     } else {
@@ -166,6 +169,7 @@ const EditProfileEstudiante = () => {
       if (apiResponse.status === 200) {
         navigate("/profile")
       } else {
+        setTypePopUp(1)
         setError("Upss... Algo salio mal atras, intenta mas tarde")
         setWarning(true)
       }
@@ -180,18 +184,20 @@ const EditProfileEstudiante = () => {
     if (fileType) {
       setUploadedImage(uploadedImage)
     } else {
+      setTypePopUp(2)
       setError("El archivo debe ser una imagen")
       setWarning(true)
     }
   }
 
-  const handelPopupStatus = () => {
-    setWarning(false)
-  }
-
   return (
     <div className={style.defaultContainer}>
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={typePopUp}
+        close={() => setWarning(false)}
+      />
       <div className={style.headerContainer}>
         <Header userperson="student" />
       </div>
