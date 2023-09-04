@@ -149,6 +149,7 @@ const Postulacion = () => {
               }}
               name="carrera"
               isMulti
+              placeholder="Carreras"
               theme={(theme) => ({
                 ...theme,
                 colors: {
