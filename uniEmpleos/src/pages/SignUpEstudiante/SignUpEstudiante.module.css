@@ -8,6 +8,11 @@
   height: 100vh;
 }
 
+.css-tj5bde-Svg {
+  display: none !important;
+}
+
+
 .inputsContainer div span {
   display: flex;
   justify-content: left;
