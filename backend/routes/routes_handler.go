@@ -14,7 +14,7 @@ func Routes(router *gin.Engine) {
 	public.POST("/login", controllers.Login)
 	public.POST("/students", controllers.NewStudent)
 	public.POST("/companies", controllers.NewCompany)
-	public.GET("/postulations/previews", controllers.GetPrevPostulations)
+	public.GET("/postulations/previews", controllers.GetOfferPreviews)
 
 	router.POST("/upload", controllers.UploadFile())
 

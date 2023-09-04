@@ -97,7 +97,7 @@ type PostulationResult struct {
 	Universidad  string `json:"universidad"`
 }
 
-func GetPrevPostulations(c *gin.Context) {
+func GetOfferPreviews(c *gin.Context) {
 	var postulations []models.ViewPrevPostulaciones
 	var data map[string]interface{}
 
