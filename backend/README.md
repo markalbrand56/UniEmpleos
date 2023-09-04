@@ -703,12 +703,13 @@ Suspende un usuario
 
 ---
 ## Postulaciones
-### [POST] api/Getpostulations
+### [POST] api/postulations/applicants
+Retorna los estudiantes que se han postulado a una oferta
 
 ## Params
 ``` json
 {
-	"id_oferta"    	: string
+	"id_oferta"    	: int
 }
 ```
 

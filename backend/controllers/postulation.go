@@ -97,7 +97,7 @@ type PostulationResult struct {
 	Universidad  string `json:"universidad"`
 }
 
-func GetUserPostulation(c *gin.Context) {
+func GetApplicants(c *gin.Context) {
 	var input GetPostulationInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
