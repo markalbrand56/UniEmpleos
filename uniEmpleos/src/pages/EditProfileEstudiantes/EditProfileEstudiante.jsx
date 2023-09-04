@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
+import { ca } from "date-fns/locale"
 import style from "./EditProfileEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
@@ -10,6 +13,8 @@ import useApi from "../../Hooks/useApi"
 import useIsImage from "../../Hooks/useIsImage"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
+
+const animatedComponents = makeAnimated()
 
 const EditProfileEstudiante = () => {
   const { user } = useStoreon("user")
@@ -22,9 +27,10 @@ const EditProfileEstudiante = () => {
   const [apellido, setApellido] = useState("")
   const [edad, setEdad] = useState("")
   const [carrera, setCarrera] = useState("")
+  const [carreraId, setCarreraId] = useState(1)
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
-  const [semestre, setSemestre] = useState("1")
+  const [semestre, setSemestre] = useState(1)
   const [uploadedImage, setUploadedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
@@ -33,26 +39,22 @@ const EditProfileEstudiante = () => {
   const [carreras, setCarreras] = useState([])
 
   const semestres = [
-    { value: "1", label: "1" },
-    { value: "2", label: "2" },
-    { value: "3", label: "3" },
-    { value: "4", label: "4" },
-    { value: "5", label: "5" },
-    { value: "6", label: "6" },
-    { value: "7", label: "7" },
-    { value: "8", label: "8" },
-    { value: "9", label: "9" },
-    { value: "10", label: "10" },
-    { value: "11", label: "11" },
-    { value: "12", label: "12" },
+    { value: 1, label: "1" },
+    { value: 2, label: "2" },
+    { value: 3, label: "3" },
+    { value: 4, label: "4" },
+    { value: 5, label: "5" },
+    { value: 6, label: "6" },
+    { value: 7, label: "7" },
+    { value: 8, label: "8" },
+    { value: 9, label: "9" },
+    { value: 10, label: "10" },
+    { value: 11, label: "11" },
+    { value: 12, label: "12" },
   ]
 
   const handleSemestre = (e) => {
-    setSemestre(e.target.value)
-  }
-
-  const handleDropdown = (e) => {
-    setCarrera(e.target.value)
+    setSemestre(e.value)
   }
 
   useEffect(() => {
@@ -67,12 +69,18 @@ const EditProfileEstudiante = () => {
       const year = date.getFullYear().toString()
       const formattedDate = `${year}-${month}-${day}`
       setEdad(formattedDate)
-      setCarrera(usuario.id_carrera)
+      carreras.forEach((e) => {
+        if (e.value === usuario.carrera.toString()) {
+          setCarrera(e.label)
+        }
+      })
       setUniversidad(usuario.universidad)
       setTelefono(usuario.telefono)
       setSemestre(usuario.semestre)
       setUploadedImage(usuario.foto)
     }
+    console.log("carrera", carrera)
+    console.log(api.data)
   }, [api.data])
 
   useEffect(() => {
@@ -84,6 +92,7 @@ const EditProfileEstudiante = () => {
       }))
       setCarreras(dataCarreras)
     }
+    console.log("carrerasss", carreras)
   }, [apiCareers.data])
 
   useEffect(() => {
@@ -118,6 +127,12 @@ const EditProfileEstudiante = () => {
     }
   }
 
+  const handleTypeSelect = (e) => {
+    setCarrera(e.label)
+    console.log(parseInt(e.value, 10))
+    setCarreraId(parseInt(e.value, 10))
+  }
+
   const handleButton = async () => {
     if (
       nombre === "" ||
@@ -142,7 +157,7 @@ const EditProfileEstudiante = () => {
           nombre,
           apellido,
           nacimiento: edad,
-          carrera,
+          carrera: carreraId,
           universidad,
           telefono,
           semestre,
@@ -160,6 +175,9 @@ const EditProfileEstudiante = () => {
       }
     }
   }
+
+  console.log(semestre)
+
 
   const handleUploadFile = (uploadedImage) => {
     const fileType = isImage(uploadedImage)
@@ -241,10 +259,33 @@ const EditProfileEstudiante = () => {
             </div>
             <div className={style.inputSubContainerDataGroup1}>
               <span>Carrera</span>
-              <DropDown
-                opciones={carreras}
-                value={carrera}
-                onChange={handleDropdown}
+              <Select
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: state.isFocused ? "#a08ae5" : "grey",
+                    color: "black",
+                  }),
+                  option: (baseStyles) => ({
+                    ...baseStyles,
+                    color: "black",
+                  }),
+                }}
+                name="carrera"
+                theme={(theme) => ({
+                  ...theme,
+                  colors: {
+                    ...theme.colors,
+                    primary25: "#94bd0f",
+                    primary: "#a08ae5",
+                  },
+                })}
+                defaultValue={carrera}
+                options={carreras}
+                formatGroupLabel={carreras}
+                components={animatedComponents}
+                value={carreras.find((option) => option.label === carrera)}
+                onChange={handleTypeSelect}
               />
             </div>
             <div className={style.inputSubContainerDataGroup1}>
@@ -259,9 +300,31 @@ const EditProfileEstudiante = () => {
             </div>
             <div className={style.inputSubContainerDataGroup1}>
               <span>Semestre</span>
-              <DropDown
-                opciones={semestres}
-                value={semestre}
+              <Select
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: state.isFocused ? "#a08ae5" : "grey",
+                    color: "black",
+                  }),
+                  option: (baseStyles) => ({
+                    ...baseStyles,
+                    color: "black",
+                  }),
+                }}
+                name="semestre"
+                theme={(theme) => ({
+                  ...theme,
+                  colors: {
+                    ...theme.colors,
+                    primary25: "#94bd0f",
+                    primary: "#a08ae5",
+                  },
+                })}
+                defaultValue={semestre}
+                options={semestres}
+                formatGroupLabel={semestres}
+                value={semestres.filter((option) => option.value === semestre)}
                 onChange={handleSemestre}
               />
             </div>

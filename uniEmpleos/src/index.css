@@ -61,6 +61,11 @@ button:hover {
   border-color: #646cff;
 }
 
+.css-tj5bde-Svg {
+  display: none !important;
+}
+
+
 
 @media (prefers-color-scheme: light) {
   :root {

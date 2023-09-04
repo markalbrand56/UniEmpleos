@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
 import style from "./SignUpEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
@@ -21,6 +23,7 @@ const SignUpEstudiante = () => {
   const [correo, setCorreo] = useState("")
   const [password, setPassword] = useState("")
   const [carrera, setCarrera] = useState("")
+  const [carreraId, setCarreraId] = useState(1)
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
   const [semestre, setSemestre] = useState("1")
@@ -107,12 +110,14 @@ const SignUpEstudiante = () => {
     }
   }
 
-  const handleDropdown = (e) => {
-    setCarrera(e.target.value)
+  const handleTypeSelect = (e) => {
+    setCarrera(e.label)
+    console.log(parseInt(e.value, 10))
+    setCarreraId(parseInt(e.value, 10))
   }
 
   const handleSemestre = (e) => {
-    setSemestre(e.target.value)
+    setSemestre(e.value)
   }
 
   const handlePassword = () => {
@@ -260,19 +265,39 @@ const SignUpEstudiante = () => {
               type="password"
               placeholder="micontraseña123"
               onChange={handleInputsValue}
-              eye={true}
+              eye
               onClickButton={handlePassword}
               isOpen={showPassword}
             />
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Carrera</span>
-            <DropDown
+            <Select
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? "#a08ae5" : "grey",
+                  color: "black",
+                }),
+                option: (baseStyles) => ({
+                  ...baseStyles,
+                  color: "black",
+                }),
+              }}
               name="carrera"
-              id="carrera"
-              opciones={carreras}
-              value={carrera}
-              onChange={handleDropdown}
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#94bd0f",
+                  primary: "#a08ae5",
+                },
+              })}
+              defaultValue={carrera}
+              options={carreras}
+              formatGroupLabel={carreras}
+              value={carreras.find((option) => option.label === carrera)}
+              onChange={handleTypeSelect}
             />
           </div>
           <div className={style.inputSubContainerDataGroup1}>
@@ -286,11 +311,31 @@ const SignUpEstudiante = () => {
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Semestre</span>
-            <DropDown
-              name="semester"
-              id="semester"
-              opciones={semestres}
-              value={semestre}
+            <Select
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? "#a08ae5" : "grey",
+                  color: "black",
+                }),
+                option: (baseStyles) => ({
+                  ...baseStyles,
+                  color: "black",
+                }),
+              }}
+              name="carrera"
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#94bd0f",
+                  primary: "#a08ae5",
+                },
+              })}
+              defaultValue={semestre}
+              options={semestres}
+              formatGroupLabel={semestres}
+              value={semestres.find((option) => option.label === semestre)}
               onChange={handleSemestre}
             />
           </div>
