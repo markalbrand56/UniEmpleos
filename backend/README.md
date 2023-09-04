@@ -692,6 +692,15 @@ Suspende un usuario
 }
 ```
 
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "User suspended successfully",
+    "data": null
+}
+```
+
 ---
 ## Postulaciones
 ### [POST] api/Getpostulations
