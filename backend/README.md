@@ -545,6 +545,41 @@ Elimina una oferta de trabajo. También elimina cualquier postulación asociada 
 }
 ```
 
+### [POST] api/offers/applicants
+Retorna los estudiantes que se han postulado a una oferta
+
+## Params
+``` json
+{
+	"id_oferta"    	: int
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Applicants returned successfully",
+	"Data": [
+		{
+		    "apellido": "Albrand",
+		    "carrera": 1,
+		    "correo": "alb21004@uvg.edu.gt",
+		    "cv": "cv",
+		    "dpi": "2806089930101",
+		    "estado": "Enviada",
+		    "foto": "foto",
+		    "id_estudiante": "alb21004@uvg.edu.gt",
+		    "nacimiento": "2002-05-06T00:00:00Z",
+		    "nombre": "Mark",
+		    "semestre": 5,
+		    "telefono": "58748587",
+		    "universidad": "Universidad del Valle de Guatemala"
+		}
+	]
+}
+```
+
 ---
 ## Carreras
 ### [GET] api/careers
@@ -632,6 +667,9 @@ Crea un administrador
 ### [GET] api/admins/students
 Retorna información de estudiantes para el panel de administradores
 
+> **Note**
+> Auth required
+
 #### Response
 ``` json
 "status": 200,
@@ -649,40 +687,51 @@ Retorna información de estudiantes para el panel de administradores
 	  ]
      }
 ```
----
-## Postulaciones
-### [POST] api/Getpostulations
 
-## Params
+### [GET] api/admins/companies
+Retorna información de empresas para el panel de administradores
+
+> **Note**
+> Auth required
+
+#### Response
 ``` json
 {
-	"id_oferta"    	: "string" 
+    "status": 200,
+    "message": "Companies Retrieved Successfully",
+    "data": {
+        "companies": [
+             {
+                    "id_empresa": "hr@empresa.tec",
+                    "nombre": "Empresa INC",
+                    "detalles": "Empresa enfocada a sitios web",
+                    "telefono": "58747474",
+                    "suspendido": false
+            },
+        ]
+    }
+}
+```
+
+### [POST] api/admins/suspend
+Suspende un usuario
+
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "id_usuario": string,
+    "suspender": bool
 }
 ```
 
 #### Response
 ``` json
 {
-	"Status":  "200",
-	"Message": "Postulations returned successfully",
-	"Data": [
-		{
-		    "apellido": "Albrand",
-		    "carrera": 1,
-		    "correo": "alb21004@uvg.edu.gt",
-		    "cv": "cv",
-		    "dpi": "2806089930101",
-		    "estado": "Enviada",
-		    "foto": "foto",
-		    "id_estudiante": "alb21004@uvg.edu.gt",
-		    "nacimiento": "2002-05-06T00:00:00Z",
-		    "nombre": "Mark",
-		    "semestre": 5,
-		    "telefono": "58748587",
-		    "universidad": "Universidad del Valle de Guatemala"
-		}
-	]
+    "status": 200,
+    "message": "User suspended successfully",
+    "data": null
 }
 ```
-
-

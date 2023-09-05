@@ -14,7 +14,7 @@ func Routes(router *gin.Engine) {
 	public.POST("/login", controllers.Login)
 	public.POST("/students", controllers.NewStudent)
 	public.POST("/companies", controllers.NewCompany)
-	public.GET("/postulations/previews", controllers.GetPrevPostulations)
+	public.GET("/postulations/previews", controllers.GetOfferPreviews)
 
 	router.POST("/upload", controllers.UploadFile())
 
@@ -59,7 +59,9 @@ func Routes(router *gin.Engine) {
 	admins.Use(middlewares.JwtAuthentication())
 
 	admins.POST("/", controllers.NewAdmin)
-	admins.GET("/students", controllers.GetEstudiantes)
+	admins.GET("/students", controllers.GetStudents)
+	admins.GET("/companies", controllers.GetCompanies)
+	admins.POST("/suspend", controllers.SuspendAccount)
 
 	// Ofertas
 	offers := router.Group("api/offers")
@@ -70,11 +72,11 @@ func Routes(router *gin.Engine) {
 	offers.POST("/all", controllers.GetOffer)
 	offers.POST("/company", controllers.GetOfferByCompany)
 	offers.DELETE("/", controllers.DeleteOffer)
+	offers.POST("/applicants", controllers.GetApplicants)
 
 	// Postulaciones
 	postulations := router.Group("api/postulations")
 	postulations.Use(middlewares.JwtAuthentication())
 
 	postulations.POST("/", controllers.NewPostulation)
-	postulations.POST("/get", controllers.GetUserPostulation)
 }

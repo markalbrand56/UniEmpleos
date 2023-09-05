@@ -74,7 +74,27 @@ func Login(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, responses.StandardResponse{
 			Status:  404,
-			Message: "Invalid credentials: " + err.Error(),
+			Message: "Invalid credentials",
+			Data:    nil,
+		})
+		return
+	}
+
+	suspended, err := verifySuspended(u)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, responses.StandardResponse{
+			Status:  404,
+			Message: "Could not verify account status: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if suspended {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  403,
+			Message: "Account is suspended",
 			Data:    nil,
 		})
 		return
@@ -115,6 +135,19 @@ func verifyLogin(usuario models.Usuario) (string, error) {
 	}
 
 	return token, nil
+}
+
+func verifySuspended(usuario models.Usuario) (bool, error) {
+	var err error
+
+	found := models.Usuario{}
+	err = configs.DB.Where("usuario = ?", usuario.Usuario).First(&found).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return found.Suspendido, nil
 }
 
 func RoleFromUser(usuario models.Usuario) (string, error) {
