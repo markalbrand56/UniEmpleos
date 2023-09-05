@@ -167,3 +167,58 @@ func SuspendAccount(c *gin.Context) {
 		Data:    nil,
 	})
 }
+
+type Offer struct {
+	IDOferta    int      `json:"id_oferta"`
+	IDEmpresa   string   `json:"id_empresa"`
+	Puesto      string   `json:"puesto"`
+	Descripcion string   `json:"descripcion"`
+	Requisitos  string   `json:"requisitos"`
+	Salario     float64  `json:"salario"`
+	IdCarreras  []string `json:"id_carreras"`
+}
+
+func DeleteOfferAdmin(c *gin.Context) {
+	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
+	idOferta := c.Query("id_oferta")
+
+	err := configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
+			Message: "Error deleting offer: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  200,
+		Message: "Offer deleted successfully",
+		Data:    nil,
+	})
+
+}
+
+func DeleteUsuario(c *gin.Context) {
+	idUsuario := c.Query("usuario")
+
+	err := configs.DB.Where("usuario = ?", idUsuario).Delete(&models.Usuario{}).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
+			Message: "Error deleting user: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  200,
+		Message: "User deleted successfully",
+		Data:    nil,
+	})
+
+}
