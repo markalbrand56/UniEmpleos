@@ -355,6 +355,7 @@ func DeleteOffer(c *gin.Context) {
 		return
 	}
 
+	// @mark, esto lo hace la base de datos con el ON DELETE CASCADE.
 	// Delete oferta_carrera
 	err := configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.OfertaCarrera{}).Error
 	if err != nil {
