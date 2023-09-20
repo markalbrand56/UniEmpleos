@@ -16,7 +16,9 @@ func Routes(router *gin.Engine) {
 	public.POST("/companies", controllers.NewCompany)
 	public.GET("/postulations/previews", controllers.GetOfferPreviews)
 
-	router.POST("/upload", controllers.UploadFile())
+	// Rutas de archivos
+	public.POST("/upload", controllers.UploadFile())
+	public.GET("/uploads/:filename", controllers.GetFile())
 
 	// Rutas protegidas
 	// Mensajes
