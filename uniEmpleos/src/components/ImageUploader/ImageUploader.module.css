@@ -6,8 +6,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: calc(100% - 2px);
-  height: calc(100% - 2px);
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
   cursor: pointer;
 }
 

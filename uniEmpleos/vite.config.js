@@ -4,7 +4,13 @@ import path from "path"
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  addModulePathsToTranspile: ["react-quilljs"],
   plugins: [react()],
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  },
   resolve: {
     alias: [
       { find: "@", replacement: path.resolve(__dirname, "./src") },

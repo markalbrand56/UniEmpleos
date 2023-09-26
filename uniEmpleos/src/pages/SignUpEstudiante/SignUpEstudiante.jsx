@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
 import style from "./SignUpEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
@@ -6,8 +8,14 @@ import { navigate } from "../../store"
 import API_URL from "../../api"
 import DropDown from "../../components/dropDown/DropDown"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
+import Popup from "../../components/Popup/Popup"
+import useIsImage from "../../Hooks/useIsImage"
+import useApi from "../../Hooks/useApi"
 
 const SignUpEstudiante = () => {
+  const isImage = useIsImage()
+  const api = useApi()
+
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
   const [edad, setEdad] = useState("")
@@ -15,14 +23,17 @@ const SignUpEstudiante = () => {
   const [correo, setCorreo] = useState("")
   const [password, setPassword] = useState("")
   const [carrera, setCarrera] = useState("")
+  const [carreraId, setCarreraId] = useState(1)
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
   const [semestre, setSemestre] = useState("1")
-  // const [cv, setCv] = React.useState("")
-  // const [fotoPerfil, setFotoPerfil] = React.useState("")
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
 
   const [carreras, setCarreras] = useState([])
   const [uploadedImage, setUploadedImage] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [typeError, setTypeError] = useState(1)
 
   const semestres = [
     { value: "1", label: "1" },
@@ -99,58 +110,93 @@ const SignUpEstudiante = () => {
     }
   }
 
-  const handleDropdown = (e) => {
-    setCarrera(e.target.value)
+  const handleTypeSelect = (e) => {
+    setCarrera(e.label)
+    console.log(parseInt(e.value, 10))
+    setCarreraId(parseInt(e.value, 10))
   }
 
   const handleSemestre = (e) => {
-    setSemestre(e.target.value)
-  }
-  
-  const handleButton = () => {
-    navigate("/login")
+    setSemestre(e.value)
   }
 
-  const signup = async () => {
-    const body = {
-      dpi,
-      nombre,
-      apellido,
-      nacimiento: edad,
-      correo,
-      telefono,
-      carrera: parseInt(carrera, 10),
-      semestre: parseInt(semestre, 10),
-      cv: " ",
-      foto: uploadedImage,
-      contra: password,
-      universidad,
-    }
-    console.log(body)
-    const response = await fetch(`${API_URL}/api/students`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+  const handlePassword = () => {
+    setShowPassword(!showPassword)
+  }
 
-    const datos = await response.json() // Recibidos
-
-    if (datos.status === 200) {
-      // Estado global
-      handleButton()
+  const handleSignUp = async () => {
+    if (
+      dpi === "" ||
+      nombre === "" ||
+      apellido === "" ||
+      edad === "" ||
+      correo === "" ||
+      telefono === "" ||
+      carrera === "" ||
+      semestre === "" ||
+      password === "" ||
+      universidad === ""
+    ) {
+      setTypeError(1)
+      setError("Todos los campos son obligatorios")
+      setWarning(true)
+    } else if (telefono.length < 8) {
+      setTypeError(1)
+      setError("Telefono invalido")
+      setWarning(true)
     } else {
-      prompt("Error al crear el usuario")
+      const apiResponse = await api.handleRequest("POST", "/students", {
+        dpi,
+        nombre,
+        apellido,
+        nacimiento: edad,
+        correo,
+        telefono,
+        carrera: parseInt(carrera, 10),
+        semestre: parseInt(semestre, 10),
+        cv: " ",
+        foto: uploadedImage,
+        contra: password,
+        universidad,
+      })
+      if (apiResponse.status === 200) {
+        setTypeError(3)
+        setError("Registro exitoso")
+        setWarning(true)
+        setTimeout(() => {
+          navigate("/login")
+        }, 5000)
+      } else if (apiResponse.status === 409) {
+        setTypeError(2)
+        setError("El correo ya esta en uso")
+        setWarning(true)
+      } else {
+        setTypeError(1)
+        setError("Upss algo salio mal")
+        setWarning(true)
+      }
     }
   }
 
-  const handleUploadFile = (uploadedImage) => {
-    setUploadedImage(uploadedImage)
+  const handleUploadFile = (image) => {
+    const fileType = isImage(image)
+    if (fileType) {
+      setUploadedImage(image)
+    } else {
+      setTypeError(2)
+      setError("El archivo debe ser una imagen")
+      setWarning(true)
+    }
   }
 
   return (
     <div className={style.signUpCointainer}>
+      <Popup
+        message={error}
+        status={warning}
+        style={typeError}
+        close={() => setWarning(false)}
+      />
       <h1>UniEmpleos</h1>
       <div className={style.inputsContainer}>
         <div className={style.inputSubContainer}>
@@ -217,16 +263,41 @@ const SignUpEstudiante = () => {
             <ComponentInput
               name="password"
               type="password"
-              placeholder="micontraseña"
+              placeholder="micontraseña123"
               onChange={handleInputsValue}
+              eye
+              onClickButton={handlePassword}
+              isOpen={showPassword}
             />
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Carrera</span>
-            <DropDown
-              opciones={carreras}
-              value={carrera}
-              onChange={handleDropdown}
+            <Select
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? "#a08ae5" : "grey",
+                  color: "black",
+                }),
+                option: (baseStyles) => ({
+                  ...baseStyles,
+                  color: "black",
+                }),
+              }}
+              name="carrera"
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#94bd0f",
+                  primary: "#a08ae5",
+                },
+              })}
+              defaultValue={carrera}
+              options={carreras}
+              formatGroupLabel={carreras}
+              value={carreras.find((option) => option.label === carrera)}
+              onChange={handleTypeSelect}
             />
           </div>
           <div className={style.inputSubContainerDataGroup1}>
@@ -240,9 +311,31 @@ const SignUpEstudiante = () => {
           </div>
           <div className={style.inputSubContainerDataGroup1}>
             <span>Semestre</span>
-            <DropDown
-              opciones={semestres}
-              value={semestre}
+            <Select
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? "#a08ae5" : "grey",
+                  color: "black",
+                }),
+                option: (baseStyles) => ({
+                  ...baseStyles,
+                  color: "black",
+                }),
+              }}
+              name="carrera"
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#94bd0f",
+                  primary: "#a08ae5",
+                },
+              })}
+              defaultValue={semestre}
+              options={semestres}
+              formatGroupLabel={semestres}
+              value={semestres.find((option) => option.label === semestre)}
               onChange={handleSemestre}
             />
           </div>
@@ -260,7 +353,7 @@ const SignUpEstudiante = () => {
           </div>
         </div>
         <div className={style.buttonContainer}>
-          <Button label="Registrarse" onClick={signup} />
+          <Button label="Registrarse" onClick={handleSignUp} />
         </div>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">

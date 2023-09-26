@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"backend/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"net/http"
@@ -167,4 +168,59 @@ func getSalarioByIDOferta(postulations []models.ViewPrevPostulaciones, id int) f
 		}
 	}
 	return 0
+}
+
+type PostulationFromStudentResult struct {
+	IDPostulacion int     `json:"id_postulacion"`
+	IDOferta      int     `json:"id_oferta"`
+	IDEmpresa     string  `json:"id_empresa"`
+	Puesto        string  `json:"puesto"`
+	Descripcion   string  `json:"descripcion"`
+	Requisitos    string  `json:"requisitos"`
+	Salario       float64 `json:"salario"`
+}
+
+func GetPostulactionFromStudent(c *gin.Context) {
+	var results []PostulationFromStudentResult
+	var data map[string]interface{}
+
+	// obten el id del estudiante a partir del token.
+	idEstudiante, err := utils.ExtractTokenUsername(c)
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error getting id estudiante",
+			Data:    nil,
+		})
+		return
+	}
+
+	// en postgreSQL:
+	//select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario
+	//from postulacion p
+	//join oferta o
+	//on p.id_oferta = o.id_oferta
+	//where id_estudiante = 'mor21146@uvg.edu.gt';
+
+	err = configs.DB.Raw("select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario from postulacion p join oferta o on p.id_oferta = o.id_oferta where id_estudiante = ?", idEstudiante).Scan(&results).Error
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error getting postulations",
+			Data:    nil,
+		})
+		return
+	}
+
+	data = map[string]interface{}{
+		"postulations": results,
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Postulations retrieved successfully",
+		Data:    data,
+	})
+
 }

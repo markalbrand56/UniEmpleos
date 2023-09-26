@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from "react"
 import Dropzone from "react-dropzone"
 import styles from "./ImageUploader.module.css"
+import useIsImage from "../../Hooks/useIsImage"
 
-const ImageUploader = ({ onImageUpload, image, height, width, placeholderImage }) => {
+const ImageUploader = ({
+  onImageUpload,
+  image,
+  height,
+  width,
+  placeholderImage,
+}) => {
+  const isImage = useIsImage()
   // Paso 3: Añadir prop onImageUpload
   const [uploadedImage, setUploadedImage] = useState("")
 
   const placeholder = placeholderImage || "/images/clip.svg"
 
   useEffect(() => {
-    setUploadedImage(image)
+    const fileType = isImage(image)
+    if (fileType) {
+      setUploadedImage(image)
+    } else {
+      setUploadedImage("")
+    }
   }, [image])
 
   const handleDrop = (acceptedFiles) => {
@@ -18,18 +31,22 @@ const ImageUploader = ({ onImageUpload, image, height, width, placeholderImage }
 
     reader.onloadend = () => {
       // `reader.result` contiene los datos de la imagen en Base64
-      setUploadedImage(reader.result)
-      onImageUpload(reader.result) // Paso 4: Llamar a onImageUpload con el valor de la imagen
+      const fileType = isImage(reader.result)
+      if (fileType) {
+        setUploadedImage(reader.result)
+      }
+      // Paso 4: Llamar a onImageUpload con el valor de la imagen
+      onImageUpload(reader.result)
     }
     reader.readAsDataURL(file)
   }
 
-  const imageStyle = {};
+  const imageStyle = {}
   if (height) {
-    imageStyle.height = height;
+    imageStyle.height = height
   }
   if (width) {
-    imageStyle.width = width;
+    imageStyle.width = width
   }
 
   return (

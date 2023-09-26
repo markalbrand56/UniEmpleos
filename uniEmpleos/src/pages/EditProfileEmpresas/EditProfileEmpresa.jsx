@@ -20,10 +20,10 @@ const EditProfileEmpresa = () => {
   const [correo, setCorreo] = useState("")
   const [detalles, setDetalles] = useState("")
   const [telefono, setTelefono] = useState("")
-  const [password, setPassword] = useState("")
   const [uploadedImage, setUploadedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
+  const [typePopUp, setTypePopUp] = useState(1)
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -40,9 +40,6 @@ const EditProfileEmpresa = () => {
         break
       case "correo":
         setCorreo(e.target.value)
-        break
-      case "password":
-        setPassword(e.target.value)
         break
       default:
         break
@@ -67,23 +64,32 @@ const EditProfileEmpresa = () => {
     detalles,
     correo,
     telefono: telefono.toString(),
-    contra: " ",
     foto: uploadedImage,
   }
 
   // Con esto se pueden hacer las llamadas al status
   const handleButton = async () => {
-    const apiResponse = await api.handleRequest(
-      "PUT",
-      "/companies/update",
-      body
-    )
-    console.log(apiResponse.status)
-    if (apiResponse.status === 200) {
-      navigate("/profilecompany")
-    } else {
-      setError("Upss... Algo salio mal atras, intenta mas tarde")
+    if (nombre === "" || detalles === "" || telefono === "") {
+      setTypePopUp(2)
+      setError("Todos los campos son obligatorios")
       setWarning(true)
+    } else if (telefono.length < 8) {
+      setTypePopUp(2)
+      setError("El numero de telefono no es valido")
+      setWarning(true)
+    } else {
+      const apiResponse = await api.handleRequest(
+        "PUT",
+        "/companies/update",
+        body
+      )
+      if (apiResponse.status === 200) {
+        navigate("/profilecompany")
+      } else {
+        setTypePopUp(1)
+        setError("Upss... Algo salio mal atras, intenta mas tarde")
+        setWarning(true)
+      }
     }
   }
 
@@ -93,18 +99,20 @@ const EditProfileEmpresa = () => {
       setUploadedImage(uploadedImage)
     } else {
       setUploadedImage("")
+      setTypePopUp(2)
       setError("El archivo debe ser una imagen")
       setWarning(true)
     }
   }
 
-  const handelPopupStatus = () => {
-    setWarning(false)
-  }
-
   return (
     <div className={style.defaultContainer}>
-      <Popup message={error} status={warning} closePopup={handelPopupStatus} />
+      <Popup
+        message={error}
+        status={warning}
+        style={typePopUp}
+        close={() => setWarning(false)}
+      />
       <div className={style.headerContainer}>
         <Header userperson="company" />
       </div>

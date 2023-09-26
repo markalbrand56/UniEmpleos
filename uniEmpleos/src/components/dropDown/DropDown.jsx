@@ -2,10 +2,10 @@ import React from "react"
 import PropTypes from "prop-types"
 import styles from "./DropDown.module.css"
 
-const DropDown = ({ opciones, value, onChange }) => {
+const DropDown = ({ opciones, value, onChange, name }) => {
   return (
     <div className={styles.dropDownContainer}>
-      <select id="dropdown" onChange={onChange} value={value} multiple>
+      <select name={name} id={name} onChange={onChange} value={value} multiple>
         {opciones.map((skin) => (
           <option
             key={skin.value}
@@ -32,6 +32,7 @@ DropDown.propTypes = {
     })
   ).isRequired,
   value: PropTypes.arrayOf(PropTypes.string).isRequired,
+  name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 }
 

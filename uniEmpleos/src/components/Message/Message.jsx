@@ -1,10 +1,15 @@
 import React from "react"
 import PropTypes from "prop-types"
 import style from "./Message.module.css"
+import { format } from "date-fns"
 
-const Message = ({ pfp, name, time, message, file, side }) => (
+const Message = ({ pfp, name, time, message, file, side }) => {
+  
+  const formatTime = format(new Date(time), "dd/MM/yyyy hh:mm a")
+
+ return (
   <div
-    className={style.messageContainer}
+    className={side === "right" ? style.messageContainer : style.messageContainerLeft}
     style={{ alignItems: side === "right" ? "flex-end" : "flex-start" }}
   >
     <div className={style.header}>
@@ -16,7 +21,7 @@ const Message = ({ pfp, name, time, message, file, side }) => (
         style={{ alignItems: side === "right" ? "flex-end" : "flex-start" }}
       >
         <div className={style.name}>{name}</div>
-        <div className={style.time}>{time}</div>
+        <div className={style.time}>{formatTime}</div>
       </div>
     </div>
     <div className={style.content}>
@@ -32,7 +37,7 @@ const Message = ({ pfp, name, time, message, file, side }) => (
       )}
     </div>
   </div>
-)
+)}
 
 Message.propTypes = {
   pfp: PropTypes.string.isRequired,

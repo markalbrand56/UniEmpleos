@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import PropTypes from "prop-types"
 import styles from "./Input.module.css"
 
@@ -11,21 +11,64 @@ const ComponentInput = ({
   min,
   max,
   value,
+  eye,
+  isOpen,
+  onClickButton,
 }) => {
-  return (
-    <div className={styles.inputContainer}>
-      <input
-        value={value}
-        id={name}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        onChange={onChange}
-        min={min}
-        max={max}
-      />
-    </div>
-  )
+  if(eye){
+    if(isOpen){
+      return (
+        <div className={styles.inputContainer}>
+          <input
+            value={value}
+            id={name}
+            name={name}
+            type="text"
+            placeholder={placeholder}
+            onChange={onChange}
+            min={min}
+            max={max}
+          />
+          <button className={styles.eyeContainer} onClick={onClickButton}>
+            <img src="/images/openEye.svg" alt="eye" />
+          </button>
+        </div>
+      )
+    } else {
+      return (
+        <div className={styles.inputContainer}>
+          <input
+            value={value}
+            id={name}
+            name={name}
+            type="password"
+            placeholder={placeholder}
+            onChange={onChange}
+            min={min}
+            max={max}
+          />
+          <button className={styles.eyeContainer} onClick={onClickButton}>
+            <img src="/images/closedEye.svg" alt="eye" />
+          </button>
+        </div>
+      )
+    }
+  } else {
+    return (
+      <div className={styles.inputContainer}>
+        <input
+          value={value}
+          id={name}
+          name={name}
+          type={type}
+          placeholder={placeholder}
+          onChange={onChange}
+          min={min}
+          max={max}
+        />
+      </div>
+    )
+  }
 }
 
 ComponentInput.propTypes = {
