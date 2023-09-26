@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
 import Joi from "joi"
 import { useQuill } from "react-quilljs"
-import Select from "react-select"
-import makeAnimated from "react-select/animated"
 import styles from "./OfferDetails.module.css"
 import { Header } from "../../components/Header/Header"
 import Button from "../../components/Button/Button"
@@ -15,8 +13,6 @@ import useApi from "../../Hooks/useApi"
 import "react-quill/dist/quill.snow.css"
 import useConfig from "../../Hooks/Useconfig"
 import Popup from "../../components/Popup/Popup"
-
-const animatedComponents = makeAnimated()
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -37,7 +33,7 @@ const OfferDetails = ({ id }) => {
   const [carreras, setCarreras] = useState([])
   const { quill, quillRef } = useQuill()
   const [warning, setWarning] = useState(false)
-  const [typePopUp, setTypePopUp] = useState(1)
+  const [deletejob, setdeleteJob] = useState(false)
   const [error, setError] = useState("")
 
   useEffect(() => {
@@ -122,9 +118,11 @@ const OfferDetails = ({ id }) => {
     navigate("/postulacionempresa")
   }
 
-  const handleTypeSelect = (e) => {
-    setCarrera(e.map((obj) => obj.value))
-    console.log(e.map((obj) => obj.value))
+  const handleCarrera = (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions).map(
+      (option) => option.value
+    )
+    setCarrera(selectedOptions)
   }
 
   const handleInputsValue = (e) => {
@@ -146,7 +144,24 @@ const OfferDetails = ({ id }) => {
     }
   }
 
+  const handlePopupStatus = () => {
+    setWarning(false)
+  }
+
+  const handleCancelJob = () => {
+    setdeleteJob(false)
+  }
+
+  const deleteJobOffer = () => {
+    setdeleteJob(true)
+    setError("¿Está seguro que desea eliminar la oferta?")
+    console.log("delete")
+  }
+
   const succcessJobOffer = () => {
+    setdeleteJob(false)
+    setError("Oferta eliminada con éxito")
+    setWarning(true)
     setTimeout(() => {
       navigate("/postulacionempresa")
     }, 4000)
@@ -156,13 +171,8 @@ const OfferDetails = ({ id }) => {
     const variableApi = `/offers/?id_oferta=${id}`
     const apiResponse = await api.handleRequest("DELETE", variableApi)
     if (apiResponse.status === 200) {
-      setWarning(true)
-      setError("Oferta eliminada con éxito")
-      setTypePopUp(3)
       succcessJobOffer()
     } else {
-      setWarning(true)
-      setTypePopUp(1)
       setError("Upss algo salió mal, intentalo de nuevo")
       setWarning(true)
     }
@@ -170,18 +180,20 @@ const OfferDetails = ({ id }) => {
 
   return (
     <div className={styles.container}>
+      <Popup status={warning} message={error} closePopup={handlePopupStatus} />
       <Popup
+        status={deletejob}
         message={error}
-        status={warning}
-        style={typePopUp}
-        close={() => setWarning(false)}
+        closePopup={onclickAccept}
+        onClickcancel={handleCancelJob}
+        canceloption
       />
       <Header userperson="enterprise" />
       <div className={styles.postulacionContainer}>
         <div className={styles.headertittlecontainer}>
           <div className={styles.titleContainer}>
             <h4>Detalles de la oferta</h4>
-            <button onClick={onclickAccept} type="button">
+            <button onClick={deleteJobOffer} type="button">
               <img src="/images/delete.svg" alt="trash" />
             </button>
           </div>
@@ -210,36 +222,10 @@ const OfferDetails = ({ id }) => {
           </div>
           <div className={styles.inputContainer}>
             <span>Carrera</span>
-            <Select
-              styles={{
-                control: (baseStyles, state) => ({
-                  ...baseStyles,
-                  borderColor: state.isFocused ? "#a08ae5" : "grey",
-                  color: "black",
-                }),
-                option: (baseStyles) => ({
-                  ...baseStyles,
-                  color: "black",
-                }),
-              }}
-              name="carrera"
-              isMulti
-              theme={(theme) => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary25: "#94bd0f",
-                  primary: "#a08ae5",
-                },
-              })}
-              defaultValue={carrera}
-              options={carreras}
-              formatGroupLabel={carreras}
-              components={animatedComponents}
-              value={carreras.filter(
-                (obj) => carrera && carrera.includes(obj.value)
-              )}
-              onChange={handleTypeSelect}
+            <DropDown
+              opciones={carreras}
+              value={carrera}
+              onChange={handleCarrera}
             />
           </div>
           <div className={styles.inputContainer}>

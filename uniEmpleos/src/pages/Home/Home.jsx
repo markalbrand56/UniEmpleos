@@ -3,7 +3,6 @@ import styles from "./Home.module.css"
 import Infocontainer from "../../components/Infocontainer/Infocontainer"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
-import LottieAnimation from "../../components/LottieAnimation/LottieAnimation"
 
 const Home = () => {
   const handleNav = (path) => {
@@ -41,8 +40,7 @@ const Home = () => {
           </div>
         </div>
         <div className={styles.image}>
-          <h1>UniEmpleos</h1>
-          <LottieAnimation />
+          <img src="/images/Uniempleos.png" alt="Uniempleos" />
         </div>
         <div className={styles.info}>
           <Infocontainer
