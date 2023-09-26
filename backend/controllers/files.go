@@ -5,7 +5,6 @@ import (
 	"backend/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -17,7 +16,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, responses.StandardResponse{
 				Status:  http.StatusUnauthorized,
-				Message: "Unauthorized. " + err.Error(),
+				Message: "Unauthorized. Cannot get information from token. " + err.Error(),
 				Data:    nil,
 			})
 			return
@@ -29,13 +28,13 @@ func UpdateProfilePicture() gin.HandlerFunc {
 
 		// single file
 		file, _ := c.FormFile("file")
-		log.Println(file.Filename)
 
 		// get the file type from filename
 		fileType := file.Filename[strings.LastIndex(file.Filename, ".")+1:]
-		fmt.Println("File type: " + fileType)
 
 		dst := "./uploads/" + user + "." + fileType
+		fmt.Println("File: " + dst)
+
 		// Upload the file to specific dst.
 		err = c.SaveUploadedFile(file, dst)
 		if err != nil {
