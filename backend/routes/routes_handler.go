@@ -17,7 +17,6 @@ func Routes(router *gin.Engine) {
 	public.GET("/postulations/previews", controllers.GetOfferPreviews)
 
 	// Rutas de archivos
-	public.POST("/upload", controllers.UploadFile())
 	public.GET("/uploads/:filename", controllers.GetFile())
 
 	// Rutas protegidas
@@ -35,6 +34,7 @@ func Routes(router *gin.Engine) {
 
 	users.GET("/", controllers.CurrentUser)
 	users.POST("/details", controllers.GetUserDetails)
+	users.PUT("/upload", controllers.UpdateProfilePicture())
 
 	// Estudiantes
 	students := router.Group("api/students")
