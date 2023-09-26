@@ -641,6 +641,36 @@ Crea una postulacíón de trabajo, cuando un estudiante se postula a una oferta
 	"Data": "nil"
 }
 ```
+
+### [GET] api/postulations/getFromStudent/
+Devuelve las postulaciones de un Estudiante. 
+> **Note**
+> Auth required
+
+#### Response
+```json 
+
+{
+    "status": 200,
+    "message": "Postulations retrieved successfully",
+    "data": {
+        "postulations": [
+            {
+                "id_postulacion": 2,
+                "id_oferta": 1,
+                "id_empresa": "hr@empresa.tec",
+                "puesto": "Desarrollador Web Junior",
+                "descripcion": "Desarrollador web junior encargado de Diseñar, desarrollar, dar mantenimiento y soporte a las aplicaciones web",
+                "requisitos": "Conocimientos en HTML, CSS, Javascript, PHP, MySQL, React, NodeJS",
+                "salario": 5000
+            }
+        ]
+    }
+}
+
+```
+
+
 ---
 ## Administradores
 ### [POST] api/admins
