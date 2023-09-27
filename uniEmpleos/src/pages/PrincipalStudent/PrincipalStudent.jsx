@@ -60,7 +60,11 @@ const PrincipalStudent = () => {
 
   useEffect(() => {
     if (apiPostulations.data) {
-      setPostulaciones(apiPostulations.data)
+      const postArray = []
+      for (const i in apiPostulations.data.postulations) {
+        postArray.push(apiPostulations.data.postulations[i].id_oferta)
+      }
+      setPostulaciones(postArray)
     }
   }, [apiPostulations.data])
 
@@ -82,9 +86,9 @@ const PrincipalStudent = () => {
             const regex = new RegExp(carrera)
             if (
               regex.test(postulation.nombre_carreras) &&
-              carrera !== "" &&
-              postulaciones.id_oferta &&
-              !(postulation.id_oferta in postulaciones.id_oferta)
+              carrera !== ""  &&
+              postulaciones &&
+              !(postulaciones.includes(postulation.id_oferta))
             ) {
               return (
                 <InfoTab
