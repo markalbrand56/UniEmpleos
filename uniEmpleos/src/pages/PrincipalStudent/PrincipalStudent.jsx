@@ -20,6 +20,7 @@ const PrincipalStudent = () => {
   const apiPostulations = useApi()
   const [carrera, setCarrera] = useState("")
   const [postulaciones, setPostulaciones] = useState([])
+  const [ofertasAMostrar, setOfertasAMostrar] = useState([])
 
   const form = useConfig(schema, {
     token: "a",
@@ -77,31 +78,43 @@ const PrincipalStudent = () => {
       )
   }
 
+  const handleOfertasAMostrar = () => {
+    const ofertas = []
+    dataa.data.postulations.map((postulation) => {
+      const regex = new RegExp(carrera)
+      if (
+        regex.test(postulation.nombre_carreras) &&
+        carrera !== "" &&
+        postulaciones &&
+        !postulaciones.includes(postulation.id_oferta)
+      ) {
+        ofertas.push(postulation)
+      }
+    })
+    setOfertasAMostrar(ofertas)
+  }
+  
+  useEffect(() => {
+    if (dataa.status === 200) {
+      handleOfertasAMostrar()
+    }
+  }, [dataa.data, carrera])
+
   return (
     <div className={styles.container}>
       <Header userperson="student" />
-      {dataa.status === 200 ? (
+      {dataa.status === 200 && ofertasAMostrar.length > 0 ? (
         <div className={styles.containerinfomain}>
-          {dataa.data.postulations.map((postulation) => {
-            const regex = new RegExp(carrera)
-            if (
-              regex.test(postulation.nombre_carreras) &&
-              carrera !== ""  &&
-              postulaciones &&
-              !(postulaciones.includes(postulation.id_oferta))
-            ) {
-              return (
-                <InfoTab
-                  key={postulation.id_oferta}
-                  title={postulation.puesto}
-                  salary={`Q.${postulation.salario}.00`}
-                  company={postulation.nombre_empresa}
-                  labelbutton="Postularme"
-                  onClick={() => saveidlocalstorage(postulation.id_oferta)}
-                />
-              )
-            }
-          })}
+          {dataa.data.postulations.map((postulation) => (
+            <InfoTab
+              key={postulation.id_oferta}
+              title={postulation.puesto}
+              salary={`Q.${postulation.salario}.00`}
+              company={postulation.nombre_empresa}
+              labelbutton="Postularme"
+              onClick={() => saveidlocalstorage(postulation.id_oferta)}
+            />
+          ))}
         </div>
       ) : (
         <div className={styles.containerinfomain}>
