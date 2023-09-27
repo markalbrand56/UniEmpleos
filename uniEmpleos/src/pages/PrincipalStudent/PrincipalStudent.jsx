@@ -17,7 +17,9 @@ const schema = Joi.object({
 const PrincipalStudent = () => {
   const api = useApi()
   const apiCareers = useApi()
+  const apiPostulations = useApi()
   const [carrera, setCarrera] = useState("")
+  const [postulaciones, setPostulaciones] = useState([])
 
   const form = useConfig(schema, {
     token: "a",
@@ -37,7 +39,7 @@ const PrincipalStudent = () => {
     const datos = await response.json()
     setData(datos)
   }
-  console.log(dataa)
+
   useEffect(() => {
     if (api.data && apiCareers.data) {
       const carreraID = api.data.usuario.carrera
@@ -53,7 +55,14 @@ const PrincipalStudent = () => {
     configureData()
     api.handleRequest("GET", "/users/")
     apiCareers.handleRequest("GET", "/careers")
+    apiPostulations.handleRequest("GET", "/postulations/getFromStudent")
   }, [])
+
+  useEffect(() => {
+    if (apiPostulations.data) {
+      setPostulaciones(apiPostulations.data)
+    }
+  }, [apiPostulations.data])
 
   const saveidlocalstorage = (id) => {
     if (form.values.idoffert !== "a" || form.values.idoffert !== "undefined") {
@@ -71,10 +80,15 @@ const PrincipalStudent = () => {
         <div className={styles.containerinfomain}>
           {dataa.data.postulations.map((postulation) => {
             const regex = new RegExp(carrera)
-            if (regex.test(postulation.nombre_carreras) && carrera !== "") {
+            if (
+              regex.test(postulation.nombre_carreras) &&
+              carrera !== "" &&
+              postulaciones.id_oferta &&
+              !(postulation.id_oferta in postulaciones.id_oferta)
+            ) {
               return (
                 <InfoTab
-                  key={postulation.id_oferta} // Asegúrate de proporcionar una clave única en elementos de lista
+                  key={postulation.id_oferta}
                   title={postulation.puesto}
                   salary={`Q.${postulation.salario}.00`}
                   company={postulation.nombre_empresa}
