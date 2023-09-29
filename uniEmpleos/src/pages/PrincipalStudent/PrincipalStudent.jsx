@@ -93,7 +93,7 @@ const PrincipalStudent = () => {
     })
     setOfertasAMostrar(ofertas)
   }
-  
+
   useEffect(() => {
     if (dataa.status === 200) {
       handleOfertasAMostrar()
@@ -105,7 +105,7 @@ const PrincipalStudent = () => {
       <Header userperson="student" />
       {dataa.status === 200 && ofertasAMostrar.length > 0 ? (
         <div className={styles.containerinfomain}>
-          {dataa.data.postulations.map((postulation) => (
+          {ofertasAMostrar.map((postulation) => (
             <InfoTab
               key={postulation.id_oferta}
               title={postulation.puesto}
