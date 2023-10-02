@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"backend/configs"
+	"backend/models"
 	"backend/responses"
 	"backend/utils"
 	"fmt"
@@ -23,8 +25,8 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		}
 
 		// strip username from email. ignoring everything after @
-		user = user[:strings.Index(user, "@")]
-		fmt.Println("Username upload: " + user)
+		user_stripped := user[:strings.Index(user, "@")]
+		fmt.Println("Username upload: " + user_stripped)
 
 		// single file
 		file, _ := c.FormFile("file")
@@ -32,8 +34,28 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		// get the file type from filename
 		fileType := file.Filename[strings.LastIndex(file.Filename, ".")+1:]
 
-		dst := "./uploads/" + user + "." + fileType
+		newFileName := user_stripped + "." + fileType
+
+		dst := "./uploads/" + newFileName
 		fmt.Println("File: " + dst)
+
+		// Actualizar en base de datos
+		userType, err := utils.ExtractTokenUserType(c)
+
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+				Status:  http.StatusUnauthorized,
+				Message: "Unauthorized. Cannot get information from token. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		if userType == "student" {
+			err = configs.DB.Model(&models.Estudiante{}).Where("correo = ?", user).Updates(models.Estudiante{Foto: newFileName}).Error
+		} else if userType == "company" {
+			err = configs.DB.Model(&models.Empresa{}).Where("correo = ?", user).Updates(models.Empresa{Foto: newFileName}).Error
+		}
 
 		// Upload the file to specific dst.
 		err = c.SaveUploadedFile(file, dst)
@@ -44,7 +66,9 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		c.JSON(http.StatusOK, responses.StandardResponse{
 			Status:  http.StatusOK,
 			Message: "File uploaded successfully",
-			Data:    nil,
+			Data: map[string]interface{}{
+				"filename": newFileName,
+			},
 		})
 	}
 }
