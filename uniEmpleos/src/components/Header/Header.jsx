@@ -36,6 +36,7 @@ export const Header = () => {
             <a href="/editprofileestudiante">Perfil</a>
             <a href="/profile">Vacantes</a>
             <a href="/chat">Chat</a>
+            <a href="/postulaciones">Postulaciones</a>
           </div>
         )
       case "enterprise":
@@ -92,10 +93,6 @@ Header.propTypes = {
   user: PropTypes.shape({
     nombre: PropTypes.string,
   }),
-  onLogin: PropTypes.func.isRequired,
-  onLogout: PropTypes.func.isRequired,
-  onCreateAccount: PropTypes.func.isRequired,
-  userperson: PropTypes.string.isRequired,
 }
 
 Header.defaultProps = {

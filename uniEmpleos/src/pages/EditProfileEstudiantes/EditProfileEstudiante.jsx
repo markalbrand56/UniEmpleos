@@ -79,8 +79,6 @@ const EditProfileEstudiante = () => {
       setSemestre(usuario.semestre)
       setUploadedImage(usuario.foto)
     }
-    console.log("carrera", carrera)
-    console.log(api.data)
   }, [api.data])
 
   useEffect(() => {
@@ -92,7 +90,6 @@ const EditProfileEstudiante = () => {
       }))
       setCarreras(dataCarreras)
     }
-    console.log("carrerasss", carreras)
   }, [apiCareers.data])
 
   useEffect(() => {
@@ -129,7 +126,6 @@ const EditProfileEstudiante = () => {
 
   const handleTypeSelect = (e) => {
     setCarrera(e.label)
-    console.log(parseInt(e.value, 10))
     setCarreraId(parseInt(e.value, 10))
   }
 
@@ -175,8 +171,6 @@ const EditProfileEstudiante = () => {
       }
     }
   }
-
-  console.log(semestre)
 
 
   const handleUploadFile = (uploadedImage) => {
