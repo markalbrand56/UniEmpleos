@@ -6,6 +6,7 @@ import { navigate } from "../../store"
 import { Header } from "../../components/Header/Header"
 import useConfig from "../../Hooks/Useconfig"
 import API_URL from "../../api"
+import useApi from "../../Hooks/useApi"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -14,6 +15,12 @@ const schema = Joi.object({
 })
 
 const PrincipalStudent = () => {
+  const api = useApi()
+  const apiCareers = useApi()
+  const apiPostulations = useApi()
+  const [carrera, setCarrera] = useState("")
+  const [postulaciones, setPostulaciones] = useState([])
+
   const form = useConfig(schema, {
     token: "a",
     idoffert: "a",
@@ -34,8 +41,32 @@ const PrincipalStudent = () => {
   }
 
   useEffect(() => {
+    if (api.data && apiCareers.data) {
+      const carreraID = api.data.usuario.carrera
+      for (const i of apiCareers.data.careers) {
+        if (i.id_carrera === carreraID) {
+          setCarrera(i.nombre)
+        }
+      }
+    }
+  }, [api.data, apiCareers.data])
+
+  useEffect(() => {
     configureData()
+    api.handleRequest("GET", "/users/")
+    apiCareers.handleRequest("GET", "/careers")
+    apiPostulations.handleRequest("GET", "/postulations/getFromStudent")
   }, [])
+
+  useEffect(() => {
+    if (apiPostulations.data) {
+      const postArray = []
+      for (const i in apiPostulations.data.postulations) {
+        postArray.push(apiPostulations.data.postulations[i].id_oferta)
+      }
+      setPostulaciones(postArray)
+    }
+  }, [apiPostulations.data])
 
   const saveidlocalstorage = (id) => {
     if (form.values.idoffert !== "a" || form.values.idoffert !== "undefined") {
@@ -51,15 +82,26 @@ const PrincipalStudent = () => {
       <Header userperson="student" />
       {dataa.status === 200 ? (
         <div className={styles.containerinfomain}>
-          {dataa.data.postulations.map((postulation) => (
-            <InfoTab
-              title={postulation.puesto}
-              salary={`Q.${postulation.salario}.00`}
-              company={postulation.nombre_empresa}
-              labelbutton="Postularme"
-              onClick={() => saveidlocalstorage(postulation.id_oferta)}
-            />
-          ))}
+          {dataa.data.postulations.map((postulation) => {
+            const regex = new RegExp(carrera)
+            if (
+              regex.test(postulation.nombre_carreras) &&
+              carrera !== ""  &&
+              postulaciones &&
+              !(postulaciones.includes(postulation.id_oferta))
+            ) {
+              return (
+                <InfoTab
+                  key={postulation.id_oferta}
+                  title={postulation.puesto}
+                  salary={`Q.${postulation.salario}.00`}
+                  company={postulation.nombre_empresa}
+                  labelbutton="Postularme"
+                  onClick={() => saveidlocalstorage(postulation.id_oferta)}
+                />
+              )
+            }
+          })}
         </div>
       ) : (
         <div className={styles.containerinfomain}>

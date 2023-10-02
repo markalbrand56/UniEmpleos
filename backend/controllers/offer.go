@@ -4,7 +4,6 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
-	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -222,18 +221,8 @@ type GetOfferByCompanyInput struct {
 	Id_Empresa string `json:"id_empresa"`
 }
 
-type GetOfferByCompanyResponse struct {
-	Id_Oferta   int     `json:"id_oferta"`
-	IDEmpresa   string  `json:"id_empresa"`
-	Puesto      string  `json:"puesto"`
-	Descripcion string  `json:"descripcion"`
-	Requisitos  string  `json:"requisitos"`
-	Salario     float64 `json:"salario"`
-	IdCarreras  []int   `json:"id_carreras"`
-}
-
 func GetOfferByCompany(c *gin.Context) {
-	var offersResponse []GetOfferByCompanyResponse
+	var offers []models.OfertaGet
 	var data map[string]interface{}
 	var input GetOfferByCompanyInput
 
@@ -246,25 +235,8 @@ func GetOfferByCompany(c *gin.Context) {
 		return
 	}
 
-	query := `
-	SELECT
-		o.id_oferta,
-		o.id_empresa,
-		o.puesto,
-		o.descripcion,
-		o.requisitos,
-		o.salario,
-		oc.id_carrera
-	FROM
-		oferta o
-	LEFT JOIN
-		oferta_carrera oc ON o.id_oferta = oc.id_oferta
-	WHERE
-		o.id_empresa = ?;
+	err := configs.DB.Where("id_empresa = ?", input.Id_Empresa).Find(&offers).Error
 
-	`
-
-	rows, err := configs.DB.Raw(query, input.Id_Empresa).Rows()
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
@@ -273,188 +245,14 @@ func GetOfferByCompany(c *gin.Context) {
 		})
 		return
 	}
-	defer rows.Close()
-
-	// Create a map to store offer details and associated career IDs
-	offerMap := make(map[int]GetOfferByCompanyResponse)
-
-	// ...
-
-	for rows.Next() {
-		var offer GetOfferByCompanyResponse
-		var idOferta int
-		var idCarrera sql.NullInt64
-
-		if err := rows.Scan(
-			&idOferta,
-			&offer.IDEmpresa,
-			&offer.Puesto,
-			&offer.Descripcion,
-			&offer.Requisitos,
-			&offer.Salario,
-			&idCarrera,
-		); err != nil {
-			c.JSON(400, responses.StandardResponse{
-				Status:  400,
-				Message: "Error scanning rows: " + err.Error(),
-				Data:    nil,
-			})
-			return
-		}
-
-		// Check if the offer already exists in the map
-		existingOffer, exists := offerMap[idOferta]
-		if exists {
-			if idCarrera.Valid {
-				existingOffer.IdCarreras = append(existingOffer.IdCarreras, int(idCarrera.Int64))
-			}
-			offerMap[idOferta] = existingOffer
-		} else {
-			offer.Id_Oferta = idOferta
-			offer.IdCarreras = nil
-			if idCarrera.Valid {
-				offer.IdCarreras = []int{int(idCarrera.Int64)}
-			}
-			offerMap[idOferta] = offer
-		}
-	}
-
-	// ...
-
-	// Convert the map values to a slice
-	for _, offer := range offerMap {
-		offersResponse = append(offersResponse, offer)
-	}
 
 	data = map[string]interface{}{
-		"offers": offersResponse,
+		"offers": offers,
 	}
 
 	c.JSON(200, responses.StandardResponse{
 		Status:  200,
 		Message: "Offers retrieved successfully",
 		Data:    data,
-	})
-}
-
-type DeleteOfferInput struct {
-	Id_Oferta string `json:"id_oferta"`
-}
-
-func DeleteOffer(c *gin.Context) {
-	// Obtén el valor del parámetro "id_oferta" desde los query parameters
-	idOferta := c.Query("id_oferta")
-
-	// Verifica si el valor del parámetro está presente
-	if idOferta == "" {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Missing id_oferta parameter",
-			Data:    nil,
-		})
-		return
-	}
-
-	// @mark, esto lo hace la base de datos con el ON DELETE CASCADE.
-	// Delete oferta_carrera
-	err := configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.OfertaCarrera{}).Error
-	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error deleting oferta_carrera: " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	// Delete oferta
-	err = configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
-	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error deleting oferta: " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
-		Message: "Offer deleted successfully",
-		Data:    nil,
-	})
-}
-
-func GetApplicants(c *gin.Context) {
-	var input GetPostulationInput
-
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON. " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	var results []map[string]interface{}
-
-	rows, err := configs.DB.Raw("SELECT p.id_estudiante, p.estado, e.dpi, e.nombre, e.apellido, e.nacimiento, e.correo, e.telefono, e.carrera, e.semestre, e.cv, e.foto, e.universidad FROM postulacion p JOIN estudiante e ON p.id_estudiante = e.id_estudiante WHERE id_oferta = ?", input.IdOferta).Rows()
-	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error getting postulations. " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var idEstudiante string
-		var estado string
-		var dpi string
-		var nombre string
-		var apellido string
-		var nacimiento string
-		var correo string
-		var telefono string
-		var carrera int
-		var semestre int
-		var cv string
-		var foto string
-		var universidad string
-		err := rows.Scan(&idEstudiante, &estado, &dpi, &nombre, &apellido, &nacimiento, &correo, &telefono, &carrera, &semestre, &cv, &foto, &universidad)
-		if err != nil {
-			c.JSON(400, responses.StandardResponse{
-				Status:  400,
-				Message: "Error scanning postulation row. " + err.Error(),
-				Data:    nil,
-			})
-			return
-		}
-
-		result := map[string]interface{}{
-			"id_estudiante": idEstudiante,
-			"estado":        estado,
-			"dpi":           dpi,
-			"nombre":        nombre,
-			"apellido":      apellido,
-			"nacimiento":    nacimiento,
-			"correo":        correo,
-			"telefono":      telefono,
-			"carrera":       carrera,
-			"semestre":      semestre,
-			"cv":            cv,
-			"foto":          foto,
-			"universidad":   universidad,
-		}
-		results = append(results, result)
-	}
-
-	c.JSON(200, responses.PostulationResponse{
-		Status:  200,
-		Message: "Applicants returned successfully",
-		Data:    results,
 	})
 }

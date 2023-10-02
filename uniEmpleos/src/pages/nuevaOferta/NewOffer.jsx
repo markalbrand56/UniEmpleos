@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
-import { useQuill } from "react-quilljs"
 import style from "./NewOffer.module.css"
 import { Header } from "../../components/Header/Header"
 import Button from "../../components/Button/Button"
 import ComponentInput from "../../components/Input/Input"
 import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
-import Select from "react-select"
-import makeAnimated from "react-select/animated"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import { useQuill } from "react-quilljs"
 import Popup from "../../components/Popup/Popup"
-
-const animatedComponents = makeAnimated()
 
 const Postulacion = () => {
   const { user } = useStoreon("user")
@@ -23,7 +19,7 @@ const Postulacion = () => {
   const [requisitos, setRequisitos] = useState("")
   const [salario, setSalario] = useState("")
   const [puesto, setPuesto] = useState("")
-  const [carrera, setCarrera] = useState([])
+  const [carrera, setCarrera] = useState("")
   const [carreras, setCarreras] = useState([])
   const { quill, quillRef } = useQuill()
   const [warning, setWarning] = useState(false)
@@ -48,7 +44,7 @@ const Postulacion = () => {
         salario: parseFloat(salario),
         descripcion: details,
         requisitos,
-        id_carreras: carrera,
+        id_carreras: [carrera],
       })
       if (apiResponse.status === 200) {
         navigate("/postulacionempresa")
@@ -60,8 +56,8 @@ const Postulacion = () => {
     }
   }
 
-  const handleTypeSelect = (e) => {
-    setCarrera(e.map((obj) => obj.value))
+  const handleCarrera = (e) => {
+    setCarrera(e.target.value)
   }
 
   const handleInputsValue = (e) => {
@@ -135,34 +131,10 @@ const Postulacion = () => {
           </div>
           <div className={style.inputContainer}>
             <span>Carrera</span>
-            <Select
-              styles={{
-                control: (baseStyles, state) => ({
-                  ...baseStyles,
-                  borderColor: state.isFocused ? "#a08ae5" : "grey",
-                  color: "black",
-                }),
-                option: (baseStyles) => ({
-                  ...baseStyles,
-                  color: "black",
-                }),
-              }}
-              name="carrera"
-              isMulti
-              placeholder="Carreras"
-              theme={(theme) => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary25: "#94bd0f",
-                  primary: "#a08ae5",
-                },
-              })}
-              defaultValue={carrera}
-              options={carreras}
-              components={animatedComponents}
-              value={carreras.filter((obj) => carrera.includes(obj.value))}
-              onChange={handleTypeSelect}
+            <DropDown
+              opciones={carreras}
+              value={carrera}
+              onChange={handleCarrera}
             />
           </div>
           <div className={style.inputContainer}>
