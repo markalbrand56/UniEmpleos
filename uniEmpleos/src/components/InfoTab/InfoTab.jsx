@@ -6,16 +6,22 @@ import Button from "../Button/Button"
 const InfoTab = ({ title, area, salary, company, labelbutton, onClick }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.containerinfomain}>
-        <h3>{title}</h3>
-      </div>
-      <div className={styles.containerinfosecond}>
-        <p>{company}</p>
-        {area && <p>{area}</p>}
-      </div>
-      <div className={styles.containerinfothird}>
-        <p>{salary}</p>
-      </div>
+      {title && (
+        <div className={styles.containerinfomain}>
+          <h3>{title}</h3>
+        </div>
+      )}
+      {company && (
+        <div className={styles.containerinfosecond}>
+          <p>{company}</p>
+          {area && <p>{area}</p>}
+        </div>
+      )}
+      {salary && (
+        <div className={styles.containerinfothird}>
+          <p>{salary}</p>
+        </div>
+      )}
       <div className={styles.button}>
         <Button label={labelbutton} onClick={onClick} />
       </div>
