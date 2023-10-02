@@ -69,15 +69,29 @@ func GetMessages(c *gin.Context) {
 	}
 
 	var messages []models.MensajeGet
-	err := configs.DB.
-		Table("mensaje m").
-		Select("es.nombre as emisor_nombre, es.foto as emisor_foto, em.nombre as receptor_nombre, em.foto as receptor_foto, m.*").
-		Joins("JOIN estudiante es ON m.id_emisor = es.id_estudiante OR m.id_receptor = es.id_estudiante").
-		Joins("JOIN empresa em ON m.id_emisor = em.id_empresa OR m.id_receptor = em.id_empresa").
-		Where("(m.id_emisor = ? AND m.id_receptor = ?) OR (m.id_emisor = ? AND m.id_receptor = ?)",
-			inputID.ID_emisor, inputID.ID_receptor,
-			inputID.ID_receptor, inputID.ID_emisor).
-		Find(&messages).Error
+	query := `Select CASE WHEN (m.id_emisor = ? AND es.id_estudiante = ?) OR (m.id_emisor = ? AND es.id_estudiante = ?) THEN es.nombre
+       WHEN (m.id_emisor = ? AND em.id_empresa = ?) OR (m.id_emisor = ? AND em.id_empresa = ?) THEN em.nombre END as emisor_nombre,
+       CASE WHEN (m.id_receptor = ? AND es.id_estudiante = ?) OR (m.id_receptor = ? AND es.id_estudiante = ?) THEN es.nombre
+       WHEN (m.id_receptor = ? and em.id_empresa = ?) OR (m.id_receptor = ? and em.id_empresa = ?) THEN em.nombre END as receptor_nombre,
+       CASE WHEN (m.id_emisor = ? and es.id_estudiante = ?) OR (m.id_emisor = ? and es.id_estudiante = ?) THEN es.foto
+       WHEN (m.id_emisor = ? and em.id_empresa = ?) OR (m.id_emisor = ? and em.id_empresa = ?) THEN em.foto END as emisor_foto,
+       m.*
+       from mensaje m
+         join estudiante es on m.id_emisor = es.id_estudiante or m.id_receptor = es.id_estudiante
+         join empresa em on m.id_emisor = em.id_empresa or m.id_receptor = em.id_empresa
+         where (id_emisor = ? and id_receptor = ?)
+         or (id_emisor = ? and id_receptor = ?);`
+
+	// Ejecutamos la consulta SQL pura con parámetros inputID.ID_usuario
+	err := configs.DB.Raw(query, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
+		inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
+		inputID.ID_receptor, inputID.ID_receptor, inputID.ID_emisor, inputID.ID_emisor,
+		inputID.ID_receptor, inputID.ID_receptor, inputID.ID_emisor, inputID.ID_emisor,
+		inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
+		inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
+		inputID.ID_emisor, inputID.ID_receptor,
+		inputID.ID_receptor, inputID.ID_emisor,
+	).Scan(&messages).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
@@ -125,7 +139,8 @@ func GetLastChat(c *gin.Context) {
 	var chats []models.ChatInfo
 
 	// Consulta SQL pura con alias y parámetro ?
-	query := `SELECT p.id_postulacion as chat_id,
+	query := `SELECT p.id_postulacion as postulation_id,
+       				CASE WHEN p.id_estudiante = ? THEN e2.id_empresa ELSE e.id_estudiante END as user_id,
 					CASE WHEN p.id_estudiante = ? THEN e2.nombre ELSE e.nombre END as user_name,
 					CASE WHEN p.id_estudiante = ? THEN e2.foto ELSE e.foto END as user_photo,
 					m.mensaje as last_message,
@@ -144,7 +159,7 @@ func GetLastChat(c *gin.Context) {
 			  ORDER BY m.tiempo DESC`
 
 	// Ejecutamos la consulta SQL pura con parámetros inputID.ID_usuario
-	err = configs.DB.Raw(query, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario).Scan(&chats).Error
+	err = configs.DB.Raw(query, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario, inputID.ID_usuario).Scan(&chats).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{

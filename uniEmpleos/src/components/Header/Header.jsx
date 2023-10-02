@@ -92,6 +92,10 @@ Header.propTypes = {
   user: PropTypes.shape({
     nombre: PropTypes.string,
   }),
+  onLogin: PropTypes.func.isRequired,
+  onLogout: PropTypes.func.isRequired,
+  onCreateAccount: PropTypes.func.isRequired,
+  userperson: PropTypes.string.isRequired,
 }
 
 Header.defaultProps = {

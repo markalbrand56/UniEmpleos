@@ -60,9 +60,5 @@
     "node-fetch": "^3.3.2",
     "storybook": "^7.0.7",
     "vite": "^4.4.8"
-  },
-  "resolutions": {
-    "cli-truncate": "2.1.0",
-    "string-width": "4.x"
   }
 }

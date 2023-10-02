@@ -61,20 +61,40 @@ func Login(c *gin.Context) {
 	token, err := verifyLogin(u)
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  401,
 			Message: "Invalid credentials: " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	role, err := role(u)
+	role, err := RoleFromUser(u)
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Invalid credentials: " + err.Error(),
+		c.JSON(http.StatusNotFound, responses.StandardResponse{
+			Status:  404,
+			Message: "Invalid credentials",
+			Data:    nil,
+		})
+		return
+	}
+
+	suspended, err := verifySuspended(u)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, responses.StandardResponse{
+			Status:  404,
+			Message: "Could not verify account status: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if suspended {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  403,
+			Message: "Account is suspended",
 			Data:    nil,
 		})
 		return
@@ -106,7 +126,9 @@ func verifyLogin(usuario models.Usuario) (string, error) {
 		return "", err
 	}
 
-	token, err := utils.GenerateToken(found.Usuario)
+	role, err := RoleFromUser(found)
+
+	token, err := utils.GenerateToken(found.Usuario, role)
 
 	if err != nil {
 		return "", err
@@ -115,7 +137,20 @@ func verifyLogin(usuario models.Usuario) (string, error) {
 	return token, nil
 }
 
-func role(usuario models.Usuario) (string, error) {
+func verifySuspended(usuario models.Usuario) (bool, error) {
+	var err error
+
+	found := models.Usuario{}
+	err = configs.DB.Where("usuario = ?", usuario.Usuario).First(&found).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return found.Suspendido, nil
+}
+
+func RoleFromUser(usuario models.Usuario) (string, error) {
 	var err error
 	var role string
 
@@ -142,6 +177,28 @@ func role(usuario models.Usuario) (string, error) {
 
 	return "", err
 
+}
+
+func RoleFromToken(c *gin.Context) (string, error) {
+	username, err := utils.ExtractTokenUsername(c)
+
+	if err != nil {
+		return "", err
+	}
+
+	u, err := models.GetUserByUsername(username)
+
+	if err != nil {
+		return "", err
+	}
+
+	role, err := RoleFromUser(u)
+
+	if err != nil {
+		return "", err
+	}
+
+	return role, nil
 }
 
 func CurrentUser(c *gin.Context) {
@@ -216,6 +273,75 @@ func CurrentUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
 			Message: "User not found",
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  400,
+		Message: "User not found",
+		Data:    nil,
+	},
+	)
+}
+
+type UserDetailsInput struct {
+	Correo string `json:"correo"`
+}
+
+func GetUserDetails(c *gin.Context) {
+	var input UserDetailsInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, responses.StandardResponse{Status: 400, Message: "Invalid input", Data: nil})
+		return
+	}
+
+	var estudiante models.Estudiante
+	var empresa models.Empresa
+	var administrador models.Administrador
+
+	err := configs.DB.Where("correo = ?", input.Correo).First(&estudiante).Error
+	if err == nil {
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  200,
+			Message: "User found",
+			Data: map[string]interface{}{
+				"estudiante": estudiante,
+			},
+		})
+		return
+	}
+
+	err = configs.DB.Where("correo = ?", input.Correo).First(&empresa).Error
+
+	if err == nil {
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  200,
+			Message: "User found",
+			Data: map[string]interface{}{
+				"empresa": empresa,
+			},
+		})
+		return
+	}
+
+	err = configs.DB.Where("correo = ?", input.Correo).First(&administrador).Error
+
+	if err == nil {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  401,
+			Message: "Access denied",
+			Data:    nil,
+		})
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
+			Message: "User not found. " + err.Error(),
 			Data:    nil,
 		})
 		return

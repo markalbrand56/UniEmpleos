@@ -20,10 +20,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'
-
-    - name: update yarn
-      run: yarn upgrade
+        node-version: '16.x'
 
     - name: Install dependencies
       run: cd uniEmpleos && yarn
