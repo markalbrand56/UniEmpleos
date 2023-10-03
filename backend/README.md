@@ -1,15 +1,15 @@
 # Documentación API
 
+---
 ## Usuario
-
 ### [POST] api/login
 Login de usuario.
 
 #### Request Body
 ``` json
 {
-    "usuario": "ejemplo",
-    "contra": "ejemploContraseña"
+    "usuario": "string",
+    "contra": "string"
 }
 ```
 
@@ -30,6 +30,7 @@ Obtener el usuario actual.
 > Auth required
 
 #### Response
+Estudiante
 ``` json
 {
     "status": 200,
@@ -54,6 +55,8 @@ Obtener el usuario actual.
 }
 
 ```
+
+Empresa
 ```json
 {
   "status": 200,
@@ -70,6 +73,36 @@ Obtener el usuario actual.
   }
 }
 ```
+### [POST] api/users/details
+Obtener los detalles públicos de un usuario, dado su correo
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "correo": "string"
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "User found",
+    "data": {
+        "empresa": {
+            "id_empresa": "prueba@prueba",
+            "nombre": "pruebaEmpresa",
+            "foto": "foto",
+            "detalles": "empresa de prueba",
+            "correo": "prueba@prueba",
+            "telefono": "12344433"
+        }
+    }
+}
+```
+---
 ## Estudiante
 ### [POST] api/students
 Crea un estudiante
@@ -134,9 +167,9 @@ Actualiza un estudiante
     "data": null
 }
 ```
-
+---
 ## Mensajes
-### [POST] api/messages
+### [POST] api/messages/send
 Crea un mensaje
 > **Note**
 > Auth required
@@ -181,7 +214,7 @@ Devuelve el último mensaje de un chat dado el usuario
     "message": "Message retrieved successfully",
     "data": {
         "message": {
-            "chat_id": 1,
+            "postulation_id": 1,
             "user_name": "Empresa INC",
             "user_photo": "",
             "last_message": "Muchas gracias por la información. Estaré a la espera de su correo",
@@ -221,7 +254,6 @@ Devuelve los mensajes de un chat dado el emisor y el receptor
                 "emisor_nombre": "Mark",
                 "emisor_foto": "foto",
                 "receptor_nombre": "Empresa INC",
-                "receptor_foto": "",
                 "archivo": ""
             },
             {
@@ -252,7 +284,7 @@ Devuelve los mensajes de un chat dado el emisor y el receptor
     }
 }
 ```
-
+---
 ## Empresas
 ### [POST] api/companies
 Crea una compañia
@@ -263,6 +295,7 @@ Crea una compañia
 {
 	"nombre"        : "string" 
 	"detalles"      : "string"
+	"foto"   	: "string"
 	"correo"    	: "string"
 	"telefono"    	: "string" 
 	"contra" 	: "string"
@@ -286,11 +319,11 @@ Actualiza una compañia
 #### Params
 ``` json
 {
-    "nombre"        : "ejemplo" 
-    "detalles"      : "detalles"
-    "correo"    	: "correo@gmail.com"
-    "telefono"    	: "12345678" 
-    "contra" 	    : "contrasena"
+    "nombre"        : "string" 
+    "detalles"      : "string"
+    "correo"    	: "string"
+    "telefono"    	: "string" 
+    "contra" 	    : "string"
 }
 ```
 
@@ -302,7 +335,7 @@ Actualiza una compañia
     "data": null
 }
 ```
-
+---
 ## Ofertas de trabajo
 ### [POST] api/offers
 Crea una oferta de trabajo
@@ -422,20 +455,24 @@ Devuelve las ofertas de trabajo publicadas por una compañia
     "data": {
         "offers": [
             {
-                "id_oferta": 1,
-                "id_empresa": "hr@empresa.tec",
-                "puesto": "Desarrollador Web Junior",
-                "descripcion": "Desarrollador web junior encargado de Diseñar, desarrollar, dar mantenimiento y soporte a las aplicaciones web",
-                "requisitos": "Conocimientos en HTML, CSS, Javascript, PHP, MySQL, React, NodeJS",
-                "salario": 5000
+                "id_oferta": 52,
+                "id_empresa": "reclutamiento@sarita.com",
+                "puesto": "puesto dummy",
+                "descripcion": "descripcion dummy",
+                "requisitos": "requisitos dummy",
+                "id_carreras": [
+                    1,
+                    2,
+                    3
+                ]
             },
             {
-                "id_oferta": 2,
-                "id_empresa": "hr@empresa.tec",
-                "puesto": "Desarrollador Full Stack",
-                "descripcion": "Desarrollador web full stack encargado de Diseñar, desarrollar, dar mantenimiento y soporte a las aplicaciones web",
-                "requisitos": "Conocimientos en HTML, CSS, Javascript, PHP, MySQL, React, NodeJS, Java, C#",
-                "salario": 10000
+                "id_oferta": 60,
+                "id_empresa": "reclutamiento@sarita.com",
+                "puesto": "puesto dummy",
+                "descripcion": "{\"ops\":[{\"insert\":\"Puesto Dummy\"},{\"attributes\":{\"align\":\"center\"},\"insert\":\"\\n\"}]}",
+                "requisitos": "requisitos dummy",
+                "id_carreras": null
             }
         ]
     }
@@ -487,11 +524,66 @@ Devuelve todos los detalles de una oferta según el ID. Devuelve además la info
 	"Data": "nil"
 }
 ```
+### [DELETE] api/offers/
+Elimina una oferta de trabajo. También elimina cualquier postulación asociada a la oferta
+> **Note**
+> Auth required
 
+#### Params
+``` json
+{
+    "id_oferta"    : int
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Offer deleted successfully",
+    "data": null
+}
+```
+
+### [POST] api/offers/applicants
+Retorna los estudiantes que se han postulado a una oferta
+
+## Params
+``` json
+{
+	"id_oferta"    	: int
+}
+```
+
+#### Response
+``` json
+{
+	"Status":  "200",
+	"Message": "Applicants returned successfully",
+	"Data": [
+		{
+		    "apellido": "Albrand",
+		    "carrera": 1,
+		    "correo": "alb21004@uvg.edu.gt",
+		    "cv": "cv",
+		    "dpi": "2806089930101",
+		    "estado": "Enviada",
+		    "foto": "foto",
+		    "id_estudiante": "alb21004@uvg.edu.gt",
+		    "nacimiento": "2002-05-06T00:00:00Z",
+		    "nombre": "Mark",
+		    "semestre": 5,
+		    "telefono": "58748587",
+		    "universidad": "Universidad del Valle de Guatemala"
+		}
+	]
+}
+```
+
+---
 ## Carreras
 ### [GET] api/careers
 Devuelve todas las carreras
-
 
 #### Response
 ``` json
@@ -524,7 +616,7 @@ Devuelve todas las carreras
     }
 }
 ```
-
+---
 ## Postulaciones
 ### [POST] api/postulation
 Crea una postulacíón de trabajo, cuando un estudiante se postula a una oferta
@@ -550,6 +642,36 @@ Crea una postulacíón de trabajo, cuando un estudiante se postula a una oferta
 }
 ```
 
+### [GET] api/postulations/getFromStudent/
+Devuelve las postulaciones de un Estudiante. 
+> **Note**
+> Auth required
+
+#### Response
+```json 
+
+{
+    "status": 200,
+    "message": "Postulations retrieved successfully",
+    "data": {
+        "postulations": [
+            {
+                "id_postulacion": 2,
+                "id_oferta": 1,
+                "id_empresa": "hr@empresa.tec",
+                "puesto": "Desarrollador Web Junior",
+                "descripcion": "Desarrollador web junior encargado de Diseñar, desarrollar, dar mantenimiento y soporte a las aplicaciones web",
+                "requisitos": "Conocimientos en HTML, CSS, Javascript, PHP, MySQL, React, NodeJS",
+                "salario": 5000
+            }
+        ]
+    }
+}
+
+```
+
+
+---
 ## Administradores
 ### [POST] api/admins
 Crea un administrador
@@ -572,40 +694,74 @@ Crea un administrador
 	"Data": "nil"
 }
 ```
+### [GET] api/admins/students
+Retorna información de estudiantes para el panel de administradores
 
-## Postulaciones
-### [POST] api/Getpostulations
+> **Note**
+> Auth required
 
-## Params
+#### Response
+``` json
+"status": 200,
+    "message": "Students Retrieved Successfully",
+    "data": {
+        "studets": [
+            {
+                "id_estudiante": "alb21004@uvg.edu.gt",
+                "foto": "",
+                "nombre": "Mark",
+                "apellido": "Albrand",
+                "nacimiento": "2002-05-06T00:00:00Z",
+                "suspendido": false
+            }
+	  ]
+     }
+```
+
+### [GET] api/admins/companies
+Retorna información de empresas para el panel de administradores
+
+> **Note**
+> Auth required
+
+#### Response
 ``` json
 {
-	"id_oferta"    	: "string" 
+    "status": 200,
+    "message": "Companies Retrieved Successfully",
+    "data": {
+        "companies": [
+             {
+                    "id_empresa": "hr@empresa.tec",
+                    "nombre": "Empresa INC",
+                    "detalles": "Empresa enfocada a sitios web",
+                    "telefono": "58747474",
+                    "suspendido": false
+            },
+        ]
+    }
+}
+```
+
+### [POST] api/admins/suspend
+Suspende un usuario
+
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "id_usuario": string,
+    "suspender": bool
 }
 ```
 
 #### Response
 ``` json
 {
-	"Status":  "200",
-	"Message": "Postulations returned successfully",
-	"Data": [
-		{
-		    "apellido": "Albrand",
-		    "carrera": 1,
-		    "correo": "alb21004@uvg.edu.gt",
-		    "cv": "cv",
-		    "dpi": "2806089930101",
-		    "estado": "Enviada",
-		    "foto": "foto",
-		    "id_estudiante": "alb21004@uvg.edu.gt",
-		    "nacimiento": "2002-05-06T00:00:00Z",
-		    "nombre": "Mark",
-		    "semestre": 5,
-		    "telefono": "58748587",
-		    "universidad": "Universidad del Valle de Guatemala"
-		}
-	]
+    "status": 200,
+    "message": "User suspended successfully",
+    "data": null
 }
 ```
-
-

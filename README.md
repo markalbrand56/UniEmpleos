@@ -1,3 +1,4 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/c109402a-e80a-430e-a75c-9d453e7cc61f/deploy-status)](https://app.netlify.com/sites/sage-palmier-936be2/deploys)
 # UniEmpleos
 Ingeniería de Software I: Proyecto Semestral.
 

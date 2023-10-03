@@ -4,9 +4,9 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
+	"net/http"
 	"time"
 )
 
@@ -63,7 +63,7 @@ func NewStudent(c *gin.Context) {
 
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
-			c.JSON(409, responses.StandardResponse{
+			c.JSON(http.StatusConflict, responses.StandardResponse{
 				Status:  409,
 				Message: "User with this email already exists",
 				Data:    nil,
@@ -71,7 +71,7 @@ func NewStudent(c *gin.Context) {
 			return
 		}
 
-		c.JSON(400, responses.StandardResponse{
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
 			Message: "Error creating user. " + err.Error(),
 			Data:    nil,
@@ -82,7 +82,7 @@ func NewStudent(c *gin.Context) {
 	err = configs.DB.Create(&e).Error // Se agrega el estudiante a la base de datos
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
 			Message: "Error creating student. " + err.Error(),
 			Data:    nil,
@@ -90,7 +90,7 @@ func NewStudent(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, responses.StandardResponse{
+	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  200,
 		Message: "Student created successfully",
 		Data:    nil,
@@ -111,14 +111,12 @@ func UpdateStudent(c *gin.Context) {
 
 	nacimiento, _ := time.Parse("2006-01-02", input.Nacimiento)
 
-	fmt.Println(input) // TODO BORRAR ESTO
-
 	var inserted models.EstudianteGet
 
 	err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, nacimiento, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  400,
 			Message: "Error updating. " + err.Error(),
 			Data:    nil,
@@ -126,7 +124,7 @@ func UpdateStudent(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, responses.StandardResponse{
+	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  200,
 		Message: "Student updated successfully",
 		Data:    nil,
