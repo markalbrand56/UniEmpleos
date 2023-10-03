@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 // Mensaje es la estructura de la tabla mensaje en la base de datos
 type Mensaje struct {
@@ -22,16 +24,16 @@ type MensajeGet struct {
 	EmisorNombre   string    `json:"emisor_nombre"`
 	EmisorFoto     string    `json:"emisor_foto"`
 	ReceptorNombre string    `json:"receptor_nombre"`
-	ReceptorFoto   string    `json:"receptor_foto"`
 	Archivo        string    `json:"archivo"`
 }
 
 type ChatInfo struct {
-	ChatID      int       `json:"chat_id"`
-	UserName    string    `json:"user_name"`
-	UserPhoto   string    `json:"user_photo"`
-	LastMessage string    `json:"last_message"`
-	LastTime    time.Time `json:"last_time"`
+	PostulationId int       `json:"postulation_id"`
+	UserId        string    `json:"user_id"`
+	UserName      string    `json:"user_name"`
+	UserPhoto     string    `json:"user_photo"`
+	LastMessage   string    `json:"last_message"`
+	LastTime      time.Time `json:"last_time"`
 }
 
 // TableName Esta función se llama automáticamente cuando se hace un Create() en el ORM, acá va el nombre como aparece en Postgres

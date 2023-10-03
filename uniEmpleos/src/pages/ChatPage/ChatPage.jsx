@@ -143,9 +143,9 @@ const ChatPage = () => {
     return () => clearInterval(intervalMensajesChatActual)
   }, [])
 
-  // console.log(apiMessages.data)
+  // console.log('-->', apiMessages.data)
   // console.log(user.id_user)
-  console.log(apiLastChats.data)
+  // console.log(apiLastChats.data)
 
   return (
     <div className={style.container}>

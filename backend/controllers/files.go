@@ -1,21 +1,64 @@
 package controllers
 
 import (
+	"backend/configs"
+	"backend/models"
 	"backend/responses"
+	"backend/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
+	"strings"
 )
 
-func UploadFile() gin.HandlerFunc {
+func UpdateProfilePicture() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		user, err := utils.ExtractTokenUsername(c)
+
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+				Status:  http.StatusUnauthorized,
+				Message: "Unauthorized. Cannot get information from token. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		// strip username from email. ignoring everything after @
+		user_stripped := user[:strings.Index(user, "@")]
+		fmt.Println("Username upload: " + user_stripped)
+
 		// single file
 		file, _ := c.FormFile("file")
-		log.Println(file.Filename)
 
-		dst := "./uploads" + file.Filename
+		// get the file type from filename
+		fileType := file.Filename[strings.LastIndex(file.Filename, ".")+1:]
+
+		newFileName := user_stripped + "." + fileType
+
+		dst := "./uploads/" + newFileName
+		fmt.Println("File: " + dst)
+
+		// Actualizar en base de datos
+		userType, err := utils.ExtractTokenUserType(c)
+
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+				Status:  http.StatusUnauthorized,
+				Message: "Unauthorized. Cannot get information from token. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		if userType == "student" {
+			err = configs.DB.Model(&models.Estudiante{}).Where("correo = ?", user).Updates(models.Estudiante{Foto: newFileName}).Error
+		} else if userType == "company" {
+			err = configs.DB.Model(&models.Empresa{}).Where("correo = ?", user).Updates(models.Empresa{Foto: newFileName}).Error
+		}
+
 		// Upload the file to specific dst.
-		err := c.SaveUploadedFile(file, dst)
+		err = c.SaveUploadedFile(file, dst)
 		if err != nil {
 			return
 		}
@@ -23,7 +66,17 @@ func UploadFile() gin.HandlerFunc {
 		c.JSON(http.StatusOK, responses.StandardResponse{
 			Status:  http.StatusOK,
 			Message: "File uploaded successfully",
-			Data:    nil,
+			Data: map[string]interface{}{
+				"filename": newFileName,
+			},
 		})
+	}
+}
+
+func GetFile() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		filename := c.Param("filename")
+		filePath := "./uploads/" + filename
+		c.File(filePath) // Esto sirve el archivo al cliente
 	}
 }

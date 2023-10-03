@@ -36,6 +36,7 @@ export const Header = () => {
             <a href="/editprofileestudiante">Perfil</a>
             <a href="/profile">Vacantes</a>
             <a href="/chat">Chat</a>
+            <a href="/postulaciones">Postulaciones</a>
           </div>
         )
       case "enterprise":
