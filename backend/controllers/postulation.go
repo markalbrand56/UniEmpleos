@@ -247,12 +247,26 @@ func RetirePostulation(c *gin.Context) {
 		return
 	}
 
+	// verify that the postulation exists
+	var postulation models.Postulacion
+
+	err = configs.DB.Where("id_postulacion = ? AND id_estudiante = ?", input, user).First(&postulation).Error
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, responses.StandardResponse{
+			Status:  http.StatusNotFound,
+			Message: "Error getting postulation. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
 	err = configs.DB.Where("id_postulacion = ? AND id_estudiante = ?", input, user).Delete(&models.Postulacion{}).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
-			Message: "Error deleting postulation. " + err.Error(),
+			Message: "No matching postulation was found. " + err.Error(),
 			Data:    nil,
 		})
 		return
