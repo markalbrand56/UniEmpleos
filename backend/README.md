@@ -670,6 +670,19 @@ Devuelve las postulaciones de un Estudiante.
 
 ```
 
+### [DELETE] api/postulations/?id_postulacion=1
+Elimina una postulación. El usuario se obtiene del token. Se pasa el id de la postulación como query param
+> **Note**
+> Auth required
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Postulation deleted successfully",
+    "data": null
+}
+```
 
 ---
 ## Administradores
