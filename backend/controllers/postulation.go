@@ -224,3 +224,43 @@ func GetPostulactionFromStudent(c *gin.Context) {
 	})
 
 }
+
+func RetirePostulation(c *gin.Context) {
+	input := c.Query("id_postulacion")
+	user, err := utils.ExtractTokenUsername(c)
+
+	if input == "" {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "ID postulation is required as a query parameter",
+			Data:    nil,
+		})
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Unauthorized. Cannot get information from token. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Where("id_postulacion = ? AND id_estudiante = ?", input, user).Delete(&models.Postulacion{}).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error deleting postulation. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
+		Message: "Postulation deleted successfully",
+		Data:    nil,
+	})
+}
