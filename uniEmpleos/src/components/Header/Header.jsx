@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { useStoreon } from "storeon/react"
 import PropTypes from "prop-types"
 import { FaBars, FaTimes } from "react-icons/fa"
+import {AiOutlineLogout} from "react-icons/ai"
 import Logo from "../Logo/Logo"
 import Button from "../Button/Button"
 import "./header.css"
@@ -40,47 +41,41 @@ export const Header = () => {
       case "student":
         return (
           <div className="actions">
-            <a href="/editprofileestudiante">Perfil</a>
-            <a href="/profile">Vacantes</a>
-            <a href="/chat">Chat</a>
-            <a href="/postulaciones">Postulaciones</a>
-            <div className="buttonLogoutMobile">
-              <Button
-                backgroundColor="#a08ae5"
-                label="Log Out"
-                onClick={handleClick}
-              />
+            <div className="actionlinks">
+              <a href="/editprofileestudiante">Perfil</a>
+              <a href="/profile">Vacantes</a>
+              <a href="/chat">Chat</a>
+              <a href="/postulaciones">Postulaciones</a>
+            </div>
+            <div className="buttonLogoutMobile" onClick={handleClick}>
+              <AiOutlineLogout size={30} style={{ color: "#000" }} />
             </div>
           </div>
         )
       case "enterprise":
         return (
           <div className="actions">
-            <a href="/newoffer">Añadir Empleo</a>
-            <a href="/postulacionempresa">Mis Ofertas</a>
-            <a href="/editprofileempresa">Profile</a>
-            <a href="/chat">Chat</a>
-            <div className="buttonLogoutMobile">
-              <Button
-                backgroundColor="#a08ae5"
-                label="Log Out"
-                onClick={handleClick}
-              />
+            <div className="actionlinks">
+              <a href="/newoffer">Añadir Empleo</a>
+              <a href="/postulacionempresa">Mis Ofertas</a>
+              <a href="/editprofileempresa">Profile</a>
+              <a href="/chat">Chat</a>
+            </div>
+            <div className="buttonLogoutMobile" onClick={handleClick}>
+              <AiOutlineLogout size={30} style={{ color: "#000" }} />
             </div>
           </div>
         )
       case "admin":
         return (
           <div className="actions">
-            <a href="/jobs">Vacantes</a>
-            <a href="/postulantes">Postulantes</a>
-            <a href="/profile">Perfil</a>
-            <div className="buttonLogoutMobile">
-              <Button
-                backgroundColor="#a08ae5"
-                label="Log Out"
-                onClick={handleClick}
-              />
+            <div className="actionlinks">
+              <a href="/jobs">Vacantes</a>
+              <a href="/postulantes">Postulantes</a>
+              <a href="/profile">Perfil</a>
+            </div>
+            <div className="buttonLogoutMobile" onClick={handleClick}>
+              <AiOutlineLogout size={30} style={{ color: "#000" }} />
             </div>
           </div>
         )

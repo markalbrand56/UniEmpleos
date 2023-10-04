@@ -1,4 +1,3 @@
-
 .logoheader{
   width: 80px;
   height: 80px;
@@ -16,6 +15,14 @@
   display: flex;
   gap: 40px;
   align-items: center;
+}
+
+.actionlinks {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  position: relative;
+  right: 60%;
 }
 
 .actions a {
@@ -130,7 +137,8 @@ button.buttonlogo:focus{
 
 .buttonLogoutMobile{
   display: flex;
-  padding: 40px;
+  padding: 0;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -140,16 +148,23 @@ button.buttonlogo:focus{
 
   .actions{
     flex-direction: column;
+    gap: 80px;
   }
   .buttonLogout{
     display: none;
   }
+
 }
 
 @media (max-width: 600px) {
   .menu-icon {
     display: block;
     cursor: pointer;
+  }
+  .actionlinks {
+    flex-direction: column;
+    position: static;
+    gap:40px;
   }
 
   .nav-elements {
