@@ -7,7 +7,10 @@ import (
 	"backend/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"math/rand"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -44,10 +47,21 @@ func UpdateProfilePicture() gin.HandlerFunc {
 			return
 		}
 
-		newFileName := user_stripped + "." + fileType
+		randomNumber := rand.Intn(9999999999-1111111111) + 1111111111
+		newFileName := user_stripped + "_" + fmt.Sprint(randomNumber) + "." + fileType
 
 		dst := "./uploads/" + newFileName
 		fmt.Println("File: " + dst)
+
+		// Eliminar archivos antiguos con el mismo prefijo de usuario
+		if err := deleteFilesWithPrefix("./uploads/", user_stripped); err != nil {
+			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
+				Status:  http.StatusInternalServerError,
+				Message: "Failed to delete old files: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
 
 		// Actualizar en base de datos
 		userType, err := utils.ExtractTokenUserType(c)
@@ -81,6 +95,26 @@ func UpdateProfilePicture() gin.HandlerFunc {
 			},
 		})
 	}
+}
+
+func deleteFilesWithPrefix(directory, prefix string) error {
+	files, err := os.ReadDir(directory)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		fmt.Println(file.Name())
+		if strings.HasPrefix(file.Name(), prefix) {
+			filePath := filepath.Join(directory, file.Name())
+			fmt.Println("Deleting file: " + filePath)
+			if err := os.Remove(filePath); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
 
 func GetFile() gin.HandlerFunc {
