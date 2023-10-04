@@ -10,6 +10,8 @@ import useApi from "../../Hooks/useApi"
 import useIsImage from "../../Hooks/useIsImage"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
+import ImageDirectUploader from "../../components/ImageDirectUploader/ImageDirectUploader"
+import API_URL from "@/api.js"
 
 const EditProfileEmpresa = () => {
   const api = useApi()
@@ -21,6 +23,7 @@ const EditProfileEmpresa = () => {
   const [detalles, setDetalles] = useState("")
   const [telefono, setTelefono] = useState("")
   const [uploadedImage, setUploadedImage] = useState("")
+  const [updatedImage, setUpdatedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typePopUp, setTypePopUp] = useState(1)
@@ -47,11 +50,12 @@ const EditProfileEmpresa = () => {
   }
   useEffect(() => {
     if (api.data) {
+      const fotoUrl = API_URL + "/api/uploads/" + api.data.usuario.foto
       setNombre(api.data.usuario.nombre)
       setCorreo(api.data.usuario.correo)
       setDetalles(api.data.usuario.detalles)
       setTelefono(parseInt(api.data.usuario.telefono, 10))
-      setUploadedImage(api.data.usuario.foto)
+      setUploadedImage( fotoUrl)
     }
   }, [api.data])
 
@@ -59,12 +63,20 @@ const EditProfileEmpresa = () => {
     api.handleRequest("GET", "/users/")
   }, [])
 
+  useEffect(() => {
+    if (updatedImage !== "") {
+      const fotoUrl = API_URL + "/api/uploads/" + updatedImage
+      console.log("New image ", fotoUrl)
+      setUploadedImage(fotoUrl)
+    }
+  }, [updatedImage])
+
   const body = {
     nombre,
     detalles,
     correo,
     telefono: telefono.toString(),
-    foto: uploadedImage,
+    foto: uploadedImage
   }
 
   // Con esto se pueden hacer las llamadas al status
@@ -105,6 +117,44 @@ const EditProfileEmpresa = () => {
     }
   }
 
+  // ...
+
+  const uploadFile = async () => {
+    event.preventDefault()
+    const file = document.getElementById("file").files[0]
+
+    if (!file) {
+      setTypePopUp(2)
+      setError("Debes seleccionar un archivo")
+      setWarning(true)
+      return
+    }
+
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const apiResponse = await fetch(`${API_URL}/api/users/upload`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: formData,
+    })
+
+    console.log("Send file")
+
+    if (apiResponse.status === 200) {
+      console.log("File uploaded")
+      const dataResponse = await apiResponse.json()
+      console.log(dataResponse)
+      setUpdatedImage(dataResponse.data.filename)
+    } else {
+      setTypePopUp(1)
+      setError("Upss... Algo salio mal atras, intenta mas tarde")
+      setWarning(true)
+    }
+  }
+
   return (
     <div className={style.defaultContainer}>
       <Popup
@@ -119,17 +169,18 @@ const EditProfileEmpresa = () => {
       <div className={style.contentContainer}>
         <div className={style.imgContainer}>
           <div className={style.imageUploaderContainer}>
-            <ImageUploader
-              onImageUpload={handleUploadFile}
-              image={uploadedImage}
+            <img
+              src={uploadedImage}
               width="30px"
               height="30px"
-              placeholderImage="/images/pfp.svg"
             />
           </div>
         </div>
         <div className={style.editProfileContainer}>
           <div className={style.inputsContainer}>
+            <div>
+              <ImageDirectUploader uploader={uploadFile} />
+            </div>
             <div className={style.grupoDatos1}>
               <div className={style.inputSubContainer}>
                 <span>Nombre</span>
