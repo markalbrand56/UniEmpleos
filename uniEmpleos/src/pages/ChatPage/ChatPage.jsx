@@ -201,11 +201,12 @@ const ChatPage = () => {
               const side = message.id_emisor === user.id_user ? "right" : "left"
               number += 1
               const fileType = isImage(message.mensaje)
+              const pfpUrlEmisor = message.emisor_foto ? API_URL + "/api/uploads/" + message.emisor_foto : "/images/pfp.svg"
               if (fileType) {
                 return (
                   <Message
                     key={[message.id, message.id_emisor, number]}
-                    pfp={message.emisor_foto}
+                    pfp={pfpUrlEmisor}
                     name={message.emisor_nombre}
                     time={message.tiempo}
                     message=""
@@ -217,7 +218,7 @@ const ChatPage = () => {
                 return (
                   <Message
                     key={[message.id, message.id_emisor, number]}
-                    pfp={message.emisor_foto}
+                    pfp={pfpUrlEmisor}
                     name={message.emisor_nombre}
                     time={message.tiempo}
                     message={message.mensaje}
