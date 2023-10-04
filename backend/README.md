@@ -558,25 +558,37 @@ Retorna los estudiantes que se han postulado a una oferta
 #### Response
 ``` json
 {
-	"Status":  "200",
-	"Message": "Applicants returned successfully",
-	"Data": [
-		{
-		    "apellido": "Albrand",
-		    "carrera": 1,
-		    "correo": "alb21004@uvg.edu.gt",
-		    "cv": "cv",
-		    "dpi": "2806089930101",
-		    "estado": "Enviada",
-		    "foto": "foto",
-		    "id_estudiante": "alb21004@uvg.edu.gt",
-		    "nacimiento": "2002-05-06T00:00:00Z",
-		    "nombre": "Mark",
-		    "semestre": 5,
-		    "telefono": "58748587",
-		    "universidad": "Universidad del Valle de Guatemala"
-		}
-	]
+    "status": 200,
+    "message": "Applicants returned successfully",
+    "data": [
+        {
+            "apellido": "Albrand",
+            "estado": "Enviada",
+            "foto": "alb21004_1504802402.jpg",
+            "id_estudiante": "alb21004@uvg.edu.gt",
+            "nacimiento": "2002-05-06T00:00:00Z",
+            "nombre": "Mark",
+            "universidad": "Universidad del Valle de Guatemala"
+        },
+        {
+            "apellido": "Contreras Arroyave",
+            "estado": "enviada",
+            "foto": "",
+            "id_estudiante": "contrerasmarce@gmail.com",
+            "nacimiento": "2002-10-24T00:00:00Z",
+            "nombre": "Marcela",
+            "universidad": "Universidad Francisco Marroquín"
+        },
+        {
+            "apellido": "Morales",
+            "estado": "En revisión",
+            "foto": "",
+            "id_estudiante": "mor21146@uvg.edu.gt",
+            "nacimiento": "2002-10-24T00:00:00Z",
+            "nombre": "Diego",
+            "universidad": "UVG"
+        }
+    ]
 }
 ```
 
