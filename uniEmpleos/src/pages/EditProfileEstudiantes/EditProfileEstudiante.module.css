@@ -1,12 +1,11 @@
 .defaultContainer {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   background-color: #f1f1f1;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  padding: 45px 0;
 }
 
 .headerContainer {
