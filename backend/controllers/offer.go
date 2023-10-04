@@ -275,7 +275,17 @@ func GetOfferByCompany(c *gin.Context) {
 		})
 		return
 	}
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "Error closing rows: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+	}(rows)
 
 	// Create a map to store offer details and associated career IDs
 	offerMap := make(map[int]GetOfferByCompanyResponse)
@@ -436,7 +446,17 @@ func GetApplicants(c *gin.Context) {
 		})
 		return
 	}
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "Error closing postulation rows. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+	}(rows)
 
 	for rows.Next() {
 		var idEstudiante string
