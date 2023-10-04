@@ -1,6 +1,7 @@
-import React from "react"
+import React, { useState } from "react"
 import { useStoreon } from "storeon/react"
 import PropTypes from "prop-types"
+import { FaBars, FaTimes } from "react-icons/fa"
 import Logo from "../Logo/Logo"
 import Button from "../Button/Button"
 import "./header.css"
@@ -11,6 +12,12 @@ const handleClick = () => {
 }
 
 export const Header = () => {
+  const [showNavbar, setShowNavbar] = useState(false)
+
+  const handleShowNavbar = () => {
+    setShowNavbar(!showNavbar)
+  }
+
   const { user } = useStoreon("user")
   const handleHome = () => {
     switch (user.role) {
@@ -37,6 +44,13 @@ export const Header = () => {
             <a href="/profile">Vacantes</a>
             <a href="/chat">Chat</a>
             <a href="/postulaciones">Postulaciones</a>
+            <div className="buttonLogoutMobile">
+              <Button
+                backgroundColor="#a08ae5"
+                label="Log Out"
+                onClick={handleClick}
+              />
+            </div>
           </div>
         )
       case "enterprise":
@@ -46,6 +60,13 @@ export const Header = () => {
             <a href="/postulacionempresa">Mis Ofertas</a>
             <a href="/editprofileempresa">Profile</a>
             <a href="/chat">Chat</a>
+            <div className="buttonLogoutMobile">
+              <Button
+                backgroundColor="#a08ae5"
+                label="Log Out"
+                onClick={handleClick}
+              />
+            </div>
           </div>
         )
       case "admin":
@@ -54,6 +75,13 @@ export const Header = () => {
             <a href="/jobs">Vacantes</a>
             <a href="/postulantes">Postulantes</a>
             <a href="/profile">Perfil</a>
+            <div className="buttonLogoutMobile">
+              <Button
+                backgroundColor="#a08ae5"
+                label="Log Out"
+                onClick={handleClick}
+              />
+            </div>
           </div>
         )
       default:
@@ -67,25 +95,25 @@ export const Header = () => {
     }
   }
   return (
-    <header>
-      <div className="wrapper">
-        <div className="headercontainer">
-          <div className="logo">
-            <button className="buttonlogo" onClick={handleHome} type="button">
-              <Logo src="/images/Ue_2.svg" size={80} />
-            </button>
-          </div>
+    <nav className="navbar">
+      <div className="container">
+        <div className="logoheader">
+          <button className="buttonlogo" onClick={handleHome} type="button">
+            <Logo src="/images/Ue_2.svg" size={80} />
+          </button>
+        </div>
+        <div className="menu-icon" onClick={handleShowNavbar}>
+          {showNavbar ? (
+            <FaTimes size={30} style={{ color: "#000" }} />
+          ) : (
+            <FaBars size={30} style={{ color: "#000" }} />
+          )}
+        </div>
+        <div className={`nav-elements  ${showNavbar && "active"}`}>
           {renderActions()}
         </div>
-        <div>
-          <Button
-            backgroundColor="#a08ae5"
-            label="Log Out"
-            onClick={handleClick}
-          />
-        </div>
       </div>
-    </header>
+    </nav>
   )
 }
 

@@ -181,7 +181,6 @@ const OfferDetails = ({ id }) => {
         onClickcancel={handleCancelJob}
         canceloption
       />
-      <Header userperson="enterprise" />
       <div className={styles.postulacionContainer}>
         <div className={styles.headertittlecontainer}>
           <div className={styles.titleContainer}>
