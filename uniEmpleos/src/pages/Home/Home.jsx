@@ -6,7 +6,6 @@ import { navigate } from "../../store"
 
 const Home = () => {
   const handleNav = (path) => {
-    console.log("path", path)
     navigate(path)
   }
 

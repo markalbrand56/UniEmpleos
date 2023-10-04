@@ -31,7 +31,6 @@ const Postulacion = ({ id }) => {
   useEffect(() => {
     if (api.data) {
       const { offer } = api.data
-      console.log("offer", offer)
       setDetalles(offer.descripcion)
     }
   }, [api.data])

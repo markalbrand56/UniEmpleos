@@ -41,7 +41,6 @@ const PostulationsEmpresa = () => {
 
   const saveidlocalstorage = (id) => {
     if (form.values.idoffert !== "a" || form.values.idoffert !== "undefined") {
-      console.log("ID", id)
       navigate(`/postulationdetails/${id}`)
     } else
       alert(

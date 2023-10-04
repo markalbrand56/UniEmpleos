@@ -112,7 +112,6 @@ const SignUpEstudiante = () => {
 
   const handleTypeSelect = (e) => {
     setCarrera(e.label)
-    console.log(parseInt(e.value, 10))
     setCarreraId(parseInt(e.value, 10))
   }
 

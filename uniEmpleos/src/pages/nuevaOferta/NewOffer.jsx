@@ -9,6 +9,7 @@ import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import { useQuill } from "react-quilljs"
+import "react-quill/dist/quill.snow.css"
 import Popup from "../../components/Popup/Popup"
 
 const Postulacion = () => {
