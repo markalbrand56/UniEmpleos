@@ -152,13 +152,10 @@ const EditProfileEmpresa = () => {
       </div>
       <div className={style.contentContainer}>
         <div className={style.imgContainer}>
-          <div className={style.imageUploaderContainer}>
-            <img
-              src={uploadedImage}
-              width="30px"
-              height="30px"
-            />
-          </div>
+          <img
+            src={uploadedImage}
+            alt="profile"
+          />
         </div>
         <div className={style.editProfileContainer}>
           <div className={style.inputsContainer}>
