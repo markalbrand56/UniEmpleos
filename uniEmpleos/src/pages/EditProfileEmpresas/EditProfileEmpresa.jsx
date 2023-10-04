@@ -123,36 +123,18 @@ const EditProfileEmpresa = () => {
     event.preventDefault()
     const file = document.getElementById("file").files[0]
 
-    if (!file) {
-      setTypePopUp(2)
-      setError("Debes seleccionar un archivo")
-      setWarning(true)
-      return
-    }
-
-    const formData = new FormData()
-    formData.append("file", file)
-
-    const apiResponse = await fetch(`${API_URL}/api/users/upload`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: formData,
-    })
-
-    console.log("Send file")
-
-    if (apiResponse.status === 200) {
-      console.log("File uploaded")
-      const dataResponse = await apiResponse.json()
-      console.log(dataResponse)
-      setUpdatedImage(dataResponse.data.filename)
-      window.location.reload()
+    if (file) {
+      const updated = await api.updateProfilePicture(file)
+      if (updated) {
+        console.log("Updated", updated.data.filename)
+        setUpdatedImage(updated.data.filename)
+        window.location.reload()
+      }
     } else {
-      setTypePopUp(1)
-      setError("Upss... Algo salio mal atras, intenta mas tarde")
-      setWarning(true)
+        setTypePopUp(2)
+        setError("Debes seleccionar un archivo")
+        setWarning(true)
+        return
     }
   }
 

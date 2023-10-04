@@ -38,12 +38,34 @@ const useApi = () => {
     return datos
   }
 
+  const updateProfilePicture = async (file) => {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const apiResponse = await fetch(`${API_URL}/api/users/upload`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: formData,
+    })
+
+    console.log("Send file")
+
+    if (apiResponse.status === 200) {
+      return await apiResponse.json()
+    } else {
+      return null
+    }
+  }
+
   return {
     error,
     user,
     data,
     loading,
     handleRequest,
+    updateProfilePicture,
   }
 }
 
