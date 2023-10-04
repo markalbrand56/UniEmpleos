@@ -125,16 +125,19 @@ const EditProfileEmpresa = () => {
 
     if (file) {
       const updated = await api.updateProfilePicture(file)
-      if (updated) {
+      if (updated.status === 200) {
         console.log("Updated", updated.data.filename)
         setUpdatedImage(updated.data.filename)
         window.location.reload()
+      } else {
+        setTypePopUp(2)
+        setError("Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde")
+        setWarning(true)
       }
     } else {
         setTypePopUp(2)
         setError("Debes seleccionar un archivo")
         setWarning(true)
-        return
     }
   }
 
