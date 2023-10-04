@@ -399,7 +399,7 @@ func GetApplicants(c *gin.Context) {
 
 	var results []map[string]interface{}
 
-	rows, err := configs.DB.Raw("SELECT p.id_estudiante, p.estado, e.dpi, e.nombre, e.apellido, e.nacimiento, e.correo, e.telefono, e.carrera, e.semestre, e.cv, e.foto, e.universidad FROM postulacion p JOIN estudiante e ON p.id_estudiante = e.id_estudiante WHERE id_oferta = ?", input.IdOferta).Rows()
+	rows, err := configs.DB.Raw("SELECT p.id_estudiante, p.estado, e.nombre, e.apellido, e.nacimiento, e.foto, e.carrera, e.universidad FROM postulacion p JOIN estudiante e ON p.id_estudiante = e.id_estudiante WHERE id_oferta = ?", input.IdOferta).Rows()
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
@@ -413,18 +413,14 @@ func GetApplicants(c *gin.Context) {
 	for rows.Next() {
 		var idEstudiante string
 		var estado string
-		var dpi string
 		var nombre string
 		var apellido string
 		var nacimiento string
-		var correo string
-		var telefono string
-		var carrera int
-		var semestre int
-		var cv string
-		var foto string
+		var foto sql.NullString
+		var carrera string
 		var universidad string
-		err := rows.Scan(&idEstudiante, &estado, &dpi, &nombre, &apellido, &nacimiento, &correo, &telefono, &carrera, &semestre, &cv, &foto, &universidad)
+
+		err := rows.Scan(&idEstudiante, &estado, &nombre, &apellido, &nacimiento, &foto, &carrera, &universidad)
 		if err != nil {
 			c.JSON(400, responses.StandardResponse{
 				Status:  400,
@@ -437,16 +433,10 @@ func GetApplicants(c *gin.Context) {
 		result := map[string]interface{}{
 			"id_estudiante": idEstudiante,
 			"estado":        estado,
-			"dpi":           dpi,
 			"nombre":        nombre,
 			"apellido":      apellido,
 			"nacimiento":    nacimiento,
-			"correo":        correo,
-			"telefono":      telefono,
-			"carrera":       carrera,
-			"semestre":      semestre,
-			"cv":            cv,
-			"foto":          foto,
+			"foto":          foto.String,
 			"universidad":   universidad,
 		}
 		results = append(results, result)
