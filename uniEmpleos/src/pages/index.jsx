@@ -15,6 +15,7 @@ import PostulationsEmpresa from "./PostulationsEmpresa/PostulationsEmpresa"
 import NewOffer from "./nuevaOferta/NewOffer"
 import ChatPage from "./ChatPage/ChatPage"
 import PostulationsEstudent from "./PostulationsEstudentPage/PostulationsEstudent"
+import OfferDetails from "./OfferDetails/OfferDetails"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
