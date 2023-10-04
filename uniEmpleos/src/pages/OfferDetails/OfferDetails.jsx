@@ -59,7 +59,6 @@ const OfferDetails = ({ id }) => {
       const dataa = api.data.offers
       for (let i = 0; i < dataa.length; i++) {
         if (dataa[i].id_oferta === parseInt(id, 10)) {
-          console.log("changing", dataa[i])
           setPuesto(dataa[i].puesto)
           setSalario(dataa[i].salario)
           setRequisitos(dataa[i].requisitos)
@@ -155,7 +154,6 @@ const OfferDetails = ({ id }) => {
   const deleteJobOffer = () => {
     setdeleteJob(true)
     setError("¿Está seguro que desea eliminar la oferta?")
-    console.log("delete")
   }
 
   const succcessJobOffer = () => {
