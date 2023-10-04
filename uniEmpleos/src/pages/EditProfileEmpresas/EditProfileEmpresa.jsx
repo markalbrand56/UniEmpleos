@@ -162,10 +162,8 @@ const EditProfileEmpresa = () => {
         </div>
         <div className={style.editProfileContainer}>
           <div className={style.inputsContainer}>
-            <div>
-              <ImageDirectUploader uploader={uploadFile} />
-            </div>
             <div className={style.grupoDatos1}>
+              <ImageDirectUploader uploader={uploadFile} />
               <div className={style.inputSubContainer}>
                 <span>Nombre</span>
                 <ComponentInput

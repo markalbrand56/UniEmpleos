@@ -4,17 +4,19 @@ import style from "./ImageDirectUploader.module.css"
 
 const ImageDirectUploader = ({ uploader }) => (
   <div className={style.UploaderContainer}>
-    <form id="uploadForm" encType="multipart/form-data" action="#" method="PUT">
-      <label htmlFor="file">Selecciona un archivo:</label>
-      <input
-        type="file"
-        name="file"
-        id="file"
-        accept=".jpg, .jpeg, .png"
-        className={style.UploaderInput}
-      ></input>
+    <form id="uploadForm" encType="multipart/form-data" action="#" method="PUT" className={style.UploaderForm}>
+      <label htmlFor="file" className={style.UploaderLabel}>
+        Sube una nueva foto de perfil
+        <input
+          className={style.UploaderInput}
+          type="file"
+          name="file"
+          id="file"
+          accept=".jpg, .jpeg, .png"
+        ></input>
+      </label>
       <button type="submit" className={style.UploaderButton} onClick={uploader}>
-        Subir
+        Confirmar
       </button>
     </form>
   </div>
