@@ -547,6 +547,8 @@ Elimina una oferta de trabajo. También elimina cualquier postulación asociada 
 
 ### [POST] api/offers/applicants
 Retorna los estudiantes que se han postulado a una oferta
+> **Note**
+> Auth required
 
 ## Params
 ``` json
