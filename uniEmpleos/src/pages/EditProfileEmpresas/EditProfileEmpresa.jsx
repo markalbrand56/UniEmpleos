@@ -116,7 +116,7 @@ const EditProfileEmpresa = () => {
       setWarning(true)
     }
   }
-  
+
   const uploadFile = async () => {
     event.preventDefault()
     const file = document.getElementById("file").files[0]
