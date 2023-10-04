@@ -14,6 +14,7 @@ import (
 func UpdateProfilePicture() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user, err := utils.ExtractTokenUsername(c)
+		acceptedFileTypes := []string{"png", "jpg", "jpeg"}
 
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, responses.StandardResponse{
@@ -33,6 +34,15 @@ func UpdateProfilePicture() gin.HandlerFunc {
 
 		// get the file type from filename
 		fileType := file.Filename[strings.LastIndex(file.Filename, ".")+1:]
+
+		if !utils.Contains(acceptedFileTypes, fileType) {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "Invalid file type. Accepted file types are " + strings.Join(acceptedFileTypes, ", "),
+				Data:    nil,
+			})
+			return
+		}
 
 		newFileName := user_stripped + "." + fileType
 
