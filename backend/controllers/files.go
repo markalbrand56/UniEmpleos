@@ -63,7 +63,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 
 		if userType == "student" {
 			err = configs.DB.Model(&models.Estudiante{}).Where("correo = ?", user).Updates(models.Estudiante{Foto: newFileName}).Error
-		} else if userType == "company" {
+		} else if userType == "enterprise" {
 			err = configs.DB.Model(&models.Empresa{}).Where("correo = ?", user).Updates(models.Empresa{Foto: newFileName}).Error
 		}
 
