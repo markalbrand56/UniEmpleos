@@ -71,7 +71,6 @@ const Postulacion = ({ id }) => {
 
   return (
     <div className={style.container}>
-      <Header userperson="student" />
       <Popup
         message={error}
         status={warning}
