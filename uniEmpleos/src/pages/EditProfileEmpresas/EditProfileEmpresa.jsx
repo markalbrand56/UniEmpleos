@@ -148,6 +148,7 @@ const EditProfileEmpresa = () => {
       const dataResponse = await apiResponse.json()
       console.log(dataResponse)
       setUpdatedImage(dataResponse.data.filename)
+      window.location.reload()
     } else {
       setTypePopUp(1)
       setError("Upss... Algo salio mal atras, intenta mas tarde")
