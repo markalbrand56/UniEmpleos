@@ -10,6 +10,8 @@ import useApi from "../../Hooks/useApi"
 import useIsImage from "../../Hooks/useIsImage"
 import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
+import ImageDirectUploader from "../../components/ImageDirectUploader/ImageDirectUploader"
+import API_URL from "@/api.js"
 
 const EditProfileEmpresa = () => {
   const api = useApi()
@@ -21,6 +23,7 @@ const EditProfileEmpresa = () => {
   const [detalles, setDetalles] = useState("")
   const [telefono, setTelefono] = useState("")
   const [uploadedImage, setUploadedImage] = useState("")
+  const [updatedImage, setUpdatedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typePopUp, setTypePopUp] = useState(1)
@@ -47,11 +50,12 @@ const EditProfileEmpresa = () => {
   }
   useEffect(() => {
     if (api.data) {
+      const fotoUrl = API_URL + "/api/uploads/" + api.data.usuario.foto
       setNombre(api.data.usuario.nombre)
       setCorreo(api.data.usuario.correo)
       setDetalles(api.data.usuario.detalles)
       setTelefono(parseInt(api.data.usuario.telefono, 10))
-      setUploadedImage(api.data.usuario.foto)
+      setUploadedImage( fotoUrl)
     }
   }, [api.data])
 
@@ -59,12 +63,20 @@ const EditProfileEmpresa = () => {
     api.handleRequest("GET", "/users/")
   }, [])
 
+  useEffect(() => {
+    if (updatedImage !== "") {
+      const fotoUrl = API_URL + "/api/uploads/" + updatedImage
+      console.log("New image ", fotoUrl)
+      setUploadedImage(fotoUrl)
+    }
+  }, [updatedImage])
+
   const body = {
     nombre,
     detalles,
     correo,
     telefono: telefono.toString(),
-    foto: uploadedImage,
+    foto: uploadedImage
   }
 
   // Con esto se pueden hacer las llamadas al status
@@ -105,6 +117,28 @@ const EditProfileEmpresa = () => {
     }
   }
 
+  const uploadFile = async () => {
+    event.preventDefault()
+    const file = document.getElementById("file").files[0]
+
+    if (file) {
+      const updated = await api.updateProfilePicture(file)
+      if (updated.status === 200) {
+        console.log("Updated", updated.data.filename)
+        setUpdatedImage(updated.data.filename)
+        window.location.reload()
+      } else {
+        setTypePopUp(2)
+        setError("Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde")
+        setWarning(true)
+      }
+    } else {
+        setTypePopUp(2)
+        setError("Debes seleccionar un archivo")
+        setWarning(true)
+    }
+  }
+
   return (
     <div className={style.defaultContainer}>
       <Popup
@@ -118,19 +152,15 @@ const EditProfileEmpresa = () => {
       </div>
       <div className={style.contentContainer}>
         <div className={style.imgContainer}>
-          <div className={style.imageUploaderContainer}>
-            <ImageUploader
-              onImageUpload={handleUploadFile}
-              image={uploadedImage}
-              width="30px"
-              height="30px"
-              placeholderImage="/images/pfp.svg"
-            />
-          </div>
+          <img
+            src={uploadedImage}
+            alt="profile"
+          />
         </div>
         <div className={style.editProfileContainer}>
           <div className={style.inputsContainer}>
             <div className={style.grupoDatos1}>
+              <ImageDirectUploader uploader={uploadFile} />
               <div className={style.inputSubContainer}>
                 <span>Nombre</span>
                 <ComponentInput

@@ -1,12 +1,11 @@
 .defaultContainer {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   background-color: #f1f1f1;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  padding: 45px 0;
 }
 
 .headerContainer {
@@ -21,6 +20,9 @@
   height: 200px;
   width: 200px;
   padding: 10px;
+  object-fit: cover;
+  border-radius: 45px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 .inputsContainer div span {
