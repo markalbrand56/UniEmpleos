@@ -4,9 +4,11 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"backend/utils"
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type OfferInput struct {
@@ -273,7 +275,17 @@ func GetOfferByCompany(c *gin.Context) {
 		})
 		return
 	}
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "Error closing rows: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+	}(rows)
 
 	// Create a map to store offer details and associated career IDs
 	offerMap := make(map[int]GetOfferByCompanyResponse)
@@ -387,6 +399,7 @@ func DeleteOffer(c *gin.Context) {
 
 func GetApplicants(c *gin.Context) {
 	var input GetPostulationInput
+	var tokenUsername string
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(400, responses.StandardResponse{
@@ -397,18 +410,53 @@ func GetApplicants(c *gin.Context) {
 		return
 	}
 
+	tokenUsername, err := utils.ExtractTokenUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error extracting information from token. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Verificación con el token para que no se pueda ver las postulaciones de otras empresas
+	var offer models.Oferta
+	err = configs.DB.Where("id_oferta = ? AND id_empresa = ?", input.IdOferta, tokenUsername).First(&offer).Error
+
+	if err != nil {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "Error verifying ownership of the offer. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
 	var results []map[string]interface{}
 
 	rows, err := configs.DB.Raw("SELECT p.id_estudiante, p.estado, e.nombre, e.apellido, e.nacimiento, e.foto, e.carrera, e.universidad FROM postulacion p JOIN estudiante e ON p.id_estudiante = e.id_estudiante WHERE id_oferta = ?", input.IdOferta).Rows()
+
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error getting postulations. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "Error closing postulation rows. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+	}(rows)
 
 	for rows.Next() {
 		var idEstudiante string
@@ -421,9 +469,10 @@ func GetApplicants(c *gin.Context) {
 		var universidad string
 
 		err := rows.Scan(&idEstudiante, &estado, &nombre, &apellido, &nacimiento, &foto, &carrera, &universidad)
+
 		if err != nil {
-			c.JSON(400, responses.StandardResponse{
-				Status:  400,
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
 				Message: "Error scanning postulation row. " + err.Error(),
 				Data:    nil,
 			})
@@ -442,8 +491,8 @@ func GetApplicants(c *gin.Context) {
 		results = append(results, result)
 	}
 
-	c.JSON(200, responses.PostulationResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.PostulationResponse{
+		Status:  http.StatusOK,
 		Message: "Applicants returned successfully",
 		Data:    results,
 	})
