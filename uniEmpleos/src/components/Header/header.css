@@ -21,8 +21,6 @@
   display: flex;
   gap: 20px;
   align-items: center;
-  position: relative;
-  right: 60%;
 }
 
 .actions a {
