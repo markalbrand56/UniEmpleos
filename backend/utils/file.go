@@ -3,7 +3,7 @@ package utils
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"path/filepath"
@@ -20,30 +20,38 @@ func Contains(slice []string, item string) bool {
 }
 
 func UploadFileToServer(url string, bearer string, file *multipart.FileHeader, dst string) error {
-	// open file
+	// Abrir el archivo
 	f, err := file.Open()
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 
-	// read file
-	fileBytes, err := ioutil.ReadAll(f)
+	// Leer el archivo
+	fileBytes, err := io.ReadAll(f)
 	if err != nil {
 		return err
 	}
 
-	// create new request body
+	// Crear el body de la request
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 	part, err := writer.CreateFormFile("file", filepath.Base(dst))
 	if err != nil {
 		return err
 	}
-	part.Write(fileBytes)
-	writer.Close()
 
-	// create new request
+	_, err = part.Write(fileBytes)
+	if err != nil {
+		return err
+	}
+
+	err = writer.Close()
+	if err != nil {
+		return err
+	}
+
+	// Crear la request
 	req, err := http.NewRequest("POST", url, body)
 	if err != nil {
 		return err
@@ -51,7 +59,7 @@ func UploadFileToServer(url string, bearer string, file *multipart.FileHeader, d
 	req.Header.Add("Authorization", bearer)
 	req.Header.Add("Content-Type", writer.FormDataContentType())
 
-	// send request
+	// Hacer la request
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
@@ -59,8 +67,8 @@ func UploadFileToServer(url string, bearer string, file *multipart.FileHeader, d
 	}
 	defer res.Body.Close()
 
-	// read response
-	responseBody, err := ioutil.ReadAll(res.Body)
+	// Leer el body de la respuesta
+	responseBody, err := io.ReadAll(res.Body)
 	if err != nil {
 		return err
 	}
