@@ -50,6 +50,8 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		randomNumber := rand.Intn(9999999999-1111111111) + 1111111111
 		newFileName := user_stripped + "_" + fmt.Sprint(randomNumber) + "." + fileType
 
+		file.Filename = newFileName
+
 		dst := "./uploads/" + newFileName
 		fmt.Println("File: " + dst)
 
@@ -81,9 +83,39 @@ func UpdateProfilePicture() gin.HandlerFunc {
 			err = configs.DB.Model(&models.Empresa{}).Where("correo = ?", user).Updates(models.Empresa{Foto: newFileName}).Error
 		}
 
-		// Upload the file to specific dst.
+		// if directory does not exist, create it
+		if _, err := os.Stat("./uploads"); os.IsNotExist(err) {
+			err := os.Mkdir("./uploads", 0755)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, responses.StandardResponse{
+					Status:  http.StatusInternalServerError,
+					Message: "Failed to create directory: " + err.Error(),
+					Data:    nil,
+				})
+				return
+			}
+		}
+
 		err = c.SaveUploadedFile(file, dst)
 		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
+				Status:  http.StatusInternalServerError,
+				Message: "Failed to save file: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		// send the file via HTTP to the file server
+		url := "http://ec2-13-57-42-212.us-west-1.compute.amazonaws.com/upload/"
+		bearerToken := "Bearer " + utils.ExtractToken(c)
+
+		if err := utils.UploadFileToServer(url, bearerToken, file, dst); err != nil {
+			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
+				Status:  http.StatusInternalServerError,
+				Message: "Failed to upload file to server: " + err.Error(),
+				Data:    nil,
+			})
 			return
 		}
 
