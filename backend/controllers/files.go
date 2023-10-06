@@ -85,6 +85,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 
 		// if directory does not exist, create it
 		if _, err := os.Stat("./uploads"); os.IsNotExist(err) {
+			fmt.Println("Creating directory")
 			err := os.Mkdir("./uploads", 0755)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, responses.StandardResponse{
@@ -96,6 +97,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 			}
 		}
 
+		// Save locally
 		err = c.SaveUploadedFile(file, dst)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
