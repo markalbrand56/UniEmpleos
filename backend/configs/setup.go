@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"os"
 )
 
 var DB *gorm.DB
@@ -18,4 +19,16 @@ func SetupDB() {
 
 	fmt.Println("Connected to DB")
 	DB = db
+}
+
+func CreateDirIfNotExist(path string) (bool, error) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		fmt.Println("Directory " + path + " does not exist. Creating...")
+		err := os.Mkdir(path, 0777)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	return false, nil
 }

@@ -83,20 +83,6 @@ func UpdateProfilePicture() gin.HandlerFunc {
 			err = configs.DB.Model(&models.Empresa{}).Where("correo = ?", user).Updates(models.Empresa{Foto: newFileName}).Error
 		}
 
-		// if directory does not exist, create it
-		if _, err := os.Stat("./uploads"); os.IsNotExist(err) {
-			fmt.Println("Creating directory")
-			err := os.Mkdir("./uploads", 0755)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, responses.StandardResponse{
-					Status:  http.StatusInternalServerError,
-					Message: "Failed to create directory: " + err.Error(),
-					Data:    nil,
-				})
-				return
-			}
-		}
-
 		// Save locally
 		err = c.SaveUploadedFile(file, dst)
 		if err != nil {
