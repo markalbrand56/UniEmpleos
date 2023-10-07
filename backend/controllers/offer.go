@@ -422,10 +422,6 @@ func GetApplicants(c *gin.Context) {
 	}
 
 	// Verificación con el token para que no se pueda ver las postulaciones de otras empresas
-	// TODO Eliminar debug
-	fmt.Println("tokenUsername: ", tokenUsername)
-	fmt.Println("input.IdOferta: ", input.IdOferta)
-
 	var offer models.Oferta
 	err = configs.DB.Where("id_oferta = ? AND id_empresa = ?", input.IdOferta, tokenUsername).First(&offer).Error
 
