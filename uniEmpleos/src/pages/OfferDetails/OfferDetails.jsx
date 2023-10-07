@@ -59,7 +59,6 @@ const OfferDetails = ({ id }) => {
       const dataa = api.data.offers
       for (let i = 0; i < dataa.length; i++) {
         if (dataa[i].id_oferta === parseInt(id, 10)) {
-          console.log("changing", dataa[i])
           setPuesto(dataa[i].puesto)
           setSalario(dataa[i].salario)
           setRequisitos(dataa[i].requisitos)
@@ -152,12 +151,6 @@ const OfferDetails = ({ id }) => {
     setdeleteJob(false)
   }
 
-  const deleteJobOffer = () => {
-    setdeleteJob(true)
-    setError("¿Está seguro que desea eliminar la oferta?")
-    console.log("delete")
-  }
-
   const succcessJobOffer = () => {
     setdeleteJob(false)
     setError("Oferta eliminada con éxito")
@@ -188,12 +181,11 @@ const OfferDetails = ({ id }) => {
         onClickcancel={handleCancelJob}
         canceloption
       />
-      <Header userperson="enterprise" />
       <div className={styles.postulacionContainer}>
         <div className={styles.headertittlecontainer}>
           <div className={styles.titleContainer}>
             <h4>Detalles de la oferta</h4>
-            <button onClick={deleteJobOffer} type="button">
+            <button onClick={onclickAccept} type="button">
               <img src="/images/delete.svg" alt="trash" />
             </button>
           </div>
