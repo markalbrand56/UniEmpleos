@@ -7,6 +7,7 @@ import (
 	"backend/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io"
 	"math/rand"
 	"net/http"
 	"os"
@@ -140,7 +141,54 @@ func deleteFilesWithPrefix(directory, prefix string) error {
 func GetFile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		filename := c.Param("filename")
-		filePath := "./uploads/" + filename
-		c.File(filePath) // Esto sirve el archivo al cliente
+		fileURL := configs.FileServer + filename
+
+		// Realizar una solicitud GET al servidor de archivos externo
+		resp, err := http.Get(fileURL)
+		if err != nil {
+			c.JSON(http.StatusNotFound, responses.StandardResponse{
+				Status:  http.StatusNotFound,
+				Message: "Error al obtener el archivo: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		defer func(Body io.ReadCloser) {
+			err := Body.Close()
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, responses.StandardResponse{
+					Status:  http.StatusInternalServerError,
+					Message: "Error al cerrar el cuerpo de la respuesta del servidor de archivos externo: " + err.Error(),
+					Data:    nil,
+				})
+				return
+			}
+		}(resp.Body)
+
+		if resp.StatusCode != http.StatusOK {
+			c.JSON(http.StatusNotFound, responses.StandardResponse{
+				Status:  http.StatusNotFound,
+				Message: "Archivo no encontrado en el servidor de archivos externo",
+				Data:    nil,
+			})
+			return
+		}
+
+		// Configurar las cabeceras de la respuesta para el cliente
+		c.Header("Content-Type", resp.Header.Get("Content-Type"))
+		c.Header("Content-Disposition", "inline; filename="+filename)
+		c.Header("Content-Length", resp.Header.Get("Content-Length"))
+
+		// Copiar el cuerpo de la respuesta del servidor de archivos al cuerpo de la respuesta de Gin
+		_, err = io.Copy(c.Writer, resp.Body)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
+				Status:  http.StatusInternalServerError,
+				Message: "Error al copiar el cuerpo de la respuesta del servidor de archivos externo: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
 	}
 }
