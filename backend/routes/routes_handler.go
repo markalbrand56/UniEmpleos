@@ -50,7 +50,6 @@ func Routes(router *gin.Engine) {
 	public.GET("/careers", controllers.GetCareers)
 
 	// Empresas
-	// Ale: Use "company" porque el mamark quería que fuera en inglés :)
 	companies := router.Group("api/companies")
 	companies.Use(middlewares.JwtAuthentication())
 
