@@ -1,6 +1,6 @@
-import react, { useState, useEffect } from "react"
-import useApi from "../../Hooks/useApi"
+import React, { useState, useEffect } from "react"
 import { useStoreon } from "storeon/react"
+import useApi from "../../Hooks/useApi"
 import Header from "../../components/Header/Header"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import styles from "./PostulationsEstudent.module.css"
@@ -23,13 +23,16 @@ const PostulationsEstudent = () => {
   }, [])
 
   const eliminarPostulacion = async (id) => {
-    const respuesta = await deletePostulation.handleRequest("DELETE", "/postulations/?id_postulacion=" + id)
+    const respuesta = await deletePostulation.handleRequest(
+      "DELETE",
+      `/postulations/?id_postulacion=${id}`
+    )
     if (respuesta.status === 200) {
       setTypePopUp(3)
       setError("Postulación eliminada con éxito")
       setWarning(true)
       obtainPostulations()
-    } else { 
+    } else {
       setTypePopUp(1)
       setError("No se pudo eliminar la postulación")
       setWarning(true)
@@ -43,7 +46,7 @@ const PostulationsEstudent = () => {
         message={error}
         status={warning}
         style={typePopUp}
-        close = {() => setWarning(false)}
+        close={() => setWarning(false)}
       />
       {api.data ? (
         <div className={styles.mainInfoContainer}>

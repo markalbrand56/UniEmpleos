@@ -39,3 +39,9 @@
     background: #f8f8ef;
     padding: 10px;
 }
+
+.button {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
