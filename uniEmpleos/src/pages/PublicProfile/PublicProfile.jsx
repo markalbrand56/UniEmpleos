@@ -1,5 +1,4 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/no-unresolved */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react"
 import { BiArrowBack, BiUser } from "react-icons/bi"
@@ -8,7 +7,7 @@ import { PiBooksLight } from "react-icons/pi"
 import { LiaUniversitySolid, LiaBirthdayCakeSolid } from "react-icons/lia"
 import { AiTwotoneCalendar } from "react-icons/ai"
 import { HiOutlineMailOpen } from "react-icons/hi"
-import useApi from "../../hooks/useApi"
+import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
 import { navigate } from "../../store"
 import style from "./PublicProfile.module.css"
