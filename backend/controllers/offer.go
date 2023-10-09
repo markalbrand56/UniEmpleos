@@ -159,10 +159,26 @@ func UpdateOffer(c *gin.Context) {
 	}
 
 	// Insert into oferta_carrera table
-	for _, idCarrera := range input.IdCarreras {
-		var inserted2 AfterInsert2
-		err = configs.DB.Raw("INSERT INTO oferta_carrera (id_oferta, id_carrera) VALUES (?, ?) RETURNING id_oferta, id_carrera", input.Id_Oferta, idCarrera).Scan(&inserted2).Error
+	for _, idCarreraStr := range input.IdCarreras {
+		// Convierte la cadena 'idCarreraStr' a un entero 'idCarrera'
+		idCarrera, err := strconv.Atoi(idCarreraStr)
 		if err != nil {
+			// Manejar el error si la conversión falla
+			c.JSON(400, responses.StandardResponse{
+				Status:  400,
+				Message: "Error converting 'idCarrera' to int: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		ofertaCarrera := models.OfertaCarrera{
+			IdOferta:  input.Id_Oferta,
+			IdCarrera: idCarrera,
+		}
+
+		// Insertar en la tabla oferta_carrera usando Gorm
+		if err := configs.DB.Create(&ofertaCarrera).Error; err != nil {
 			c.JSON(400, responses.StandardResponse{
 				Status:  400,
 				Message: "Error creating oferta_carrera: " + err.Error(),
