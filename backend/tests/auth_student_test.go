@@ -39,13 +39,11 @@ func CORS() gin.HandlerFunc {
 	}
 }
 
-func TestLogin(t *testing.T) {
+func TestLogin(t *testing.T) { // no es necesario eliminar usuarios.
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	// usuario: mor21246@uvg
-	// contraseña: mora
-	jsonData := `{"usuario": "prueba@prueba", "contra": "prueba"}`
+	jsonData := `{"usuario": "empresa@prueba.com", "contra": "empresaprueba"}`
 
 	body := bytes.NewBufferString(jsonData)
 
@@ -63,7 +61,7 @@ func TestNewStudent(t *testing.T) {
 
 	w := httptest.NewRecorder()
 
-	jsonData := `{"dpi": "101010101010", "nombre": "Juan", "apellido": "Perez", "nacimiento": "19/05/2002", "correo": "juan@prueba.com", "telefono": "55555555", "carrera": 1, "semestre": 4, "contra": "12345678", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
+	jsonData := `{"dpi": "101010101010", "nombre": "Estudiante", "apellido": "Prueba", "nacimiento": "01/01/2001", "correo": "estudiante@prueba.com", "telefono": "12345678", "carrera": 1, "semestre": 4, "contra": "estudianteprueba", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
 
 	body := bytes.NewBufferString(jsonData)
 
@@ -81,7 +79,7 @@ func TestUpdateStudent(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	jsonData := `{"usuario": "prueba@prueba", "contra": "prueba"}` // Solo para obtener el token
+	jsonData := `{"usuario": "estudiante@prueba.com", "contra": "estudianteprueba"}` // Solo para obtener el token
 	body := bytes.NewBufferString(jsonData)
 
 	req := httptest.NewRequest("POST", "/api/login", body)
@@ -107,7 +105,7 @@ func TestUpdateStudent(t *testing.T) {
 	// Paso 3: Usar el token para hacer la actualización del estudiante
 	w = httptest.NewRecorder()
 
-	jsonData = `{"dpi": "101010101010", "nombre": "Juan", "apellido": "Perez", "nacimiento": "19/05/2002", "correo": "juan@prueba.com", "telefono": "666666", "carrera": 1, "semestre": 4, "contra": "12345678", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
+	jsonData = `{"dpi": "101010101010", "nombre": "ESTUDIANTE", "apellido": "PRUEBA", "nacimiento": "02/02/2002", "correo": "estudiante@prueba.com", "telefono": "87654321", "carrera": 1, "semestre": 4, "contra": "estudianteprueba", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
 	body = bytes.NewBufferString(jsonData)
 
 	req = httptest.NewRequest("PUT", "/api/students/update", body)
@@ -118,4 +116,5 @@ func TestUpdateStudent(t *testing.T) {
 	fmt.Println(w.Body.String())
 
 	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200 on update student")
+
 }
