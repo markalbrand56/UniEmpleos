@@ -179,3 +179,39 @@ func GetLastChat(c *gin.Context) {
 		Data:    messageMap,
 	})
 }
+
+type DeleteChatInput struct {
+	Id_Postulacion string `json:"id_postulacion"`
+}
+
+func DeleteChat(c *gin.Context) {
+
+	// Obtener el id_postulacion desde los query parameters
+	idPostulacion := c.Query("id_postulacion")
+
+	// Verifica si el valor del parámetro está presente
+	if idPostulacion == "" {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Missing id_postulacion parameter",
+			Data:    nil,
+		})
+		return
+	}
+
+	err := configs.DB.Where("id_postulacion = ?", idPostulacion).Delete(&models.Mensaje{}).Error
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error deleting chat",
+			Data:    nil,
+		})
+		return
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Chat deleted successfully",
+		Data:    nil,
+	})
+}
