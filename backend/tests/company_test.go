@@ -15,7 +15,7 @@ func TestUpdateCompany(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// Login needed to get token
-	jsonDataPrev := `{"usuario": "reclutamiento@sarita.com", "contra": "sarita"}`
+	jsonDataPrev := `{"usuario": "empresa@prueba.com", "contra": "empresaprueba"}`
 	bodyPrev := bytes.NewBufferString(jsonDataPrev)
 	reqPrev := httptest.NewRequest("POST", "/api/login", bodyPrev)
 	router.ServeHTTP(w, reqPrev)
@@ -32,7 +32,7 @@ func TestUpdateCompany(t *testing.T) {
 	err := json.Unmarshal(w.Body.Bytes(), &loginResponse)
 	assert.NoError(t, err, "Error unmarshalling login response")
 
-	jsonData := `{"nombre": "Sarita SA", "detalles": "Dummy 2", "correo": "reclutamiento@sarita.com", "telefono": "22227314", "contra": "sarita"}`
+	jsonData := `{"nombre": "Empresa de Prueba", "detalles": "Detalles de Prueba", "correo": "empresa@prueba.com", "telefono": "12345678", "contra": "empresaprueba"}`
 	body := bytes.NewBufferString(jsonData)
 	req := httptest.NewRequest("PUT", "/api/companies/update", body)
 	req.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
