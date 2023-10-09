@@ -72,6 +72,7 @@ func NewOffer(c *gin.Context) {
 
 	// Insert into oferta_carrera table
 	for _, idCarreraStr := range input.IdCarreras {
+		var inserted2 AfterInsert2
 		idCarrera, err := strconv.Atoi(idCarreraStr)
 		if err != nil {
 			// Manejar el error si la conversión falla
@@ -85,7 +86,7 @@ func NewOffer(c *gin.Context) {
 		}
 
 		// Insertar en la tabla oferta_carrera usando Gorm
-		if err := configs.DB.Create(&ofertaCarrera).Error; err != nil {
+		if err := configs.DB.Create(&ofertaCarrera).Scan(&inserted2).Error; err != nil {
 			c.JSON(400, responses.StandardResponse{
 				Status:  400,
 				Message: "Error creating oferta_carrera: " + err.Error(),
