@@ -292,6 +292,7 @@ type PublicDetailsStudent struct {
 	Nombre      string    `json:"nombre"`
 	Apellido    string    `json:"apellido"`
 	Nacimiento  time.Time `json:"nacimiento"`
+	Telefono    string    `json:"telefono"`
 	Carrera     int       `json:"carrera"`
 	Semestre    int       `json:"semestre"`
 	CV          string    `json:"cv"`
@@ -357,6 +358,7 @@ func GetUserDetails(c *gin.Context) {
 					Nombre:      estudiante.Nombre,
 					Apellido:    estudiante.Apellido,
 					Nacimiento:  estudiante.Nacimiento,
+					Telefono:    estudiante.Telefono,
 					Carrera:     estudiante.Carrera,
 					Semestre:    estudiante.Semestre,
 					CV:          estudiante.CV,
