@@ -1,0 +1,19 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.infoStudentContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start
+}
+
+.sinPostulantes {
+    color: #000;
+}

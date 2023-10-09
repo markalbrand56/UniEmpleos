@@ -7,6 +7,7 @@ import InfoTab from "../../components/InfoTab/InfoTab"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import Popup from "../../components/Popup/Popup"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -23,8 +24,12 @@ const PostulationsEmpresa = () => {
 
   const { user } = useStoreon("user")
   const api = useApi()
+  const obtainPostulantes = useApi()
 
   const [dataa, setData] = useState([])
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
+  const [typeError, setTypeError] = useState(1)
 
   useEffect(() => {
     if (api.data) {
@@ -48,9 +53,32 @@ const PostulationsEmpresa = () => {
       )
   }
 
+  const handleVerPostulantes = async (id) => {
+    const datos = await obtainPostulantes.handleRequest(
+      "POST",
+      "/offers/applicants",
+      {
+        id_oferta: parseInt(id, 10),
+      }
+    )
+    if (datos.data) {
+      navigate(`/postulantes/${id}`)
+    } else {
+      setTypeError(2)
+      setError("La oferta no tiene postulantes")
+      setWarning(true)
+    }
+  }
+
   return (
     <div className={styles.containePostulation}>
       <Header userperson="company" />
+      <Popup
+        message={error}
+        status={warning}
+        style={typeError}
+        close={() => setWarning(false)}
+      />
       {api.data ? (
         <div className={styles.containerinfoprincipal}>
           {dataa.map((postulation) => (
@@ -62,6 +90,9 @@ const PostulationsEmpresa = () => {
               labelbutton="Ver más"
               onClick={() => {
                 saveidlocalstorage(postulation.id_oferta)
+              }}
+              verPostulantes={() => {
+                handleVerPostulantes(postulation.id_oferta)
               }}
             />
           ))}

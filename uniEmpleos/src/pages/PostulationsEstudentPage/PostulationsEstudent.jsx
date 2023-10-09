@@ -1,6 +1,6 @@
-import react, { useState, useEffect } from "react"
-import useApi from "../../Hooks/useApi"
+import React, { useState, useEffect } from "react"
 import { useStoreon } from "storeon/react"
+import useApi from "../../Hooks/useApi"
 import Header from "../../components/Header/Header"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import styles from "./PostulationsEstudent.module.css"
@@ -13,9 +13,17 @@ const PostulationsEstudent = () => {
   const [typePopUp, setTypePopUp] = useState(1)
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
+  const [postulaciones, setPostulaciones] = useState([])
 
-  const obtainPostulations = () => {
-    api.handleRequest("GET", "/postulations/getFromStudent")
+  const obtainPostulations = async () => {
+    const datos = await api.handleRequest("GET", "/postulations/getFromStudent")
+    if (datos.status === 200) {
+      setPostulaciones(datos.data)
+    } else {
+      setTypePopUp(1)
+      setError("Error al obtener las postulaciones")
+      setWarning(true)
+    }
   }
 
   useEffect(() => {
@@ -23,13 +31,16 @@ const PostulationsEstudent = () => {
   }, [])
 
   const eliminarPostulacion = async (id) => {
-    const respuesta = await deletePostulation.handleRequest("DELETE", "/postulations/?id_postulacion=" + id)
+    const respuesta = await deletePostulation.handleRequest(
+      "DELETE",
+      `/postulations/?id_postulacion=${id}`
+    )
     if (respuesta.status === 200) {
       setTypePopUp(3)
       setError("Postulación eliminada con éxito")
       setWarning(true)
       obtainPostulations()
-    } else { 
+    } else {
       setTypePopUp(1)
       setError("No se pudo eliminar la postulación")
       setWarning(true)
@@ -43,11 +54,11 @@ const PostulationsEstudent = () => {
         message={error}
         status={warning}
         style={typePopUp}
-        close = {() => setWarning(false)}
+        close={() => setWarning(false)}
       />
-      {api.data ? (
+      {postulaciones.postulations && postulaciones.postulations.length > 0 ? (
         <div className={styles.mainInfoContainer}>
-          {api.data.postulations.map((postulation) => (
+          {postulaciones.postulations.map((postulation) => (
             <InfoTab
               key={postulation.id_oferta}
               title={postulation.puesto}
