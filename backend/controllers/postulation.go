@@ -5,6 +5,7 @@ import (
 	"backend/models"
 	"backend/responses"
 	"backend/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"net/http"
@@ -43,7 +44,9 @@ func NewPostulation(c *gin.Context) {
 	var inserted models.PostulacionGet
 
 	// TODO: Delete Raw
-	err := configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
+	//err := configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
+
+	err := configs.DB.Create(&postulation).Scan(&inserted).Error
 
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
@@ -63,8 +66,24 @@ func NewPostulation(c *gin.Context) {
 		return
 	}
 
+	var puesto string
+
+	// Obtener el valor de "puesto" de la oferta
+	err = configs.DB.Model(models.Oferta{}).Select("puesto").Where("id_oferta = ?", inserted.IdOferta).Scan(&puesto).Error
+	if err != nil {
+		c.JSON(408, responses.StandardResponse{
+			Status:  408,
+			Message: "Error getting 'puesto' from oferta. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Mensaje con el valor de "puesto"
+	mensaje := fmt.Sprintf("Hola, me acabo de postular al puesto de '%s'.", puesto)
+
 	// Nuevo query
-	err = configs.DB.Exec("INSERT INTO mensaje (id_postulacion, id_emisor, id_receptor, mensaje, tiempo) VALUES (?, ?, (SELECT id_empresa FROM oferta WHERE id_oferta = ?), 'Hola, me acabo de postular a esta oferta.', ?)", inserted.IdPostulacion, inserted.IdEstudiante, inserted.IdOferta, time.Now()).Error
+	err = configs.DB.Exec("INSERT INTO mensaje (id_postulacion, id_emisor, id_receptor, mensaje, tiempo) VALUES (?, ?, (SELECT id_empresa FROM oferta WHERE id_oferta = ?), ?, ?)", inserted.IdPostulacion, inserted.IdEstudiante, inserted.IdOferta, mensaje, time.Now()).Error
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
