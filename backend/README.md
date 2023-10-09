@@ -96,6 +96,7 @@ Obtener los detalles públicos de un usuario, dado su correo
             "nombre": "Estudiante Actualizado",
             "apellido": "Prueba",
             "nacimiento": "2002-02-02T00:00:00Z",
+            "telefono": "12345678",
             "carrera": 1,
             "semestre": 4,
             "cv": "",
