@@ -7,6 +7,11 @@ import (
 )
 
 func main() {
+	// create directory for uploads
+	if _, err := configs.CreateDirIfNotExist("./uploads"); err != nil {
+		panic(err)
+	}
+
 	router := gin.Default()
 
 	router.Use(CORS())

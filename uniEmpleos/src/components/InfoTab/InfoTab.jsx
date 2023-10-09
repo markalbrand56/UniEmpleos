@@ -3,7 +3,15 @@ import PropTypes from "prop-types"
 import styles from "./InfoTab.module.css"
 import Button from "../Button/Button"
 
-const InfoTab = ({ title, area, salary, company, labelbutton, onClick }) => {
+const InfoTab = ({
+  title,
+  area,
+  salary,
+  company,
+  labelbutton,
+  onClick,
+  verPostulantes,
+}) => {
   return (
     <div className={styles.container}>
       {title && (
@@ -24,6 +32,9 @@ const InfoTab = ({ title, area, salary, company, labelbutton, onClick }) => {
       )}
       <div className={styles.button}>
         <Button label={labelbutton} onClick={onClick} />
+        {verPostulantes && (
+          <Button label="Ver postulantes" onClick={verPostulantes} />
+        )}
       </div>
     </div>
   )
@@ -36,6 +47,7 @@ InfoTab.propTypes = {
   company: PropTypes.string.isRequired,
   labelbutton: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
+  verPostulantes: PropTypes.func.isRequired,
 }
 
 export default InfoTab

@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"backend/configs"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -42,7 +43,7 @@ func TestCaseOne(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// Paso 1: Iniciar sesión
-	jsonLogin := `{"usuario": "alb21004@uvg.edu.gt", "contra": "mark"}`
+	jsonLogin := `{"usuario": "estudiante@prueba.com", "contra": "estudianteprueba"}`
 
 	body := bytes.NewBufferString(jsonLogin)
 	req := httptest.NewRequest("POST", "/api/login", body)
@@ -101,7 +102,7 @@ func TestCaseOne(t *testing.T) {
 	w = httptest.NewRecorder()
 	// id_oferta, id_estudiante, estado
 
-	jsonPostulation := `{"id_oferta": ` + id_offer_S + `, "id_estudiante": "alb21004@uvg.edu.gt", "estado": "Enviada"}`
+	jsonPostulation := `{"id_oferta": ` + id_offer_S + `, "id_estudiante": "estudiante@prueba.com", "estado": "Enviada"}`
 
 	body = bytes.NewBufferString(jsonPostulation)
 	req = httptest.NewRequest("POST", "/api/postulations/", body)
@@ -116,7 +117,7 @@ func TestCaseOne(t *testing.T) {
 
 }
 
-func TestCaseTwo(t *testing.T) {
+func TestCaseTwo(t *testing.T) { // ESTEE
 	/*
 		Una empresa quiere "postear" una oferta laboral.
 		pasos:
@@ -127,7 +128,7 @@ func TestCaseTwo(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// Paso 1: Iniciar sesión
-	jsonLogin := `{"usuario": "prueba@prueba", "contra": "prueba"}`
+	jsonLogin := `{"usuario": "empresa@prueba.com", "contra": "empresaprueba"}`
 	body := bytes.NewBufferString(jsonLogin)
 	req := httptest.NewRequest("POST", "/api/login", body)
 	router.ServeHTTP(w, req)
@@ -150,7 +151,7 @@ func TestCaseTwo(t *testing.T) {
 	w = httptest.NewRecorder()
 
 	// crear el body.
-	jsonOffer := `{"id_empresa": "prueba@prueba", "puesto": "FrontEnd Developer", "descripcion": "UX/UI Desing with JS", "requisitos": "Experiencia con JavaScript y Typescript", "salario":100.00, "id_carreras":["1", "2", "3"]}`
+	jsonOffer := `{"id_empresa": "empresa@prueba.com", "puesto": "Puesto de Prueba TC2", "descripcion": "Descripcion de Prueba", "requisitos": "Experiencia de Prueba", "salario":100.00, "id_carreras":["1", "2", "3"]}`
 	body2 := bytes.NewBufferString(jsonOffer)
 	req = httptest.NewRequest("POST", "/api/offers/", body2)
 
@@ -161,6 +162,11 @@ func TestCaseTwo(t *testing.T) {
 
 	assert.True(t, w.Code == http.StatusOK || w.Code == http.StatusConflict, w.Code, "El usuario puede añadir una oferta laboral")
 	assert.Equal(t, http.StatusOK, w.Code, "El usuario puede añadir una oferta laboral")
+
+	// eliminar con un query la oferta que se acaba de crear.
+
+	//configs.DB.Where("puesto = 'Puesto de Prueba TC2'").Delete(&Offer{})
+	//configs.DB.Raw("DELETE FROM oferta WHERE puesto = 'Puesto de Prueba TC2'").Scan(&Offer{})
 
 }
 
@@ -173,7 +179,7 @@ func TestCaseThree(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// Paso 1: Iniciar sesión
-	jsonLogin := `{"usuario": "mor21146@uvg.edu.gt", "contra": "mora"}`
+	jsonLogin := `{"usuario": "estudiante@prueba.com", "contra": "estudianteprueba"}`
 	body := bytes.NewBufferString(jsonLogin)
 	req := httptest.NewRequest("POST", "/api/login", body)
 	router.ServeHTTP(w, req)
@@ -199,18 +205,18 @@ func TestCaseThree(t *testing.T) {
 	// Paso 3: Modificar los campos que se deseen
 
 	// crear el body.
-	jsonUpdate := `{"dpi"	    : "3239183600512", 
-				"nombre"        : "Diego", 
-				"apellido"      : "Morales",
-				"nacimiento"    : "2002-10-24", 
-				"correo"        : "mor21146@uvg.edu.gt", 
-				"telefono"      : "55447788", 
+	jsonUpdate := `{"dpi"	    : "101010101010", 
+				"nombre"        : "Estudiante Actualizado", 
+				"apellido"      : "Prueba",
+				"nacimiento"    : "2002-02-02", 
+				"correo"        : "estudiante@prueba.com", 
+				"telefono"      : "12345678", 
 				"carrera"       : 1,   
 				"semestre"      : 4,    
 				"cv"            : "", 
 				"foto"          : "", 
-				"contra"		: "mora",
-				"universidad"   : "UVG"}`
+				"contra"		: "estudianteprueba",
+				"universidad"   : "Universidad Del Valle de Guatemala"}`
 	body2 := bytes.NewBufferString(jsonUpdate)
 	// Paso 4: Guardar los cambios
 	req = httptest.NewRequest("PUT", "/api/students/update", body2)
@@ -222,4 +228,7 @@ func TestCaseThree(t *testing.T) {
 	fmt.Println(w.Body.String())
 
 	assert.True(t, w.Code == http.StatusOK || w.Code == http.StatusConflict, w.Code, "El usuario puede editar su perfil")
+	configs.DB.Raw("DELETE FROM oferta WHERE puesto = 'Puesto de Prueba TC2'").Scan(&Offer{})
+	configs.DB.Raw("DELETE FROM postulacion WHERE id_estudiante = 'estudiante@prueba.com'").Scan(&Postulations{})
+
 }
