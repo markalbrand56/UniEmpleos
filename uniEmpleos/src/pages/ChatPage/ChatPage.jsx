@@ -13,6 +13,7 @@ import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
 import useIsImage from "../../Hooks/useIsImage"
 import { formatDuration } from "date-fns"
+import API_URL from "@/api.js"
 
 const ChatPage = () => {
   const { user } = useStoreon("user")
@@ -160,12 +161,11 @@ const ChatPage = () => {
                 return null
               } else {
                 const fileType = isImage(chat.last_message)
+                const pfpUrl = chat.user_photo ? API_URL + "/api/uploads/" + chat.user_photo : "/images/pfp.svg"
                 if (fileType) {
                   return (
                     <Chat
-                      pfp={
-                        chat.user_photo ? chat.user_photo : "/images/pfp.svg"
-                      }
+                      pfp={pfpUrl}
                       name={chat.user_name}
                       lastChat="Foto"
                       key={chat.postulation_id}
@@ -178,9 +178,7 @@ const ChatPage = () => {
                 } else {
                   return (
                     <Chat
-                      pfp={
-                        chat.user_photo ? chat.user_photo : "/images/pfp.svg"
-                      }
+                      pfp={pfpUrl}
                       name={chat.user_name}
                       lastChat={chat.last_message}
                       key={chat.postulation_id}
@@ -203,11 +201,12 @@ const ChatPage = () => {
               const side = message.id_emisor === user.id_user ? "right" : "left"
               number += 1
               const fileType = isImage(message.mensaje)
+              const pfpUrlEmisor = message.emisor_foto ? API_URL + "/api/uploads/" + message.emisor_foto : "/images/pfp.svg"
               if (fileType) {
                 return (
                   <Message
                     key={[message.id, message.id_emisor, number]}
-                    pfp={message.emisor_foto}
+                    pfp={pfpUrlEmisor}
                     name={message.emisor_nombre}
                     time={message.tiempo}
                     message=""
@@ -219,7 +218,7 @@ const ChatPage = () => {
                 return (
                   <Message
                     key={[message.id, message.id_emisor, number]}
-                    pfp={message.emisor_foto}
+                    pfp={pfpUrlEmisor}
                     name={message.emisor_nombre}
                     time={message.tiempo}
                     message={message.mensaje}

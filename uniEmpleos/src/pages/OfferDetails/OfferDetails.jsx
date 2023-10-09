@@ -151,11 +151,6 @@ const OfferDetails = ({ id }) => {
     setdeleteJob(false)
   }
 
-  const deleteJobOffer = () => {
-    setdeleteJob(true)
-    setError("¿Está seguro que desea eliminar la oferta?")
-  }
-
   const succcessJobOffer = () => {
     setdeleteJob(false)
     setError("Oferta eliminada con éxito")
@@ -186,12 +181,11 @@ const OfferDetails = ({ id }) => {
         onClickcancel={handleCancelJob}
         canceloption
       />
-      <Header userperson="enterprise" />
       <div className={styles.postulacionContainer}>
         <div className={styles.headertittlecontainer}>
           <div className={styles.titleContainer}>
             <h4>Detalles de la oferta</h4>
-            <button onClick={deleteJobOffer} type="button">
+            <button onClick={onclickAccept} type="button">
               <img src="/images/delete.svg" alt="trash" />
             </button>
           </div>
