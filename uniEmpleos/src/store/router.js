@@ -21,4 +21,8 @@ export default createRouter([
   ],
   ["/postulaciones", () => ({ page: "postulaciones" })],
   ["/postulantes/*", (id) => ({ page: "postulantes", props: { id } })],
+  [
+    "/publicprofile/*",
+    (correo) => ({ page: "publicprofile", props: { correo } }),
+  ],
 ])

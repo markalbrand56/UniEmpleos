@@ -5,6 +5,7 @@ import InfoStudent from "../../components/InfoStudent/InfoStudent"
 import style from "./PostulantesPage.module.css"
 import Popup from "../../components/Popup/Popup"
 import { Header } from "../../components/Header/Header"
+import { navigate } from "../../store"
 
 const PostulantesPage = ({ id }) => {
   const api = useApi()
@@ -31,7 +32,7 @@ const PostulantesPage = ({ id }) => {
   }, [])
 
   const handleClickUsuario = (idUsuario) => {
-    console.log(idUsuario)
+    navigate(`/publicprofile/${idUsuario}`)
   }
 
   return (
