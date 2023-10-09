@@ -51,7 +51,7 @@ const PostulantesPage = ({ id }) => {
               nombre={postulante.nombre}
               apellido={postulante.apellido}
               universidad={postulante.universidad}
-              pfp={postulante.pfp}
+              pfp={postulante.foto}
               onClick={() => handleClickUsuario(postulante.id_estudiante)}
             />
           ))
