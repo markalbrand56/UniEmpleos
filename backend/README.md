@@ -89,15 +89,33 @@ Obtener los detalles públicos de un usuario, dado su correo
 ``` json
 {
     "status": 200,
-    "message": "User found",
+    "message": "Student found",
     "data": {
-        "empresa": {
-            "id_empresa": "prueba@prueba",
-            "nombre": "pruebaEmpresa",
-            "foto": "foto",
-            "detalles": "empresa de prueba",
-            "correo": "prueba@prueba",
-            "telefono": "12344433"
+        "student": {
+            "correo": "estudiante@prueba.com",
+            "nombre": "Estudiante Actualizado",
+            "apellido": "Prueba",
+            "nacimiento": "2002-02-02T00:00:00Z",
+            "carrera": 1,
+            "semestre": 4,
+            "cv": "",
+            "foto": "",
+            "universidad": "Universidad Del Valle de Guatemala"
+        }
+    }
+}
+```
+
+``` json
+{
+    "status": 200,
+    "message": "Enterprise found",
+    "data": {
+        "company": {
+            "correo": "empresa@prueba.com",
+            "nombre": "Empresa de Prueba",
+            "foto": "",
+            "detalles": "Detalles de Prueba"
         }
     }
 }
