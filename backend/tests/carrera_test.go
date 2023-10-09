@@ -17,7 +17,7 @@ func TestGetCarreras(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// login needed to get token
-	jsonData := `{"usuario": "prueba@prueba", "contra": "prueba"}`
+	jsonData := `{"usuario": "estudiante@prueba.com", "contra": "estudianteprueba"}`
 	body := bytes.NewBufferString(jsonData)
 	req := httptest.NewRequest("POST", "/api/login", body)
 	router.ServeHTTP(w, req)
