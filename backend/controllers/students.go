@@ -111,9 +111,21 @@ func UpdateStudent(c *gin.Context) {
 
 	nacimiento, _ := time.Parse("2006-01-02", input.Nacimiento)
 
-	var inserted models.EstudianteGet
+	// Crear una instancia del modelo Estudiante con los datos actualizados
+	updatedStudent := models.Estudiante{
+		Nombre:      input.Nombre,
+		Apellido:    input.Apellido,
+		Nacimiento:  nacimiento,
+		Telefono:    input.Telefono,
+		Carrera:     input.Carrera,
+		Semestre:    input.Semestre,
+		CV:          input.CV,
+		Foto:        input.Foto,
+		Universidad: input.Universidad,
+	}
 
-	err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, nacimiento, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
+	err := configs.DB.Model(&models.Estudiante{}).Where("id_estudiante = ?", input.Correo).Updates(updatedStudent).Error
+	//err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, nacimiento, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{

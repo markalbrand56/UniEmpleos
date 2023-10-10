@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type OfferInput struct {
@@ -54,10 +55,9 @@ func NewOffer(c *gin.Context) {
 		Salario:     input.Salario,
 	}
 
-	fmt.Println(offer)
-
 	var inserted AfterInsert
-	err := configs.DB.Raw("INSERT INTO oferta (id_empresa, puesto, descripcion, requisitos, salario) VALUES (?, ?, ?, ?, ?) RETURNING id_oferta, id_empresa, puesto, descripcion, requisitos, salario", offer.IDEmpresa, offer.Puesto, offer.Descripcion, offer.Requisitos, offer.Salario).Scan(&inserted).Error
+
+	err := configs.DB.Create(&offer).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
@@ -71,10 +71,22 @@ func NewOffer(c *gin.Context) {
 	fmt.Println("\ncarreras: ", input.IdCarreras)
 
 	// Insert into oferta_carrera table
-	for _, idCarrera := range input.IdCarreras {
+	for _, idCarreraStr := range input.IdCarreras {
 		var inserted2 AfterInsert2
-		err = configs.DB.Raw("INSERT INTO oferta_carrera (id_oferta, id_carrera) VALUES (?, ?) RETURNING id_oferta, id_carrera", inserted.IdOferta, idCarrera).Scan(&inserted2).Error
+		idCarrera, err := strconv.Atoi(idCarreraStr)
 		if err != nil {
+			// Manejar el error si la conversión falla
+			continue // O puedes tomar otra acción según tus necesidades
+		}
+
+		// Ahora, 'idCarrera' es un entero y puedes usarlo como tal en tu código
+		ofertaCarrera := models.OfertaCarrera{
+			IdOferta:  inserted.IdOferta,
+			IdCarrera: idCarrera,
+		}
+
+		// Insertar en la tabla oferta_carrera usando Gorm
+		if err := configs.DB.Create(&ofertaCarrera).Scan(&inserted2).Error; err != nil {
 			c.JSON(400, responses.StandardResponse{
 				Status:  400,
 				Message: "Error creating oferta_carrera: " + err.Error(),
@@ -84,6 +96,7 @@ func NewOffer(c *gin.Context) {
 		}
 	}
 
+	//err = configs.DB.Raw("INSERT INTO oferta_carrera (id_oferta, id_carrera) VALUES (?, ?) RETURNING id_oferta, id_carrera", inserted.IdOferta, idCarrera).Scan(&inserted2).Error
 	c.JSON(200, responses.StandardResponse{
 		Status:  200,
 		Message: "Offer and oferta_carrera created successfully",
@@ -147,10 +160,26 @@ func UpdateOffer(c *gin.Context) {
 	}
 
 	// Insert into oferta_carrera table
-	for _, idCarrera := range input.IdCarreras {
-		var inserted2 AfterInsert2
-		err = configs.DB.Raw("INSERT INTO oferta_carrera (id_oferta, id_carrera) VALUES (?, ?) RETURNING id_oferta, id_carrera", input.Id_Oferta, idCarrera).Scan(&inserted2).Error
+	for _, idCarreraStr := range input.IdCarreras {
+		// Convierte la cadena 'idCarreraStr' a un entero 'idCarrera'
+		idCarrera, err := strconv.Atoi(idCarreraStr)
 		if err != nil {
+			// Manejar el error si la conversión falla
+			c.JSON(400, responses.StandardResponse{
+				Status:  400,
+				Message: "Error converting 'idCarrera' to int: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		ofertaCarrera := models.OfertaCarrera{
+			IdOferta:  input.Id_Oferta,
+			IdCarrera: idCarrera,
+		}
+
+		// Insertar en la tabla oferta_carrera usando Gorm
+		if err := configs.DB.Create(&ofertaCarrera).Error; err != nil {
 			c.JSON(400, responses.StandardResponse{
 				Status:  400,
 				Message: "Error creating oferta_carrera: " + err.Error(),
