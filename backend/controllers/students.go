@@ -97,8 +97,21 @@ func NewStudent(c *gin.Context) {
 	})
 }
 
+type EstudianteUpdateInput struct {
+	Nombre      string `json:"nombre"`
+	Apellido    string `json:"apellido"`
+	Nacimiento  string `json:"nacimiento"`
+	Correo      string `json:"correo"`
+	Telefono    string `json:"telefono"`
+	Carrera     int    `json:"carrera"`
+	Semestre    int    `json:"semestre"`
+	CV          string `json:"cv"`
+	Foto        string `json:"foto"`
+	Universidad string `json:"universidad"`
+}
+
 func UpdateStudent(c *gin.Context) {
-	var input EstudianteInput
+	var input EstudianteUpdateInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(400, responses.StandardResponse{
@@ -120,12 +133,10 @@ func UpdateStudent(c *gin.Context) {
 		Carrera:     input.Carrera,
 		Semestre:    input.Semestre,
 		CV:          input.CV,
-		Foto:        input.Foto,
 		Universidad: input.Universidad,
 	}
 
 	err := configs.DB.Model(&models.Estudiante{}).Where("id_estudiante = ?", input.Correo).Updates(updatedStudent).Error
-	//err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, nacimiento, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
