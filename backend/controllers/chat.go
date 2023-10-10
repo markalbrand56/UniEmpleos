@@ -80,7 +80,8 @@ func GetMessages(c *gin.Context) {
          join estudiante es on m.id_emisor = es.id_estudiante or m.id_receptor = es.id_estudiante
          join empresa em on m.id_emisor = em.id_empresa or m.id_receptor = em.id_empresa
          where (id_emisor = ? and id_receptor = ?)
-         or (id_emisor = ? and id_receptor = ?);`
+         or (id_emisor = ? and id_receptor = ?)
+		 order by m.tiempo asc;`
 
 	// Ejecutamos la consulta SQL pura con parámetros inputID.ID_usuario
 	err := configs.DB.Raw(query, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
