@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react"
+import Select from "react-select"
 import { useStoreon } from "storeon/react"
+import { useQuill } from "react-quilljs"
 import style from "./NewOffer.module.css"
 import { Header } from "../../components/Header/Header"
 import Button from "../../components/Button/Button"
@@ -8,7 +10,6 @@ import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
 import DropDown from "../../components/dropDown/DropDown"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import { useQuill } from "react-quilljs"
 import "react-quill/dist/quill.snow.css"
 import Popup from "../../components/Popup/Popup"
 
@@ -58,7 +59,7 @@ const Postulacion = () => {
   }
 
   const handleCarrera = (e) => {
-    setCarrera(e.target.value)
+    setCarrera(e.value)
   }
 
   const handleInputsValue = (e) => {
@@ -132,12 +133,34 @@ const Postulacion = () => {
           </div>
           <div className={style.inputContainer}>
             <span>Carrera</span>
-            <DropDown
-              opciones={carreras}
-              value={carrera}
+            <Select
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? "#a08ae5" : "grey",
+                  color: "black",
+                }),
+                option: (baseStyles) => ({
+                  ...baseStyles,
+                  color: "black",
+                }),
+              }}
+              name="carrera"
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#94bd0f",
+                  primary: "#a08ae5",
+                },
+              })}
+              defaultValue={carrera}
+              options={carreras}
+              value={carreras.find((option) => option.label === carrera)}
               onChange={handleCarrera}
             />
           </div>
+
           <div className={style.inputContainer}>
             <span>Requisitos</span>
             <TextArea
