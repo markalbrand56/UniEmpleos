@@ -33,7 +33,7 @@ const EditProfileEstudiante = () => {
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
   const [semestre, setSemestre] = useState(1)
-  const [uploadedImage, setUploadedImage] = useState("")
+  const [uploadedImage, setUploadedImage] = useState("/images/pfp.svg")
   const [updatedImage, setUpdatedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
@@ -63,7 +63,7 @@ const EditProfileEstudiante = () => {
   useEffect(() => {
     if (api.data) {
       const { usuario } = api.data
-      const fotoUrl = API_URL + "/api/uploads/" + usuario.foto
+      const fotoUrl = (api.data.usuario.foto === "") ? "/images/pfp.svg" : (API_URL + "/api/uploads/" + api.data.usuario.foto)
       setNombre(usuario.nombre)
       setApellido(usuario.apellido)
       const date = new Date(usuario.nacimiento)
