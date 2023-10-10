@@ -23,6 +23,10 @@ type GetPostulationInput struct {
 	IdOferta int `json:"id_oferta"`
 }
 
+type PuestoResult struct {
+	Puesto string
+}
+
 func NewPostulation(c *gin.Context) {
 	var input PostulationInput
 
@@ -66,10 +70,10 @@ func NewPostulation(c *gin.Context) {
 		return
 	}
 
-	var puesto string
+	var resultado PuestoResult
 
 	// Obtener el valor de "puesto" de la oferta
-	err = configs.DB.Model(models.Oferta{}).Select("puesto").Where("id_oferta = ?", inserted.IdOferta).Scan(&puesto).Error
+	err = configs.DB.Model(models.Oferta{}).Select("puesto").Where("id_oferta = ?", inserted.IdOferta).Scan(&resultado).Error
 	if err != nil {
 		c.JSON(408, responses.StandardResponse{
 			Status:  408,
@@ -78,6 +82,8 @@ func NewPostulation(c *gin.Context) {
 		})
 		return
 	}
+
+	puesto := resultado.Puesto
 
 	// Mensaje con el valor de "puesto"
 	mensaje := fmt.Sprintf("Hola, me acabo de postular al puesto de '%s'.", puesto)

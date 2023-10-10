@@ -124,8 +124,6 @@ func UpdateStudent(c *gin.Context) {
 		Universidad: input.Universidad,
 	}
 
-	//err := configs.DB.Model(&offer).Where("id_oferta = ?", input.Id_Oferta).Updates(offer).Error
-	//err := configs.DB.Model(input).Where("id_estudiante = ?", input.Correo).Updates(models.Estudiante{}).Error
 	err := configs.DB.Model(&models.Estudiante{}).Where("id_estudiante = ?", input.Correo).Updates(updatedStudent).Error
 	//err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, nacimiento, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
 
