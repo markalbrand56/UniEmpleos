@@ -78,7 +78,6 @@ const EditProfileEmpresa = () => {
     detalles,
     correo,
     telefono: telefono.toString(),
-    foto: uploadedImage
   }
 
   // Con esto se pueden hacer las llamadas al status

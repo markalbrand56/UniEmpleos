@@ -63,6 +63,7 @@ const EditProfileEstudiante = () => {
   useEffect(() => {
     if (api.data) {
       const { usuario } = api.data
+      // console.log("Foto from API", usuario.foto)
       const fotoUrl = (api.data.usuario.foto === "") ? "/images/pfp.svg" : (API_URL + "/api/uploads/" + api.data.usuario.foto)
       setNombre(usuario.nombre)
       setApellido(usuario.apellido)
@@ -170,7 +171,6 @@ const EditProfileEstudiante = () => {
           telefono,
           semestre,
           cv: "",
-          foto: uploadedImage,
           correo: user.id_user,
         }
       )
