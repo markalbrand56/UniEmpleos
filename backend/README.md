@@ -719,27 +719,6 @@ Elimina una postulación. El usuario se obtiene del token. Se pasa el id de la p
 
 ---
 ## Administradores
-### [POST] api/admins
-Crea un administrador
-
-#### Params
-
-``` json
-{
-	"id_administrador"    	: "string" 
-	"nombre"		: "string"
-	"apellido" 		: "string"
-}
-```
-
-#### Response
-``` json
-{
-	"Status":  "200",
-	"Message": "Admin Created Successfully",
-	"Data": "nil"
-}
-```
 ### [GET] api/admins/students
 Retorna información de estudiantes para el panel de administradores
 
@@ -790,7 +769,7 @@ Retorna información de empresas para el panel de administradores
 ```
 
 ### [POST] api/admins/suspend
-Suspende un usuario
+Suspende un usuario. Si "suspender" es true, suspende al usuario. Si es false, lo reactiva
 
 > **Note**
 > Auth required
@@ -808,6 +787,46 @@ Suspende un usuario
 {
     "status": 200,
     "message": "User suspended successfully",
+    "data": null
+}
+```
+
+### [DELETE] api/admins/delete/offers?id_oferta=220
+Elimina una oferta de trabajo. También elimina cualquier postulación asociada a la oferta
+
+> **Note**
+> Auth required
+
+#### Params
+Query param
+
+- "id_oferta": int
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Offer deleted successfully",
+    "data": null
+}
+```
+
+### [POST] api/admins/delete/user?usuario=estudiante@eliminar.com
+Elimina un usuario. Elimina toda información asociada al usuario
+
+> **Note**
+> Auth required
+
+#### Params
+Query param
+
+- "usuario": string
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "User deleted successfully",
     "data": null
 }
 ```
