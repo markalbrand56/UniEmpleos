@@ -39,8 +39,8 @@ func NewOffer(c *gin.Context) {
 	var input OfferInput
 
 	if err := c.BindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Invalid input: " + err.Error(),
 			Data:    nil,
 		})
@@ -59,8 +59,8 @@ func NewOffer(c *gin.Context) {
 	err := configs.DB.Raw("INSERT INTO oferta (id_empresa, puesto, descripcion, requisitos, salario) VALUES (?, ?, ?, ?, ?) RETURNING id_oferta, id_empresa, puesto, descripcion, requisitos, salario", offer.IDEmpresa, offer.Puesto, offer.Descripcion, offer.Requisitos, offer.Salario).Scan(&inserted).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error creating offer: " + err.Error(),
 			Data:    nil,
 		})
@@ -74,8 +74,8 @@ func NewOffer(c *gin.Context) {
 		var inserted2 AfterInsert2
 		err = configs.DB.Raw("INSERT INTO oferta_carrera (id_oferta, id_carrera) VALUES (?, ?) RETURNING id_oferta, id_carrera", inserted.IdOferta, idCarrera).Scan(&inserted2).Error
 		if err != nil {
-			c.JSON(400, responses.StandardResponse{
-				Status:  400,
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
 				Message: "Error creating oferta_carrera: " + err.Error(),
 				Data:    nil,
 			})
@@ -83,8 +83,8 @@ func NewOffer(c *gin.Context) {
 		}
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
 		Message: "Offer and oferta_carrera created successfully",
 		Data:    nil,
 	})
@@ -106,8 +106,8 @@ func UpdateOffer(c *gin.Context) {
 	var offer models.Oferta
 
 	if err := c.BindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Invalid input: " + err.Error(),
 			Data:    nil,
 		})
@@ -125,8 +125,8 @@ func UpdateOffer(c *gin.Context) {
 	err := configs.DB.Model(&offer).Where("id_oferta = ?", input.Id_Oferta).Updates(offer).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error updating offer: " + err.Error(),
 			Data:    nil,
 		})
@@ -137,8 +137,8 @@ func UpdateOffer(c *gin.Context) {
 	err = configs.DB.Where("id_oferta = ?", input.Id_Oferta).Delete(&models.OfertaCarrera{}).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error deleting oferta_carrera to update them: " + err.Error(),
 			Data:    nil,
 		})
@@ -151,8 +151,8 @@ func UpdateOffer(c *gin.Context) {
 		idCarrera, err := strconv.Atoi(idCarreraStr)
 		if err != nil {
 			// Manejar el error si la conversión falla
-			c.JSON(400, responses.StandardResponse{
-				Status:  400,
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
 				Message: "Error converting 'idCarrera' to int: " + err.Error(),
 				Data:    nil,
 			})
@@ -166,8 +166,8 @@ func UpdateOffer(c *gin.Context) {
 
 		// Insertar en la tabla oferta_carrera usando Gorm
 		if err := configs.DB.Create(&ofertaCarrera).Error; err != nil {
-			c.JSON(400, responses.StandardResponse{
-				Status:  400,
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
 				Message: "Error creating oferta_carrera: " + err.Error(),
 				Data:    nil,
 			})
@@ -175,8 +175,8 @@ func UpdateOffer(c *gin.Context) {
 		}
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
 		Message: "Offer updated successfully",
 		Data:    nil,
 	})
@@ -193,8 +193,8 @@ func GetOffer(c *gin.Context) {
 	var input OfferGet
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Invalid input: " + err.Error(),
 			Data:    nil,
 		})
@@ -204,8 +204,8 @@ func GetOffer(c *gin.Context) {
 	err := configs.DB.Where("id_oferta = ?", input.Id_Oferta).First(&offer).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error getting offer: " + err.Error(),
 			Data:    nil,
 		})
@@ -215,8 +215,8 @@ func GetOffer(c *gin.Context) {
 	err = configs.DB.Where("id_empresa = ?", offer.IDEmpresa).First(&Company).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error getting company: " + err.Error(),
 			Data:    nil,
 		})
@@ -228,8 +228,8 @@ func GetOffer(c *gin.Context) {
 		"company": Company,
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
 		Message: "Offer retrieved successfully",
 		Data:    data,
 	})
@@ -255,8 +255,8 @@ func GetOfferByCompany(c *gin.Context) {
 	var input GetOfferByCompanyInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Invalid input: " + err.Error(),
 			Data:    nil,
 		})
@@ -283,8 +283,8 @@ func GetOfferByCompany(c *gin.Context) {
 
 	rows, err := configs.DB.Raw(query, input.Id_Empresa).Rows()
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error getting offers: " + err.Error(),
 			Data:    nil,
 		})
@@ -357,8 +357,8 @@ func GetOfferByCompany(c *gin.Context) {
 		"offers": offersResponse,
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
 		Message: "Offers retrieved successfully",
 		Data:    data,
 	})
@@ -374,9 +374,9 @@ func DeleteOffer(c *gin.Context) {
 
 	// Verifica si el valor del parámetro está presente
 	if idOferta == "" {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Missing id_oferta parameter",
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Missing id_oferta query parameter",
 			Data:    nil,
 		})
 		return
@@ -386,8 +386,8 @@ func DeleteOffer(c *gin.Context) {
 	// Delete oferta_carrera
 	err := configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.OfertaCarrera{}).Error
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error deleting oferta_carrera: " + err.Error(),
 			Data:    nil,
 		})
@@ -397,16 +397,16 @@ func DeleteOffer(c *gin.Context) {
 	// Delete oferta
 	err = configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error deleting oferta: " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
 		Message: "Offer deleted successfully",
 		Data:    nil,
 	})
@@ -417,9 +417,9 @@ func GetApplicants(c *gin.Context) {
 	var tokenUsername string
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON. " + err.Error(),
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
 			Data:    nil,
 		})
 		return

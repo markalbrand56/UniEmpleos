@@ -23,8 +23,8 @@ func NewCompany(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON: " + err.Error(),
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -49,7 +49,7 @@ func NewCompany(c *gin.Context) {
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
 			c.JSON(http.StatusConflict, responses.StandardResponse{
-				Status:  409,
+				Status:  http.StatusConflict,
 				Message: "User with this email already exists",
 				Data:    nil,
 			})
@@ -57,7 +57,7 @@ func NewCompany(c *gin.Context) {
 		}
 
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "Error creating user. " + err.Error(),
 			Data:    nil,
 		})
@@ -68,7 +68,7 @@ func NewCompany(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "Error creating company. " + err.Error(),
 			Data:    nil,
 		})
@@ -76,7 +76,7 @@ func NewCompany(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Company created successfully",
 		Data:    nil,
 	})
@@ -86,9 +86,9 @@ func UpdateCompanies(c *gin.Context) {
 	var input EmpresaInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON: " + err.Error(),
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -104,17 +104,16 @@ func UpdateCompanies(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error updating",
+			Status:  http.StatusBadRequest,
+			Message: "Error updating company. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Company updated successfully",
 		Data:    nil,
 	})
-
 }

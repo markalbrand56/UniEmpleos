@@ -10,7 +10,6 @@ func Routes(router *gin.Engine) {
 	// Rutas públicas
 	public := router.Group("/api")
 
-	public.POST("/register", controllers.Register)
 	public.POST("/login", controllers.Login)
 	public.POST("/students", controllers.NewStudent)
 	public.POST("/companies", controllers.NewCompany)
@@ -60,12 +59,11 @@ func Routes(router *gin.Engine) {
 	admins := router.Group("api/admins")
 	admins.Use(middlewares.JwtAuthentication())
 
-	admins.POST("/", controllers.NewAdmin)
 	admins.GET("/students", controllers.GetStudents)
 	admins.GET("/companies", controllers.GetCompanies)
 	admins.POST("/suspend", controllers.SuspendAccount)
-	admins.POST("/offers", controllers.DeleteOfferAdmin)
-	admins.POST("/deleteUser", controllers.DeleteUsuario)
+	admins.DELETE("/delete/offers", controllers.DeleteOfferAdmin)
+	admins.POST("/delete/user", controllers.DeleteUsuario)
 
 	// Ofertas
 	offers := router.Group("api/offers")

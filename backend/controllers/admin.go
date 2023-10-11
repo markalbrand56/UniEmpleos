@@ -9,48 +9,6 @@ import (
 	"time"
 )
 
-type AdministradorInput struct {
-	IdAdministrador string `json:"id_administrador"`
-	Nombre          string `json:"nombre"`
-	Apellido        string `json:"apellido"`
-}
-
-func NewAdmin(c *gin.Context) {
-	var input AdministradorInput
-
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON: " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	a := models.Administrador{
-		IdAdministrador: input.IdAdministrador,
-		Nombre:          input.Nombre,
-		Apellido:        input.Apellido,
-	}
-
-	err := configs.DB.Create(&a).Error // Se agrega el administrador a la base de datos
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error creating. " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
-		Message: "Admin Created Successfully",
-		Data:    nil,
-	})
-}
-
 type EstudianteGetAdmin struct {
 	IdEstudiante string    `json:"id_estudiante"`
 	Nombre       string    `json:"nombre"`
