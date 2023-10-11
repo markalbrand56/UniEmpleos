@@ -48,9 +48,9 @@ func NewPostulation(c *gin.Context) {
 	var inserted models.PostulacionGet
 
 	// TODO: Delete Raw
-	//err := configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
+	err := configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
 
-	err := configs.DB.Create(&postulation).Scan(&inserted).Error
+	//err := configs.DB.Create(&postulation).Scan(&inserted).Error
 
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
@@ -73,7 +73,7 @@ func NewPostulation(c *gin.Context) {
 	var resultado PuestoResult
 
 	// Obtener el valor de "puesto" de la oferta
-	err = configs.DB.Model(models.Oferta{}).Select("puesto").Where("id_oferta = ?", inserted.IdOferta).Scan(&resultado).Error
+	err = configs.DB.Model(models.Oferta{}).Select("puesto").Where("id_oferta = ?", input.IdOferta).Scan(&resultado).Error
 	if err != nil {
 		c.JSON(408, responses.StandardResponse{
 			Status:  408,
@@ -89,7 +89,7 @@ func NewPostulation(c *gin.Context) {
 	mensaje := fmt.Sprintf("Hola, me acabo de postular al puesto de '%s'.", puesto)
 
 	// Nuevo query
-	err = configs.DB.Exec("INSERT INTO mensaje (id_postulacion, id_emisor, id_receptor, mensaje, tiempo) VALUES (?, ?, (SELECT id_empresa FROM oferta WHERE id_oferta = ?), ?, ?)", inserted.IdPostulacion, inserted.IdEstudiante, inserted.IdOferta, mensaje, time.Now()).Error
+	err = configs.DB.Exec("INSERT INTO mensaje (id_postulacion, id_emisor, id_receptor, mensaje, tiempo) VALUES (?, ?, (SELECT id_empresa FROM oferta WHERE id_oferta = ?), ?, ?)", inserted.IdPostulacion, inserted.IdEstudiante, input.IdOferta, mensaje, time.Now()).Error
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
