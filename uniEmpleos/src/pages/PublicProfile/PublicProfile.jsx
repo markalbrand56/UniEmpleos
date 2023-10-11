@@ -11,6 +11,7 @@ import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
 import { navigate } from "../../store"
 import style from "./PublicProfile.module.css"
+import API_URL from "../../api"
 
 const PublicProfile = ({ correo }) => {
   const api = useApi()
@@ -85,7 +86,7 @@ const PublicProfile = ({ correo }) => {
         style={{
           color: "#000",
           position: "absolute",
-          top: "10px",
+          top: "40px",
           left: "20px",
           cursor: "pointer",
         }}
@@ -93,61 +94,65 @@ const PublicProfile = ({ correo }) => {
       />
       {usuario ? (
         <div className={style.infoContainer}>
-          {usuario.foto && (
-            <div className={style.pfpContainer}>
-              <img
-                className={style.pfp}
-                src={usuario.foto}
-                alt={`${usuario.nombre} ${usuario.apellido}`}
-              />
-            </div>
-          )}
-          <div className={style.subInfoContainer}>
-            <div className={style.nombreContainer}>
-              <BiUser size={30} />
-              <span className={style.nombre}>
-                Nombre: {`${usuario.nombre} ${usuario.apellido}`}
-              </span>
-            </div>
-
-            <div className={style.emailContainer}>
-              <HiOutlineMailOpen size={30} />
-              <span className={style.email}>Correo: {usuario.correo}</span>
-            </div>
-            <div className={style.telefonoContainer}>
-              <BsPhone size={30} />
-              <span className={style.telefono}>
-                Telefono: {usuario.telefono}
-              </span>
-            </div>
-            {usuario.universidad && (
-              <div className={style.universityContainer}>
-                <LiaUniversitySolid size={30} />
-                <span className={style.university}>
-                  Universidad: {usuario.universidad}
+          <h1 className={style.title}>
+            Perfil de {usuario.nombre} {usuario.apellido}
+          </h1>
+          <div className={style.tipoContainer}>
+            {usuario.foto && (
+              <div className={style.pfpContainer}>
+                <img
+                  className={style.pfp}
+                  src={`${API_URL}/api/uploads/${usuario.foto}`}
+                  alt={`${usuario.nombre} ${usuario.apellido}`}
+                />
+              </div>
+            )}
+            <div className={style.subInfoContainer}>
+              <div className={style.profileli}>
+                <BiUser size={30} />
+                <span className={style.profileSpan}>
+                  Nombre: {`${usuario.nombre} ${usuario.apellido}`}
                 </span>
               </div>
-            )}
-            {usuario.carrera && (
-              <div className={style.carreraContainer}>
-                <PiBooksLight size={30} />
-                <span className={style.carrera}>Carrera: {carrera}</span>
+              <div className={style.profileli}>
+                <HiOutlineMailOpen size={30} />
+                <span className={style.correo}>Correo: {usuario.correo}</span>
               </div>
-            )}
-            {usuario.nacimiento && (
-              <div className={style.edadContainer}>
-                <LiaBirthdayCakeSolid size={30} />
-                <span className={style.edad}>Edad: {edad}</span>
-              </div>
-            )}
-            {usuario.semestre && (
-              <div className={style.semestreContainer}>
-                <AiTwotoneCalendar size={30} />
-                <span className={style.semestre}>
-                  Semestre: {usuario.semestre}
+              <div className={style.profileli}>
+                <BsPhone size={30} />
+                <span className={style.profileSpan}>
+                  Telefono: {usuario.telefono}
                 </span>
               </div>
-            )}
+              {usuario.universidad && (
+                <div className={style.profileli}>
+                  <LiaUniversitySolid size={30} />
+                  <span className={style.profileSpan}>
+                    Universidad: {usuario.universidad}
+                  </span>
+                </div>
+              )}
+              {usuario.carrera && (
+                <div className={style.profileli}>
+                  <PiBooksLight size={30} />
+                  <span className={style.profileSpan}>Carrera: {carrera}</span>
+                </div>
+              )}
+              {usuario.nacimiento && (
+                <div className={style.profileli}>
+                  <LiaBirthdayCakeSolid size={30} />
+                  <span className={style.profileSpan}>Edad: {edad}</span>
+                </div>
+              )}
+              {usuario.semestre && (
+                <div className={style.profileli}>
+                  <AiTwotoneCalendar size={30} />
+                  <span className={style.profileSpan}>
+                    Semestre: {usuario.semestre}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       ) : (
