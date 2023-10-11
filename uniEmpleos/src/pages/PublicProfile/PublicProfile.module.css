@@ -92,6 +92,12 @@
         text-transform: capitalize;
     }
 
+    .correo{
+        font-size: 16px;
+        color: #333333;
+        text-align: center;
+    }
+
 
     .tipoContainer{
         flex-direction: column;

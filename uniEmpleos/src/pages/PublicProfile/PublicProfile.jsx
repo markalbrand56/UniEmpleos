@@ -116,9 +116,7 @@ const PublicProfile = ({ correo }) => {
               </div>
               <div className={style.profileli}>
                 <HiOutlineMailOpen size={30} />
-                <span className={style.profileSpan}>
-                  Correo: {usuario.correo}
-                </span>
+                <span className={style.correo}>Correo: {usuario.correo}</span>
               </div>
               <div className={style.profileli}>
                 <BsPhone size={30} />
