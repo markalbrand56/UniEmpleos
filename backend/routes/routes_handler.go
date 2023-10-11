@@ -10,7 +10,6 @@ func Routes(router *gin.Engine) {
 	// Rutas públicas
 	public := router.Group("/api")
 
-	public.POST("/register", controllers.Register)
 	public.POST("/login", controllers.Login)
 	public.POST("/students", controllers.NewStudent)
 	public.POST("/companies", controllers.NewCompany)
