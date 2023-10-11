@@ -38,21 +38,21 @@ const ChatPage = () => {
     })
   }
 
-  useEffect(() => {
-    obtainMessages()
-  }, [currentChat])
-
   const obtainMessages = async () => {
     if (currentChat !== "") {
       await apiMessages.handleRequest("POST", "/messages/get", {
         id_emisor: user.id_user,
         id_receptor: currentChat,
       })
-      if (cambioChats !== apiMessages.data){
+      if (cambioChats !== apiMessages.data) {
         setCambioChats(apiMessages.data)
       }
     }
   }
+
+  useEffect(() => {
+    obtainMessages()
+  }, [currentChat])
 
   const scrollDown = () => {
     chatContainerRef.current.scrollTo({
