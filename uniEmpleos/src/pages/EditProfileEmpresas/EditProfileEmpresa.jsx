@@ -22,7 +22,7 @@ const EditProfileEmpresa = () => {
   const [correo, setCorreo] = useState("")
   const [detalles, setDetalles] = useState("")
   const [telefono, setTelefono] = useState("")
-  const [uploadedImage, setUploadedImage] = useState("")
+  const [uploadedImage, setUploadedImage] = useState("/images/pfp.svg")
   const [updatedImage, setUpdatedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
@@ -50,12 +50,14 @@ const EditProfileEmpresa = () => {
   }
   useEffect(() => {
     if (api.data) {
-      const fotoUrl = API_URL + "/api/uploads/" + api.data.usuario.foto
+      const fotoUrl = (api.data.usuario.foto === "") ? "/images/pfp.svg" : (API_URL + "/api/uploads/" + api.data.usuario.foto)
+
+      console.log("Foto", fotoUrl)
       setNombre(api.data.usuario.nombre)
       setCorreo(api.data.usuario.correo)
       setDetalles(api.data.usuario.detalles)
       setTelefono(parseInt(api.data.usuario.telefono, 10))
-      setUploadedImage( fotoUrl)
+      setUploadedImage(fotoUrl)
     }
   }, [api.data])
 
@@ -76,7 +78,6 @@ const EditProfileEmpresa = () => {
     detalles,
     correo,
     telefono: telefono.toString(),
-    foto: uploadedImage
   }
 
   // Con esto se pueden hacer las llamadas al status

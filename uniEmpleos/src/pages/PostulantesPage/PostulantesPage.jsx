@@ -7,6 +7,7 @@ import Popup from "../../components/Popup/Popup"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import API_URL from "../../api"
+import fotoPFP from "/images/pfp.svg"
 
 const PostulantesPage = ({ id }) => {
   const api = useApi()
@@ -35,7 +36,7 @@ const PostulantesPage = ({ id }) => {
   const handleClickUsuario = (idUsuario) => {
     navigate(`/publicprofile/${idUsuario}`)
   }
-
+console.log(response)
   return (
     <div className={style.mainContainer}>
       <Header />
@@ -53,7 +54,7 @@ const PostulantesPage = ({ id }) => {
               nombre={postulante.nombre}
               apellido={postulante.apellido}
               universidad={postulante.universidad}
-              pfp={`${API_URL}/api/uploads/${postulante.foto}`}
+              pfp={postulante.foto === "" ? fotoPFP : `${API_URL}/api/uploads/${postulante.foto}`}
               onClick={() => handleClickUsuario(postulante.id_estudiante)}
             />
           ))
