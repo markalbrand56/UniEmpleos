@@ -151,7 +151,7 @@ const SignUpEstudiante = () => {
         nacimiento: edad,
         correo,
         telefono,
-        carrera: parseInt(carrera, 10),
+        carrera: carreraId,
         semestre: parseInt(semestre, 10),
         cv: " ",
         foto: uploadedImage,
