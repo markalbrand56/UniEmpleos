@@ -18,6 +18,7 @@ import PostulationsEstudent from "./PostulationsEstudentPage/PostulationsEstuden
 import OfferDetails from "./OfferDetails/OfferDetails"
 import PostulantesPage from "./PostulantesPage/PostulantesPage"
 import PublicProfile from "./PublicProfile/PublicProfile"
+import PrincipalAdmin from "./PricipalAdmin/PrincipalAdmin"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
@@ -35,6 +36,9 @@ const Page = () => {
       break
     case "principalStudent":
       Component = <PrincipalStudent />
+      break
+    case "principaladmin":
+      Component = <PrincipalAdmin />
       break
     case "signupestudiante":
       Component = <SignUpEstudiante />

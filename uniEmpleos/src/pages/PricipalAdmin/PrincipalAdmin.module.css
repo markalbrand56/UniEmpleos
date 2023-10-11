@@ -1,0 +1,14 @@
+.containerinfoprincipal{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 30px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+@media screen and (max-width: 768px){
+    .containerinfoprincipal{
+        justify-content: center;
+    }
+}
