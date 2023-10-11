@@ -59,7 +59,6 @@ func Routes(router *gin.Engine) {
 	admins := router.Group("api/admins")
 	admins.Use(middlewares.JwtAuthentication())
 
-	admins.POST("/", controllers.NewAdmin)
 	admins.GET("/students", controllers.GetStudents)
 	admins.GET("/companies", controllers.GetCompanies)
 	admins.POST("/suspend", controllers.SuspendAccount)
