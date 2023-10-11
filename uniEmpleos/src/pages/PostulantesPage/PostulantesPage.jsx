@@ -6,6 +6,7 @@ import style from "./PostulantesPage.module.css"
 import Popup from "../../components/Popup/Popup"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
+import API_URL from "../../api"
 
 const PostulantesPage = ({ id }) => {
   const api = useApi()
@@ -52,7 +53,7 @@ const PostulantesPage = ({ id }) => {
               nombre={postulante.nombre}
               apellido={postulante.apellido}
               universidad={postulante.universidad}
-              pfp={postulante.foto}
+              pfp={`${API_URL}/api/uploads/${postulante.foto}`}
               onClick={() => handleClickUsuario(postulante.id_estudiante)}
             />
           ))
