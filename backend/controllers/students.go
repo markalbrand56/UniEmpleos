@@ -114,9 +114,9 @@ func UpdateStudent(c *gin.Context) {
 	var input EstudianteUpdateInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON: " + err.Error(),
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -140,17 +140,16 @@ func UpdateStudent(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error updating. " + err.Error(),
+			Status:  http.StatusBadRequest,
+			Message: "Error updating student. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Student updated successfully",
 		Data:    nil,
 	})
-
 }

@@ -31,9 +31,9 @@ func NewPostulation(c *gin.Context) {
 	var input PostulationInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON. " + err.Error(),
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -47,7 +47,6 @@ func NewPostulation(c *gin.Context) {
 
 	var inserted models.PostulacionGet
 
-	// TODO: Delete Raw
 	//err := configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
 
 	err := configs.DB.Create(&postulation).Scan(&inserted).Error
@@ -55,16 +54,16 @@ func NewPostulation(c *gin.Context) {
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
 			c.JSON(http.StatusConflict, responses.StandardResponse{
-				Status:  409,
+				Status:  http.StatusConflict,
 				Message: "This postulation already exists",
 				Data:    nil,
 			})
 			return
 		}
 
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error creating. " + err.Error(),
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error creating postulation. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -75,9 +74,9 @@ func NewPostulation(c *gin.Context) {
 	// Obtener el valor de "puesto" de la oferta
 	err = configs.DB.Model(models.Oferta{}).Select("puesto").Where("id_oferta = ?", inserted.IdOferta).Scan(&resultado).Error
 	if err != nil {
-		c.JSON(408, responses.StandardResponse{
-			Status:  408,
-			Message: "Error getting 'puesto' from oferta. " + err.Error(),
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting offer title. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -91,16 +90,16 @@ func NewPostulation(c *gin.Context) {
 	// Nuevo query
 	err = configs.DB.Exec("INSERT INTO mensaje (id_postulacion, id_emisor, id_receptor, mensaje, tiempo) VALUES (?, ?, (SELECT id_empresa FROM oferta WHERE id_oferta = ?), ?, ?)", inserted.IdPostulacion, inserted.IdEstudiante, inserted.IdOferta, mensaje, time.Now()).Error
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error creating initial message. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
 		Message: "Postulation created successfully",
 		Data:    nil,
 	})
@@ -130,8 +129,8 @@ func GetOfferPreviews(c *gin.Context) {
 	err := configs.DB.Find(&postulations).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error getting postulations",
 			Data:    nil,
 		})
@@ -160,8 +159,8 @@ func GetOfferPreviews(c *gin.Context) {
 		"postulations": combinedPostulations,
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
 		Message: "Postulations retrieved successfully",
 		Data:    data,
 	})
@@ -212,9 +211,9 @@ func GetPostulactionFromStudent(c *gin.Context) {
 	// obten el id del estudiante a partir del token.
 	idEstudiante, err := utils.ExtractTokenUsername(c)
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error getting id estudiante",
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting student id from token. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -230,8 +229,8 @@ func GetPostulactionFromStudent(c *gin.Context) {
 	err = configs.DB.Raw("select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario from postulacion p join oferta o on p.id_oferta = o.id_oferta where id_estudiante = ?", idEstudiante).Scan(&results).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error getting postulations",
 			Data:    nil,
 		})
@@ -242,8 +241,8 @@ func GetPostulactionFromStudent(c *gin.Context) {
 		"postulations": results,
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
 		Message: "Postulations retrieved successfully",
 		Data:    data,
 	})
