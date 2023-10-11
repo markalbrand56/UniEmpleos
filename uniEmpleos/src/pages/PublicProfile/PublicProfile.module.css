@@ -49,6 +49,12 @@
     text-transform: capitalize;
 }
 
+.correo{
+    font-size: 20px;
+    color: #333333;
+    text-align: center;
+}
+
 .subInfoContainer {
     width: calc(100%/2);
     gap: 20px;
