@@ -70,7 +70,7 @@ export const Header = () => {
           <div className="actions">
             <div className="actionlinks">
               <a href="/profile">Perfil</a>
-              <a href="/jobs">Vacantes</a>
+              <a href="/profileadmin">Vacantes</a>
               <a href="/postulantes">Postulantes</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
