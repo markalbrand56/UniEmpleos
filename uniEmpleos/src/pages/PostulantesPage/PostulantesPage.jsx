@@ -44,6 +44,7 @@ const PostulantesPage = ({ id }) => {
         style={typeError}
         close={() => setWarning(false)}
       />
+      <h1>Postulantes</h1>
       <div className={style.infoStudentContainer}>
         {response.data ? (
           response.data.map((postulante) => (

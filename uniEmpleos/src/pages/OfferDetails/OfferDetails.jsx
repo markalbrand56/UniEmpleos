@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import Select from "react-select"
 import { useStoreon } from "storeon/react"
 import Joi from "joi"
 import { useQuill } from "react-quilljs"
@@ -29,7 +30,7 @@ const OfferDetails = ({ id }) => {
   const [salario, setSalario] = useState("")
   const [puesto, setPuesto] = useState("")
   const [detalles, setDetalles] = useState("")
-  const [carrera, setCarrera] = useState([])
+  const [carrera, setCarrera] = useState("")
   const [carreras, setCarreras] = useState([])
   const { quill, quillRef } = useQuill()
   const [warning, setWarning] = useState(false)
@@ -63,13 +64,16 @@ const OfferDetails = ({ id }) => {
           setSalario(dataa[i].salario)
           setRequisitos(dataa[i].requisitos)
           setDetalles(dataa[i].descripcion)
-          if (dataa[i].id_carreras !== null) {
-            setCarrera(dataa[i].id_carreras.map((num) => num.toString()))
+          if (
+            dataa[i].id_carreras !== null &&
+            dataa[i].id_carreras.length > 0
+          ) {
+            setCarrera(dataa[i].id_carreras[0].toString()) // usar el primer elemento del array
           } else {
-            setCarrera(["1"])
+            setCarrera("1") // o cualquier valor predeterminado que desees
           }
         } else {
-          console.log("not changing", id)
+          console.log(carrera)
         }
       }
     }
@@ -92,7 +96,7 @@ const OfferDetails = ({ id }) => {
         descripcion: details,
         requisitos,
         salario: parseFloat(salario),
-        id_carreras: carrera,
+        id_carreras: [carrera],
       })
       if (apiResponse.status === 200) {
         navigate("/postulacionempresa")
@@ -118,10 +122,7 @@ const OfferDetails = ({ id }) => {
   }
 
   const handleCarrera = (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions).map(
-      (option) => option.value
-    )
-    setCarrera(selectedOptions)
+    setCarrera(e.value.toString())
   }
 
   const handleInputsValue = (e) => {
@@ -214,9 +215,29 @@ const OfferDetails = ({ id }) => {
           </div>
           <div className={styles.inputContainer}>
             <span>Carrera</span>
-            <DropDown
-              opciones={carreras}
-              value={carrera}
+            <Select
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? "#a08ae5" : "grey",
+                  color: "black",
+                }),
+                option: (baseStyles) => ({
+                  ...baseStyles,
+                  color: "black",
+                }),
+              }}
+              name="carrera"
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#94bd0f",
+                  primary: "#a08ae5",
+                },
+              })}
+              options={carreras}
+              value={carreras.find((option) => option.value === carrera)}
               onChange={handleCarrera}
             />
           </div>

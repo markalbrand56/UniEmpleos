@@ -2,9 +2,8 @@ import React, { useState } from "react"
 import { useStoreon } from "storeon/react"
 import PropTypes from "prop-types"
 import { FaBars, FaTimes } from "react-icons/fa"
-import {AiOutlineLogout} from "react-icons/ai"
+import { LuLogOut } from "react-icons/lu"
 import Logo from "../Logo/Logo"
-import Button from "../Button/Button"
 import "./header.css"
 import { navigate } from "../../store"
 
@@ -48,7 +47,7 @@ export const Header = () => {
               <a href="/postulaciones">Postulaciones</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
-              <AiOutlineLogout size={30} style={{ color: "#000" }} />
+              <LuLogOut size={30} style={{ color: "#000" }} />
             </div>
           </div>
         )
@@ -62,7 +61,7 @@ export const Header = () => {
               <a href="/chat">Chat</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
-              <AiOutlineLogout size={30} style={{ color: "#000" }} />
+              <LuLogOut size={30} style={{ color: "#000" }} />
             </div>
           </div>
         )
@@ -75,7 +74,7 @@ export const Header = () => {
               <a href="/profile">Perfil</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
-              <AiOutlineLogout size={30} style={{ color: "#000" }} />
+              <LuLogOut size={30} style={{ color: "#000" }} />
             </div>
           </div>
         )
