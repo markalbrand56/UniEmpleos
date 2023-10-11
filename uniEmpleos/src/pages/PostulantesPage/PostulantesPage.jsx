@@ -36,7 +36,7 @@ const PostulantesPage = ({ id }) => {
   const handleClickUsuario = (idUsuario) => {
     navigate(`/publicprofile/${idUsuario}`)
   }
-console.log(response)
+
   return (
     <div className={style.mainContainer}>
       <Header />
@@ -54,7 +54,11 @@ console.log(response)
               nombre={postulante.nombre}
               apellido={postulante.apellido}
               universidad={postulante.universidad}
-              pfp={postulante.foto === "" ? fotoPFP : `${API_URL}/api/uploads/${postulante.foto}`}
+              pfp={
+                postulante.foto === ""
+                  ? fotoPFP
+                  : `${API_URL}/api/uploads/${postulante.foto}`
+              }
               onClick={() => handleClickUsuario(postulante.id_estudiante)}
             />
           ))

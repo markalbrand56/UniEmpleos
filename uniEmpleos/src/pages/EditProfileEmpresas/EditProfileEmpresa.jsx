@@ -50,7 +50,10 @@ const EditProfileEmpresa = () => {
   }
   useEffect(() => {
     if (api.data) {
-      const fotoUrl = (api.data.usuario.foto === "") ? "/images/pfp.svg" : (API_URL + "/api/uploads/" + api.data.usuario.foto)
+      const fotoUrl =
+        api.data.usuario.foto === ""
+          ? "/images/pfp.svg"
+          : API_URL + "/api/uploads/" + api.data.usuario.foto
 
       console.log("Foto", fotoUrl)
       setNombre(api.data.usuario.nombre)
@@ -106,18 +109,6 @@ const EditProfileEmpresa = () => {
     }
   }
 
-  const handleUploadFile = (uploadedImage) => {
-    const fileType = isImage(uploadedImage)
-    if (fileType) {
-      setUploadedImage(uploadedImage)
-    } else {
-      setUploadedImage("")
-      setTypePopUp(2)
-      setError("El archivo debe ser una imagen")
-      setWarning(true)
-    }
-  }
-
   const uploadFile = async () => {
     event.preventDefault()
     const file = document.getElementById("file").files[0]
@@ -130,13 +121,30 @@ const EditProfileEmpresa = () => {
         window.location.reload()
       } else {
         setTypePopUp(2)
-        setError("Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde")
+        setError(
+          "Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde"
+        )
         setWarning(true)
       }
     } else {
-        setTypePopUp(2)
-        setError("Debes seleccionar un archivo")
-        setWarning(true)
+      setTypePopUp(2)
+      setError("Debes seleccionar un archivo")
+      setWarning(true)
+    }
+  }
+
+  // modificaciones de la imagen
+  const [inputStyle, setInputStyle] = useState(false)
+  const [archivo, setArchivo] = useState()
+
+  const handleInputChange = (event) => {
+    const selectedFiles = event.target.files
+    if (selectedFiles.length > 0) {
+      setInputStyle(true)
+      setArchivo(event.target.files[0].name)
+    } else {
+      setInputStyle(false)
+      setArchivo("")
     }
   }
 
@@ -153,15 +161,17 @@ const EditProfileEmpresa = () => {
       </div>
       <div className={style.contentContainer}>
         <div className={style.imgContainer}>
-          <img
-            src={uploadedImage}
-            alt="profile"
-          />
+          <img src={uploadedImage} alt="profile" />
         </div>
         <div className={style.editProfileContainer}>
           <div className={style.inputsContainer}>
             <div className={style.grupoDatos1}>
-              <ImageDirectUploader uploader={uploadFile} />
+              <ImageDirectUploader
+                uploader={uploadFile}
+                handleInputChange={handleInputChange}
+                isSelected={inputStyle}
+                archivo={archivo}
+              />
               <div className={style.inputSubContainer}>
                 <span>Nombre</span>
                 <ComponentInput
