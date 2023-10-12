@@ -159,6 +159,25 @@ func DeleteOfferAdmin(c *gin.Context) {
 
 }
 
+func DeletePostulation(c *gin.Context) {
+	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
+	idPostulacion := c.Query("id_postulacion")
+	err := configs.DB.Where("id_postulacion = ?", idPostulacion).Delete(&models.Postulacion{}).Error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  400,
+			Message: "Error deleting postulation: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  200,
+		Message: "Postulation deleted successfully",
+		Data:    nil,
+	})
+}
+
 func DeleteUsuario(c *gin.Context) {
 	idUsuario := c.Query("usuario")
 
