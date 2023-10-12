@@ -830,3 +830,23 @@ Query param
     "data": null
 }
 ```
+
+### [DELETE] api/admins/postulation?id_postulacion=1
+Elimina la postulación de un estudiante a una oferta. 
+
+> **Note**
+> Auth required
+
+#### Params
+Query param
+
+- "id_postulacion": int
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Postulation deleted successfully",
+    "data": null
+}
+```
