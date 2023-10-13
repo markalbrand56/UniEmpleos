@@ -2,6 +2,7 @@
   display: inline-flex;
   align-items: center;
   column-gap: 5px;
+  margin: 50px;
 }
 
 .loader__bar {

@@ -9,6 +9,7 @@ import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
+import Loader from "../../components/Loader/Loader"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -29,8 +30,10 @@ const PrincipalAdmin = () => {
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typeError, setTypeError] = useState(1)
+  const [loading, setLoading] = useState(false)
 
   const obtenerPreviews = async () => {
+    setLoading(true)
     const datos = await api.handleRequest("GET", "/postulations/previews", {
       id_empresa: user.id_user,
     })
@@ -47,6 +50,7 @@ const PrincipalAdmin = () => {
       setError("Ups, algo salio mal al obtener las ofertas")
       setWarning(true)
     }
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -54,7 +58,7 @@ const PrincipalAdmin = () => {
   }, [])
 
   return (
-    <div className={styles.containePostulation}>
+    <div className={styles.mainContainer}>
       <Header userperson="company" />
       <Popup
         message={error}
@@ -62,7 +66,11 @@ const PrincipalAdmin = () => {
         style={typeError}
         close={() => setWarning(false)}
       />
-      {api.data ? (
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <Loader size={100} />
+        </div>
+      ) : api.data ? (
         <div className={styles.containerinfoprincipal}>
           {dataa.map((postulation) => (
             <InfoTab
