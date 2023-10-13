@@ -7,6 +7,7 @@ import { Header } from "../../components/Header/Header"
 import useConfig from "../../Hooks/Useconfig"
 import API_URL from "../../api"
 import useApi from "../../Hooks/useApi"
+import Loader from "../../components/Loader/Loader"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -21,6 +22,7 @@ const PrincipalStudent = () => {
   const [carrera, setCarrera] = useState("")
   const [postulaciones, setPostulaciones] = useState([])
   const [ofertasAMostrar, setOfertasAMostrar] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const form = useConfig(schema, {
     token: "a",
@@ -31,6 +33,7 @@ const PrincipalStudent = () => {
   const [dataa, setData] = useState([])
 
   const configureData = async () => {
+    setLoading(true)
     const response = await fetch(`${API_URL}/api/postulations/previews`, {
       method: "GET",
       headers: {
@@ -92,18 +95,21 @@ const PrincipalStudent = () => {
       }
     })
     setOfertasAMostrar(ofertas)
+    setLoading(false)
   }
 
   useEffect(() => {
     if (dataa.status === 200) {
       handleOfertasAMostrar()
     }
-  }, [dataa.data, carrera])
+  }, [dataa.data, carrera, postulaciones])
 
   return (
     <div className={styles.container}>
       <Header userperson="student" />
-      {dataa.status === 200 && ofertasAMostrar.length > 0 ? (
+      {loading ? (
+        <div className={styles.loaderContainer}><Loader size={100} /></div>
+      ) : dataa.status === 200 && ofertasAMostrar.length > 0 ? (
         <div className={styles.containerinfomain}>
           {ofertasAMostrar.map((postulation) => (
             <InfoTab
