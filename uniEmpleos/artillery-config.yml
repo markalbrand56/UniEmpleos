@@ -26,7 +26,7 @@ config:
 scenarios:
   - flow:
       - loop:
-        - get:
+        - post:
             url: "/login"
         - get:
             url: "/signupestudiante"
