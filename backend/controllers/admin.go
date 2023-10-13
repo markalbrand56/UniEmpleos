@@ -318,6 +318,28 @@ func AdminDeleteUsuario(c *gin.Context) {
 		return
 	}
 
+	roleToBeDeleted, err := RoleFromUser(models.Usuario{Usuario: idUsuario})
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting role from the user to be deleted. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	fmt.Println(roleToBeDeleted)
+
+	if roleToBeDeleted == "admin" {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "Cannot delete an admin account",
+			Data:    nil,
+		})
+		return
+	}
+
 	err = configs.DB.Where("usuario = ?", idUsuario).Delete(&models.Usuario{}).Error
 
 	if err != nil {
