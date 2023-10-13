@@ -74,7 +74,7 @@ func AdminGetStudents(c *gin.Context) {
 	messageMap := map[string]interface{}{"studets": estudiantes}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Students Retrieved Successfully",
 		Data:    messageMap,
 	})
@@ -119,7 +119,7 @@ func AdminGetCompanies(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "Error retrieving companies: " + err.Error(),
 			Data:    nil,
 		})
@@ -130,7 +130,7 @@ func AdminGetCompanies(c *gin.Context) {
 	messageMap := map[string]interface{}{"companies": empresas}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Companies Retrieved Successfully",
 		Data:    messageMap,
 	})
@@ -215,7 +215,7 @@ func AdminSuspendAccount(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Account Reactivated Successfully",
 		Data:    nil,
 	})
@@ -259,15 +259,15 @@ func AdminDeleteOffer(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error deleting offer: " + err.Error(),
+			Status:  http.StatusBadRequest,
+			Message: "Error deleting offer. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Offer deleted successfully",
 		Data:    nil,
 	})
@@ -283,7 +283,7 @@ func AdminDeletePostulation(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
-			Message: "Error getting privileges: " + err.Error(),
+			Message: "Error getting privileges. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -302,14 +302,14 @@ func AdminDeletePostulation(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "Error deleting postulation: " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Postulation deleted successfully",
 		Data:    nil,
 	})
@@ -323,7 +323,7 @@ func AdminDeleteUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
-			Message: "Error getting privileges: " + err.Error(),
+			Message: "Error getting privileges. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -364,15 +364,15 @@ func AdminDeleteUser(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error deleting user: " + err.Error(),
+			Status:  http.StatusBadRequest,
+			Message: "Error deleting user. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "User deleted successfully",
 		Data:    nil,
 	})
