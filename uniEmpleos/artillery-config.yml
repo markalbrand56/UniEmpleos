@@ -1,0 +1,35 @@
+config:
+  target: 'https://sage-palmier-936be2.netlify.app/'
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      rampTo: 5
+      name: Warm up phase
+    - duration: 60
+      arrivalRate: 5
+      rampTo: 10
+      name: Ramp up load
+    - duration: 60
+      arrivalRate: 267  # Ajustado para alcanzar 8000 usuarios en 30 segundos
+      rampTo: 267
+      name: Spike phase
+  plugins:
+    ensure: {}
+    apdex: {}
+    metrics-by-endpoint: {}
+  apdex:
+    threshold: 100
+    ensure:
+      thresholds:
+        - http.response_time.p99: 5000  # Ajustado a 5 segundos
+        - http.response_time.p95: 3000  # Ajustado a 3 segundos
+scenarios:
+  - flow:
+      - loop:
+        - get:
+            url: "/login"
+        - get:
+            url: "/signupestudiante"
+        - get:
+            url: "/signupempresa"
+        count: 100
