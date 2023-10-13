@@ -27,7 +27,7 @@ const useApi = () => {
     setLoading(true)
     const response = await fetch(`${API_URL}/api${path}`, options)
     const datos = await response.json() // Recibidos
-    // console.log("API RESPONSE:", datos.message)
+    console.log("API RESPONSE:", datos)
     setLoading(false)
     setData(datos.data)
 

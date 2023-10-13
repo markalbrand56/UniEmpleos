@@ -43,8 +43,8 @@ export const Header = () => {
             <div className="actionlinks">
               <a href="/editprofileestudiante">Perfil</a>
               <a href="/profile">Vacantes</a>
-              <a href="/chat">Chat</a>
               <a href="/postulaciones">Postulaciones</a>
+              <a href="/chat">Chat</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
               <LuLogOut size={30} style={{ color: "#000" }} />
@@ -55,9 +55,9 @@ export const Header = () => {
         return (
           <div className="actions">
             <div className="actionlinks">
-              <a href="/newoffer">Añadir Empleo</a>
+              <a href="/editprofileempresa">Perfil</a>
+              <a href="/newoffer">Crear Empleo</a>
               <a href="/postulacionempresa">Mis Ofertas</a>
-              <a href="/editprofileempresa">Profile</a>
               <a href="/chat">Chat</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
@@ -69,9 +69,9 @@ export const Header = () => {
         return (
           <div className="actions">
             <div className="actionlinks">
-              <a href="/jobs">Vacantes</a>
-              <a href="/postulantes">Postulantes</a>
               <a href="/profile">Perfil</a>
+              <a href="/profileadmin">Vacantes</a>
+              <a href="/postulantes">Postulantes</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
               <LuLogOut size={30} style={{ color: "#000" }} />
