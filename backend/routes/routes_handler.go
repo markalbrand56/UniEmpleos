@@ -62,7 +62,7 @@ func Routes(router *gin.Engine) {
 	admins.GET("/companies", controllers.AdminGetCompanies)
 	admins.POST("/suspend", controllers.AdminSuspendAccount)
 	admins.DELETE("/delete/offers", controllers.AdminDeleteOffer)
-	admins.POST("/delete/user", controllers.AdminDeleteUsuario)
+	admins.POST("/delete/user", controllers.AdminDeleteUser)
 	admins.DELETE("/postulation", controllers.AdminDeletePostulation)
 
 	// Ofertas

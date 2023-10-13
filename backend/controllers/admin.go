@@ -315,7 +315,7 @@ func AdminDeletePostulation(c *gin.Context) {
 	})
 }
 
-func AdminDeleteUsuario(c *gin.Context) {
+func AdminDeleteUser(c *gin.Context) {
 	idUsuario := c.Query("usuario")
 
 	privileges, err := isAdmin(c)
