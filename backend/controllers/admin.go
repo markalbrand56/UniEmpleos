@@ -167,7 +167,27 @@ func AdminSuspendAccount(c *gin.Context) {
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
-			Message: "Error binding JSON: " + err.Error(),
+			Message: "Invalid input. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	roleToBeSuspended, err := RoleFromUser(models.Usuario{Usuario: input.IdUsuario})
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting role from the user to be suspended. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if roleToBeSuspended == "admin" {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "Cannot suspend an admin account",
 			Data:    nil,
 		})
 		return
@@ -178,7 +198,7 @@ func AdminSuspendAccount(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "Error suspending account: " + err.Error(),
 			Data:    nil,
 		})
@@ -187,7 +207,7 @@ func AdminSuspendAccount(c *gin.Context) {
 
 	if input.Suspender {
 		c.JSON(http.StatusOK, responses.StandardResponse{
-			Status:  200,
+			Status:  http.StatusOK,
 			Message: "Account Suspended Successfully",
 			Data:    nil,
 		})
