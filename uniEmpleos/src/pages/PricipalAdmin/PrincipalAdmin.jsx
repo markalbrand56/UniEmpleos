@@ -26,6 +26,7 @@ const PrincipalAdmin = () => {
 
   const { user } = useStoreon("user")
   const api = useApi()
+  const obtainPostulantes = useApi()
   const [dataa, setData] = useState([])
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
@@ -51,6 +52,28 @@ const PrincipalAdmin = () => {
       setWarning(true)
     }
     setLoading(false)
+  }
+
+  const handleVerPostulantes = async (id) => {
+    const datos = await obtainPostulantes.handleRequest(
+      "POST",
+      "/offers/applicants",
+      {
+        id_oferta: parseInt(id, 10),
+      }
+    )
+    console.log(datos)
+    if (datos.data) {
+      navigate(`/postulantes/${id}`)
+    } else {
+      setTypeError(2)
+      setError("La oferta no tiene postulantes")
+      setWarning(true)
+    }
+  }
+
+  const hadleVerMas = (id) => {
+    navigate(`/adminSPD/${id}`)
   }
 
   useEffect(() => {
@@ -79,6 +102,12 @@ const PrincipalAdmin = () => {
               salary={`Q.${postulation.salario}.00`}
               company={postulation.nombre_empresa}
               labelbutton="Ver más"
+              onClick={() => {
+                hadleVerMas(postulation.id_oferta)
+              }}
+              verPostulantes={() => {
+                handleVerPostulantes(postulation.id_oferta)
+              }}
             />
           ))}
         </div>
