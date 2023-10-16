@@ -15,6 +15,7 @@ type EstudianteGetAdmin struct {
 	Nombre       string    `json:"nombre"`
 	Apellido     string    `json:"apellido"`
 	Nacimiento   time.Time `json:"nacimiento"`
+	Foto         string    `json:"foto"`
 	Suspendido   bool      `json:"suspendido"`
 }
 
@@ -57,7 +58,7 @@ func AdminGetStudents(c *gin.Context) {
 
 	// Realiza la consulta para obtener la información de los estudiantes con la suspensión
 	err = configs.DB.Table("estudiante e").
-		Select("e.id_estudiante, e.nombre, e.apellido, e.nacimiento, u.suspendido").
+		Select("e.id_estudiante, e.nombre, e.apellido, e.nacimiento, e.foto, u.suspendido").
 		Joins("INNER JOIN usuario u ON e.id_estudiante = u.usuario").
 		Scan(&estudiantes).Error
 
