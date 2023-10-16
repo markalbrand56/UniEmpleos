@@ -30,4 +30,5 @@ export default createRouter([
     "/adminSPD/*",
     (id) => ({ page: "adminShowPostulationDetails", props: { id } }),
   ],
+  ["/profileadminstudent", () => ({ page: "adminStudent" })],
 ])

@@ -8,6 +8,7 @@ import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import API_URL from "../../api"
 import fotoPFP from "/images/pfp.svg"
+import Loader from "../../components/Loader/Loader"
 
 const PostulantesPage = ({ id }) => {
   const api = useApi()
@@ -15,8 +16,12 @@ const PostulantesPage = ({ id }) => {
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typeError, setTypeError] = useState(1)
+  const [loading, setLoading] = useState(false)
+
+  console.log(id)
 
   const obtainPostulantes = async () => {
+    setLoading(true)
     const datos = await api.handleRequest("POST", "/offers/applicants", {
       id_oferta: parseInt(id, 10),
     })
@@ -27,6 +32,7 @@ const PostulantesPage = ({ id }) => {
       setError("Error al obtener los postulantes")
       setWarning(true)
     }
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -47,25 +53,30 @@ const PostulantesPage = ({ id }) => {
         close={() => setWarning(false)}
       />
       <h1>Postulantes</h1>
-      <div className={style.infoStudentContainer}>
-        {response.data ? (
-          response.data.map((postulante) => (
-            <InfoStudent
-              nombre={postulante.nombre}
-              apellido={postulante.apellido}
-              universidad={postulante.universidad}
-              pfp={
-                postulante.foto === ""
-                  ? fotoPFP
-                  : `${API_URL}/api/uploads/${postulante.foto}`
-              }
-              onClick={() => handleClickUsuario(postulante.id_estudiante)}
-            />
-          ))
-        ) : (
-          <span className={style.sinPostulantes}>No hay postulantes</span>
-        )}
-      </div>
+      {loading ? (
+        <Loader size={100} />
+      ) : (
+        <div className={style.infoStudentContainer}>
+          {response.data ? (
+            response.data.map((postulante) => (
+              <InfoStudent
+                key={postulante.id_estudiante}
+                nombre={postulante.nombre}
+                apellido={postulante.apellido}
+                universidad={postulante.universidad}
+                pfp={
+                  postulante.foto === ""
+                    ? fotoPFP
+                    : `${API_URL}/api/uploads/${postulante.foto}`
+                }
+                onClick={() => handleClickUsuario(postulante.id_estudiante)}
+              />
+            ))
+          ) : (
+            <span className={style.sinPostulantes}>No hay postulantes</span>
+          )}
+        </div>
+      )}
     </div>
   )
 }
