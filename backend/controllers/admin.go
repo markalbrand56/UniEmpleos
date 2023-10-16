@@ -86,6 +86,7 @@ type EmpresaGetAdmin struct {
 	Nombre     string `json:"nombre"`
 	Detalles   string `json:"detalles"`
 	Telefono   string `json:"telefono"`
+	Foto       string `json:"foto"`
 	Suspendido bool   `json:"suspendido"`
 }
 
@@ -114,7 +115,7 @@ func AdminGetCompanies(c *gin.Context) {
 
 	// Realiza la consulta para obtener la información de las empresas con la suspensión
 	err = configs.DB.Table("empresa e").
-		Select("e.id_empresa, e.nombre, e.detalles, e.telefono, u.suspendido").
+		Select("e.id_empresa, e.nombre, e.detalles, e.telefono, e.foto, u.suspendido").
 		Joins("INNER JOIN usuario u ON e.id_empresa = u.usuario").
 		Scan(&empresas).Error
 
