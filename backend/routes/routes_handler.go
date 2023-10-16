@@ -58,12 +58,12 @@ func Routes(router *gin.Engine) {
 	admins := router.Group("api/admins")
 	admins.Use(middlewares.JwtAuthentication())
 
-	admins.GET("/students", controllers.GetStudents)
-	admins.GET("/companies", controllers.GetCompanies)
-	admins.POST("/suspend", controllers.SuspendAccount)
-	admins.DELETE("/delete/offers", controllers.DeleteOfferAdmin)
-	admins.POST("/delete/user", controllers.DeleteUsuario)
-	admins.DELETE("/postulation", controllers.DeletePostulation)
+	admins.GET("/students", controllers.AdminGetStudents)
+	admins.GET("/companies", controllers.AdminGetCompanies)
+	admins.POST("/suspend", controllers.AdminSuspendAccount)
+	admins.DELETE("/delete/offers", controllers.AdminDeleteOffer)
+	admins.POST("/delete/user", controllers.AdminDeleteUser)
+	admins.DELETE("/postulation", controllers.AdminDeletePostulation)
 
 	// Ofertas
 	offers := router.Group("api/offers")

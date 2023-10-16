@@ -161,13 +161,7 @@ func RoleFromToken(c *gin.Context) (string, error) {
 		return "", err
 	}
 
-	u, err := models.GetUserByUsername(username)
-
-	if err != nil {
-		return "", err
-	}
-
-	role, err := RoleFromUser(u)
+	role, err := RoleFromUser(models.Usuario{Usuario: username})
 
 	if err != nil {
 		return "", err
@@ -363,6 +357,12 @@ func GetUserDetails(c *gin.Context) {
 					Detalles: empresa.Detalles,
 				},
 			},
+		})
+	case "admin":
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "Admins cannot be viewed",
+			Data:    nil,
 		})
 	default:
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{

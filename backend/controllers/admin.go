@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -14,15 +15,50 @@ type EstudianteGetAdmin struct {
 	Nombre       string    `json:"nombre"`
 	Apellido     string    `json:"apellido"`
 	Nacimiento   time.Time `json:"nacimiento"`
+	Foto         string    `json:"foto"`
 	Suspendido   bool      `json:"suspendido"`
 }
 
-func GetStudents(c *gin.Context) {
+func isAdmin(c *gin.Context) (bool, error) {
+	role, err := RoleFromToken(c)
+
+	if err != nil {
+		return false, err
+	}
+
+	if role != "admin" {
+		return false, nil
+	}
+	fmt.Println("Es admin")
+	return true, nil
+}
+
+func AdminGetStudents(c *gin.Context) {
 	var estudiantes []EstudianteGetAdmin
 
+	privileges, err := isAdmin(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting privileges: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if !privileges {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "This user does not have administrative privileges",
+			Data:    nil,
+		})
+		return
+	}
+
 	// Realiza la consulta para obtener la información de los estudiantes con la suspensión
-	err := configs.DB.Table("estudiante e").
-		Select("e.id_estudiante, e.nombre, e.apellido, e.nacimiento, u.suspendido").
+	err = configs.DB.Table("estudiante e").
+		Select("e.id_estudiante, e.nombre, e.apellido, e.nacimiento, e.foto, u.suspendido").
 		Joins("INNER JOIN usuario u ON e.id_estudiante = u.usuario").
 		Scan(&estudiantes).Error
 
@@ -39,7 +75,7 @@ func GetStudents(c *gin.Context) {
 	messageMap := map[string]interface{}{"studets": estudiantes}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Students Retrieved Successfully",
 		Data:    messageMap,
 	})
@@ -53,18 +89,38 @@ type EmpresaGetAdmin struct {
 	Suspendido bool   `json:"suspendido"`
 }
 
-func GetCompanies(c *gin.Context) {
+func AdminGetCompanies(c *gin.Context) {
 	var empresas []EmpresaGetAdmin
 
+	privileges, err := isAdmin(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting privileges: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if !privileges {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "This user does not have administrative privileges",
+			Data:    nil,
+		})
+		return
+	}
+
 	// Realiza la consulta para obtener la información de las empresas con la suspensión
-	err := configs.DB.Table("empresa e").
+	err = configs.DB.Table("empresa e").
 		Select("e.id_empresa, e.nombre, e.detalles, e.telefono, u.suspendido").
 		Joins("INNER JOIN usuario u ON e.id_empresa = u.usuario").
 		Scan(&empresas).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "Error retrieving companies: " + err.Error(),
 			Data:    nil,
 		})
@@ -75,7 +131,7 @@ func GetCompanies(c *gin.Context) {
 	messageMap := map[string]interface{}{"companies": empresas}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Companies Retrieved Successfully",
 		Data:    messageMap,
 	})
@@ -86,24 +142,64 @@ type SuspendAccountInput struct {
 	Suspender bool   `json:"suspender"` // True para suspender, false para reactivar
 }
 
-func SuspendAccount(c *gin.Context) {
+func AdminSuspendAccount(c *gin.Context) {
 	var input SuspendAccountInput
 
+	privileges, err := isAdmin(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting privileges: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if !privileges {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "This user does not have administrative privileges",
+			Data:    nil,
+		})
+		return
+	}
+
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON: " + err.Error(),
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	roleToBeSuspended, err := RoleFromUser(models.Usuario{Usuario: input.IdUsuario})
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting role from the user to be suspended. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if roleToBeSuspended == "admin" {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "Cannot suspend an admin account",
 			Data:    nil,
 		})
 		return
 	}
 
 	// Realiza la consulta para obtener la información de las empresas con la suspensión
-	err := configs.DB.Model(&models.Usuario{}).Where("usuario = ?", input.IdUsuario).Update("suspendido", input.Suspender).Error
+	err = configs.DB.Model(&models.Usuario{}).Where("usuario = ?", input.IdUsuario).Update("suspendido", input.Suspender).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "Error suspending account: " + err.Error(),
 			Data:    nil,
 		})
@@ -112,7 +208,7 @@ func SuspendAccount(c *gin.Context) {
 
 	if input.Suspender {
 		c.JSON(http.StatusOK, responses.StandardResponse{
-			Status:  200,
+			Status:  http.StatusOK,
 			Message: "Account Suspended Successfully",
 			Data:    nil,
 		})
@@ -120,7 +216,7 @@ func SuspendAccount(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Account Reactivated Successfully",
 		Data:    nil,
 	})
@@ -136,64 +232,148 @@ type Offer struct {
 	IdCarreras  []string `json:"id_carreras"`
 }
 
-func DeleteOfferAdmin(c *gin.Context) {
+func AdminDeleteOffer(c *gin.Context) {
 	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
 	idOferta := c.Query("id_oferta")
 
-	err := configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
+	privileges, err := isAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error deleting offer: " + err.Error(),
+			Status:  http.StatusBadRequest,
+			Message: "Error getting privileges: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if !privileges {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "This user does not have administrative privileges",
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error deleting offer. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Offer deleted successfully",
 		Data:    nil,
 	})
 
 }
 
-func DeletePostulation(c *gin.Context) {
+func AdminDeletePostulation(c *gin.Context) {
 	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
 	idPostulacion := c.Query("id_postulacion")
-	err := configs.DB.Where("id_postulacion = ?", idPostulacion).Delete(&models.Postulacion{}).Error
+
+	privileges, err := isAdmin(c)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
+			Message: "Error getting privileges. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if !privileges {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "This user does not have administrative privileges",
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Where("id_postulacion = ?", idPostulacion).Delete(&models.Postulacion{}).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error deleting postulation: " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Postulation deleted successfully",
 		Data:    nil,
 	})
 }
 
-func DeleteUsuario(c *gin.Context) {
+func AdminDeleteUser(c *gin.Context) {
 	idUsuario := c.Query("usuario")
 
-	err := configs.DB.Where("usuario = ?", idUsuario).Delete(&models.Usuario{}).Error
+	privileges, err := isAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error deleting user: " + err.Error(),
+			Status:  http.StatusBadRequest,
+			Message: "Error getting privileges. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if !privileges {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "This user does not have administrative privileges",
+			Data:    nil,
+		})
+		return
+	}
+
+	roleToBeDeleted, err := RoleFromUser(models.Usuario{Usuario: idUsuario})
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting role from the user to be deleted. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	fmt.Println(roleToBeDeleted)
+
+	if roleToBeDeleted == "admin" {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "Cannot delete an admin account",
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Where("usuario = ?", idUsuario).Delete(&models.Usuario{}).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error deleting user. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "User deleted successfully",
 		Data:    nil,
 	})
