@@ -51,23 +51,25 @@ const ProfileAdminStudent = () => {
       ) : (
         <div className={style.studentsContainer}>
           {studentsData.studets ? (
-            studentsData.studets.map((student) => (
-              <InfoStudent
-                key={student.id_estudiante}
-                nombre={student.nombre}
-                apellido={student.apellido}
-                pfp={
-                  student.foto === ""
-                    ? fotoPFP
-                    : `${API_URL}/api/uploads/${student.foto}`
-                }
-                onClick={() => {
-                  handleStudentClick(student.id_estudiante)
-                }}
-                showState
-                state={student.suspendido}
-              />
-            ))
+            studentsData.studets.map((student) => {
+              const pfpUrlEmisor =
+                student.foto === ""
+                  ? "/images/pfp.svg"
+                  : `${API_URL}/api/uploads/${student.foto}`
+              return (
+                <InfoStudent
+                  key={student.id_estudiante}
+                  nombre={student.nombre}
+                  apellido={student.apellido}
+                  pfp={pfpUrlEmisor}
+                  onClick={() => {
+                    handleStudentClick(student.id_estudiante)
+                  }}
+                  showState
+                  state={student.suspendido}
+                />
+              )
+            })
           ) : (
             <h1>No hay estudiantes</h1>
           )}
