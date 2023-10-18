@@ -1,6 +1,6 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/c109402a-e80a-430e-a75c-9d453e7cc61f/deploy-status)](https://app.netlify.com/sites/sage-palmier-936be2/deploys)
 # UniEmpleos
-Ingeniería de Software I: Proyecto Semestral.
+Ingeniería de Software I: Proyecto Semestral. Universidad del Valle de Guatemala
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
