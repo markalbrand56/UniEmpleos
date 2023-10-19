@@ -335,6 +335,28 @@ func AdminDeleteUser(c *gin.Context) {
 
 }
 
+type AdminDetailsStudent struct {
+	Correo      string    `json:"correo"`
+	Nombre      string    `json:"nombre"`
+	Apellido    string    `json:"apellido"`
+	Nacimiento  time.Time `json:"nacimiento"`
+	Telefono    string    `json:"telefono"`
+	Carrera     int       `json:"carrera"`
+	Semestre    int       `json:"semestre"`
+	CV          string    `json:"cv"`
+	Foto        string    `json:"foto"`
+	Universidad string    `json:"universidad"`
+	Suspendido  bool      `json:"suspendido"`
+}
+
+type AdminDetailsEnterprise struct {
+	Correo     string `json:"correo"`
+	Nombre     string `json:"nombre"`
+	Foto       string `json:"foto"`
+	Detalles   string `json:"detalles"`
+	Suspendido bool   `json:"suspendido"`
+}
+
 func AdminGetUserDetails(c *gin.Context) {
 	var input UserDetailsInput // Correo del usuario a buscar
 
@@ -358,9 +380,6 @@ func AdminGetUserDetails(c *gin.Context) {
 		return
 	}
 
-	var estudiante models.Estudiante
-	var empresa models.Empresa
-
 	userType, err := RoleFromUser(models.Usuario{Usuario: input.Correo})
 
 	if err != nil {
@@ -374,6 +393,19 @@ func AdminGetUserDetails(c *gin.Context) {
 
 	switch userType {
 	case "student":
+		var usuario models.Usuario
+		var estudiante models.Estudiante
+
+		err = configs.DB.Where("usuario = ?", input.Correo).First(&usuario).Error
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "User not found. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
 		err = configs.DB.Where("id_estudiante = ?", input.Correo).First(&estudiante).Error
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -388,7 +420,7 @@ func AdminGetUserDetails(c *gin.Context) {
 			Status:  http.StatusOK,
 			Message: "Student found",
 			Data: map[string]interface{}{
-				"student": PublicDetailsStudent{
+				"student": AdminDetailsStudent{
 					Correo:      estudiante.Correo,
 					Nombre:      estudiante.Nombre,
 					Apellido:    estudiante.Apellido,
@@ -399,10 +431,24 @@ func AdminGetUserDetails(c *gin.Context) {
 					CV:          estudiante.CV,
 					Foto:        estudiante.Foto,
 					Universidad: estudiante.Universidad,
+					Suspendido:  usuario.Suspendido,
 				},
 			},
 		})
 	case "enterprise":
+		var usuario models.Usuario
+		err = configs.DB.Where("usuario = ?", input.Correo).First(&usuario).Error
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "User not found. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		var empresa models.Empresa
 		err = configs.DB.Where("id_empresa = ?", input.Correo).First(&empresa).Error
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -417,11 +463,12 @@ func AdminGetUserDetails(c *gin.Context) {
 			Status:  http.StatusOK,
 			Message: "Enterprise found",
 			Data: map[string]interface{}{
-				"company": PublicDetailsEnterprise{
-					Correo:   empresa.Correo,
-					Nombre:   empresa.Nombre,
-					Foto:     empresa.Foto,
-					Detalles: empresa.Detalles,
+				"company": AdminDetailsEnterprise{
+					Correo:     empresa.Correo,
+					Nombre:     empresa.Nombre,
+					Foto:       empresa.Foto,
+					Detalles:   empresa.Detalles,
+					Suspendido: usuario.Suspendido,
 				},
 			},
 		})
