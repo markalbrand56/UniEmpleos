@@ -20,44 +20,36 @@ type EstudianteGetAdmin struct {
 	Suspendido   bool      `json:"suspendido"`
 }
 
-func isAdmin(c *gin.Context) (bool, error) {
+func isAdmin(c *gin.Context) error {
+	// Solo retorna un error si el usuario no es un administrador
 	role, err := RoleFromToken(c)
 
 	if err != nil {
-		return false, err
+		return fmt.Errorf("error getting role from token: %s", err.Error())
 	}
 
 	if role != "admin" {
 		user, err := utils.ExtractTokenUsername(c)
 
 		if err != nil {
-			return false, err
+			return fmt.Errorf("error getting username from token: %s", err.Error())
 		}
 
-		return false, fmt.Errorf("user '%s' is not an admin", user)
+		return fmt.Errorf("user '%s' is not an admin", user)
 	}
 	fmt.Println("Es admin")
-	return true, nil
+	return nil
 }
 
 func AdminGetStudents(c *gin.Context) {
 	var estudiantes []EstudianteGetAdmin
 
-	privileges, err := isAdmin(c)
+	err := isAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Error getting privileges: " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	if !privileges {
-		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-			Status:  http.StatusUnauthorized,
-			Message: "This user does not have administrative privileges",
 			Data:    nil,
 		})
 		return
@@ -100,21 +92,12 @@ type EmpresaGetAdmin struct {
 func AdminGetCompanies(c *gin.Context) {
 	var empresas []EmpresaGetAdmin
 
-	privileges, err := isAdmin(c)
+	err := isAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Error getting privileges: " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	if !privileges {
-		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-			Status:  http.StatusUnauthorized,
-			Message: "This user does not have administrative privileges",
 			Data:    nil,
 		})
 		return
@@ -153,21 +136,12 @@ type SuspendAccountInput struct {
 func AdminSuspendAccount(c *gin.Context) {
 	var input SuspendAccountInput
 
-	privileges, err := isAdmin(c)
+	err := isAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Error getting privileges: " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	if !privileges {
-		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-			Status:  http.StatusUnauthorized,
-			Message: "This user does not have administrative privileges",
 			Data:    nil,
 		})
 		return
@@ -244,21 +218,12 @@ func AdminDeleteOffer(c *gin.Context) {
 	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
 	idOferta := c.Query("id_oferta")
 
-	privileges, err := isAdmin(c)
+	err := isAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Error getting privileges: " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	if !privileges {
-		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-			Status:  http.StatusUnauthorized,
-			Message: "This user does not have administrative privileges",
 			Data:    nil,
 		})
 		return
@@ -287,21 +252,12 @@ func AdminDeletePostulation(c *gin.Context) {
 	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
 	idPostulacion := c.Query("id_postulacion")
 
-	privileges, err := isAdmin(c)
+	err := isAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Error getting privileges. " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	if !privileges {
-		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-			Status:  http.StatusUnauthorized,
-			Message: "This user does not have administrative privileges",
 			Data:    nil,
 		})
 		return
@@ -327,21 +283,12 @@ func AdminDeletePostulation(c *gin.Context) {
 func AdminDeleteUser(c *gin.Context) {
 	idUsuario := c.Query("usuario")
 
-	privileges, err := isAdmin(c)
+	err := isAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Error getting privileges. " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	if !privileges {
-		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-			Status:  http.StatusUnauthorized,
-			Message: "This user does not have administrative privileges",
 			Data:    nil,
 		})
 		return
@@ -400,21 +347,12 @@ func AdminGetUserDetails(c *gin.Context) {
 		return
 	}
 
-	privileges, err := isAdmin(c)
+	err := isAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Error getting privileges. " + err.Error(),
-			Data:    nil,
-		})
-		return
-	}
-
-	if !privileges {
-		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-			Status:  http.StatusUnauthorized,
-			Message: "This user does not have administrative privileges",
 			Data:    nil,
 		})
 		return
