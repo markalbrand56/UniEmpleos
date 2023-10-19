@@ -31,4 +31,8 @@ export default createRouter([
     (id) => ({ page: "adminShowPostulationDetails", props: { id } }),
   ],
   ["/profileadminstudent", () => ({ page: "adminStudent" })],
+  [
+    "/publicprofileadminstudent/*",
+    (id) => ({ page: "publicprofileadminstudent", props: { id } }),
+  ],
 ])

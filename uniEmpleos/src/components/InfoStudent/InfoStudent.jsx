@@ -26,9 +26,9 @@ const InfoStudent = ({
             <div className={style.stateContainer}>
               <span>Estado:</span>
               <span
-                style={state ? { color: "#FF0000" } : { color: "#00FF00" }}
+                style={state ? { color: "#FF0000" } : { color: "#000" }}
               >
-                {`${state}`}
+                {state ? "Suspendido" : "Activo"}
               </span>
             </div>
           )}

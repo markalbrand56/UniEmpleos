@@ -7,6 +7,7 @@ import Popup from "../../components/Popup/Popup"
 import Loader from "../../components/Loader/Loader"
 import fotoPFP from "/images/pfp.svg"
 import API_URL from "../../api"
+import { navigate } from "../../store"
 
 const ProfileAdminStudent = () => {
   const students = useApi()
@@ -29,7 +30,7 @@ const ProfileAdminStudent = () => {
     setLoading(false)
   }
   const handleStudentClick = (e) => {
-    console.log(e)
+    navigate(`/publicProfileAdminStudent/${e}`)
   }
 
   useEffect(() => {
