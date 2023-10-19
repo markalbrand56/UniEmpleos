@@ -850,3 +850,54 @@ Query param
     "data": null
 }
 ```
+
+### [POST] api/admin/details
+Obtener los detalles de administrador de un usuario, dado su correo
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "correo": "string"
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Enterprise found",
+    "data": {
+        "company": {
+            "correo": "empresa@prueba.com",
+            "nombre": "Empresa de Prueba",
+            "foto": "empresa_8900995120.jpg",
+            "detalles": "Detalles de Prueba",
+            "suspendido": false
+        }
+    }
+}
+```
+
+``` json
+{
+    "status": 200,
+    "message": "Student found",
+    "data": {
+        "student": {
+            "correo": "estudiante@prueba.com",
+            "nombre": "Estudiante Actualizado",
+            "apellido": "Prueba",
+            "nacimiento": "2002-02-02T00:00:00Z",
+            "telefono": "12345678",
+            "carrera": 1,
+            "semestre": 4,
+            "cv": "",
+            "foto": "",
+            "universidad": "Universidad Del Valle de Guatemala",
+            "suspendido": false
+        }
+    }
+}
+```

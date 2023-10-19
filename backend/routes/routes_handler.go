@@ -64,6 +64,7 @@ func Routes(router *gin.Engine) {
 	admins.DELETE("/delete/offers", controllers.AdminDeleteOffer)
 	admins.POST("/delete/user", controllers.AdminDeleteUser)
 	admins.DELETE("/postulation", controllers.AdminDeletePostulation)
+	admins.POST("/details", controllers.AdminGetUserDetails)
 
 	// Ofertas
 	offers := router.Group("api/offers")
