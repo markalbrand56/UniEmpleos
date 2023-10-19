@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"backend/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -27,7 +28,13 @@ func isAdmin(c *gin.Context) (bool, error) {
 	}
 
 	if role != "admin" {
-		return false, nil
+		user, err := utils.ExtractTokenUsername(c)
+
+		if err != nil {
+			return false, err
+		}
+
+		return false, fmt.Errorf("user '%s' is not an admin", user)
 	}
 	fmt.Println("Es admin")
 	return true, nil
@@ -379,4 +386,118 @@ func AdminDeleteUser(c *gin.Context) {
 		Data:    nil,
 	})
 
+}
+
+func AdminGetUserDetails(c *gin.Context) {
+	var input UserDetailsInput // Correo del usuario a buscar
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	privileges, err := isAdmin(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting privileges. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if !privileges {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "This user does not have administrative privileges",
+			Data:    nil,
+		})
+		return
+	}
+
+	var estudiante models.Estudiante
+	var empresa models.Empresa
+
+	userType, err := RoleFromUser(models.Usuario{Usuario: input.Correo})
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "User not found. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	switch userType {
+	case "student":
+		err = configs.DB.Where("id_estudiante = ?", input.Correo).First(&estudiante).Error
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "Student not found. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  http.StatusOK,
+			Message: "Student found",
+			Data: map[string]interface{}{
+				"student": PublicDetailsStudent{
+					Correo:      estudiante.Correo,
+					Nombre:      estudiante.Nombre,
+					Apellido:    estudiante.Apellido,
+					Nacimiento:  estudiante.Nacimiento,
+					Telefono:    estudiante.Telefono,
+					Carrera:     estudiante.Carrera,
+					Semestre:    estudiante.Semestre,
+					CV:          estudiante.CV,
+					Foto:        estudiante.Foto,
+					Universidad: estudiante.Universidad,
+				},
+			},
+		})
+	case "enterprise":
+		err = configs.DB.Where("id_empresa = ?", input.Correo).First(&empresa).Error
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "Enterprise not found. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  http.StatusOK,
+			Message: "Enterprise found",
+			Data: map[string]interface{}{
+				"company": PublicDetailsEnterprise{
+					Correo:   empresa.Correo,
+					Nombre:   empresa.Nombre,
+					Foto:     empresa.Foto,
+					Detalles: empresa.Detalles,
+				},
+			},
+		})
+	case "admin":
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "Admins cannot be viewed",
+			Data:    nil,
+		})
+	default:
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "User not found. " + err.Error(),
+			Data:    nil,
+		})
+	}
 }
