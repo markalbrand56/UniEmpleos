@@ -23,6 +23,11 @@
     cursor: pointer;
     border-radius: 5px;
     border: 2px solid #ccc;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-height: 2;
 }
 
 .UploaderInput {

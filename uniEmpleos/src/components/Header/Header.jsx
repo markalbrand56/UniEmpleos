@@ -69,9 +69,8 @@ export const Header = () => {
         return (
           <div className="actions">
             <div className="actionlinks">
-              <a href="/profile">Perfil</a>
-              <a href="/profileadmin">Vacantes</a>
-              <a href="/postulantes">Postulantes</a>
+              <a href="/profileadmin">Empresas</a>
+              <a href="/profileadminstudent">Estudiantes</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
               <LuLogOut size={30} style={{ color: "#000" }} />

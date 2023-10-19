@@ -19,6 +19,8 @@ import OfferDetails from "./OfferDetails/OfferDetails"
 import PostulantesPage from "./PostulantesPage/PostulantesPage"
 import PublicProfile from "./PublicProfile/PublicProfile"
 import PrincipalAdmin from "./PricipalAdmin/PrincipalAdmin"
+import AdminShowPostulationDetails from "./AdminShowPostulationDetails/AdminShowPostulationDetails"
+import ProfileAdminStudent from "./AdminStudent/AdminStudent"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
@@ -78,6 +80,12 @@ const Page = () => {
       break
     case "publicprofile":
       Component = <PublicProfile correo={route.match.props.correo} />
+      break
+    case "adminShowPostulationDetails":
+      Component = <AdminShowPostulationDetails id={route.match.props.id} />
+      break
+    case "adminStudent":
+      Component = <ProfileAdminStudent />
       break
     default:
       Component = <h1>404 Error</h1>

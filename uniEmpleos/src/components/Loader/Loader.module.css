@@ -1,0 +1,35 @@
+.loader {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 5px;
+  margin: 50px;
+}
+
+.loader__bar {
+  display: inline-block;
+  width: 15%;
+  height: 30%;
+  background-color: #000;
+  opacity: .5;
+  border-radius: 10px;
+  animation: scale-up 1000ms
+  var(--d) linear infinite;
+}
+
+.loader__bar:nth-child(even) {
+  height: 70%;
+}
+
+.loader__bar:nth-child(3) {
+  height: 100%;
+}
+
+@keyframes scale-up {
+  25% {
+    opacity: 1;
+    scale: 1 1.5;
+  }
+  50% {
+    scale: 1;
+  }
+}

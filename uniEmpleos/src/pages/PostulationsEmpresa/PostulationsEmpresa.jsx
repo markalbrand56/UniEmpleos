@@ -8,6 +8,7 @@ import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
+import Loader from "../../components/Loader/Loader"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -30,15 +31,18 @@ const PostulationsEmpresa = () => {
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typeError, setTypeError] = useState(1)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (api.data) {
       const { offers } = api.data
       setData(offers)
     }
+    setLoading(false)
   }, [api.data])
 
   useEffect(() => {
+    setLoading(true)
     api.handleRequest("POST", "/offers/company", {
       id_empresa: user.id_user,
     })
@@ -72,17 +76,20 @@ const PostulationsEmpresa = () => {
 
   return (
     <div className={styles.containePostulation}>
-      <Header userperson="company" />
+      <Header />
       <Popup
         message={error}
         status={warning}
         style={typeError}
         close={() => setWarning(false)}
       />
-      {api.data ? (
+      {loading ? (
+        <Loader size={100} />
+      ) : dataa.length > 0 ? (
         <div className={styles.containerinfoprincipal}>
           {dataa.map((postulation) => (
             <InfoTab
+              key={postulation.id_oferta}
               title={postulation.puesto}
               area={postulation.nombre_carreras}
               salary={`Q.${postulation.salario}.00`}
@@ -99,7 +106,7 @@ const PostulationsEmpresa = () => {
         </div>
       ) : (
         <div className={styles.containerinfomain}>
-          <h1>No tiene niguna oferta activa</h1>
+          <h1 style={{color: "#000"}}>No tiene niguna oferta activa</h1>
         </div>
       )}
     </div>

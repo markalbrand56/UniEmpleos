@@ -26,4 +26,9 @@ export default createRouter([
     "/publicprofile/*",
     (correo) => ({ page: "publicprofile", props: { correo } }),
   ],
+  [
+    "/adminSPD/*",
+    (id) => ({ page: "adminShowPostulationDetails", props: { id } }),
+  ],
+  ["/profileadminstudent", () => ({ page: "adminStudent" })],
 ])

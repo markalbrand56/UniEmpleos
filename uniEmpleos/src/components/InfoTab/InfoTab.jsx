@@ -33,7 +33,7 @@ const InfoTab = ({
       <div className={styles.button}>
         <Button label={labelbutton} onClick={onClick} />
         {verPostulantes && (
-          <Button label="Ver postulantes" onClick={verPostulantes}backgroundColor={"#a08ae5"}/>
+          <Button label="Ver postulantes" onClick={verPostulantes} backgroundColor={"#a08ae5"}/>
         )}
       </div>
     </div>
@@ -42,9 +42,9 @@ const InfoTab = ({
 
 InfoTab.propTypes = {
   title: PropTypes.string.isRequired,
-  area: PropTypes.string.isRequired,
+  area: PropTypes.string,
   salary: PropTypes.string.isRequired,
-  company: PropTypes.string.isRequired,
+  company: PropTypes.string,
   labelbutton: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   verPostulantes: PropTypes.func.isRequired,

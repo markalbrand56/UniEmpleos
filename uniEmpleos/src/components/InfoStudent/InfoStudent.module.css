@@ -5,6 +5,7 @@
   height: 100px;
   padding: 10px;
   animation: aparecer 0.5s ease;
+  justify-content: space-evenly;
 }
 
 @keyframes aparecer {
@@ -20,7 +21,7 @@
 
 .button {
   display: flex;
-  width: 100%;
+  width: calc(100% - 20px);
   height: 100%;
   justify-content: start;
   align-items: center;
@@ -29,7 +30,7 @@
   background-color: #8c6fd454;
   gap: 20px;
   border-radius: 10px;
-  padding: 0;
+  padding: 0 10px;
 }
 
 .button:hover {
@@ -62,7 +63,7 @@
 
 .infoContainer {
   width: calc(75% - 20px);
-  height: 80%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -83,4 +84,25 @@
   font-weight: 400;
   color: #333333;
   text-align: left;
+}
+
+.stateContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+@media (max-width: 767px) {
+  .mainContainer {
+    width: calc(100% - 20px);
+    height: 150px;
+  }
+
+  .pfpContainer {
+    width: calc(30% - 20px);
+  }
+
+  .infoContainer {
+    width: calc(70% - 20px);
+  }
 }

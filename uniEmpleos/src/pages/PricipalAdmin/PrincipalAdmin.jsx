@@ -9,6 +9,7 @@ import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
+import Loader from "../../components/Loader/Loader"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -25,12 +26,15 @@ const PrincipalAdmin = () => {
 
   const { user } = useStoreon("user")
   const api = useApi()
+  const obtainPostulantes = useApi()
   const [dataa, setData] = useState([])
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typeError, setTypeError] = useState(1)
+  const [loading, setLoading] = useState(false)
 
   const obtenerPreviews = async () => {
+    setLoading(true)
     const datos = await api.handleRequest("GET", "/postulations/previews", {
       id_empresa: user.id_user,
     })
@@ -47,6 +51,29 @@ const PrincipalAdmin = () => {
       setError("Ups, algo salio mal al obtener las ofertas")
       setWarning(true)
     }
+    setLoading(false)
+  }
+
+  const handleVerPostulantes = async (id) => {
+    const datos = await obtainPostulantes.handleRequest(
+      "POST",
+      "/offers/applicants",
+      {
+        id_oferta: parseInt(id, 10),
+      }
+    )
+    console.log(datos)
+    if (datos.data) {
+      navigate(`/postulantes/${id}`)
+    } else {
+      setTypeError(2)
+      setError("La oferta no tiene postulantes")
+      setWarning(true)
+    }
+  }
+
+  const hadleVerMas = (id) => {
+    navigate(`/adminSPD/${id}`)
   }
 
   useEffect(() => {
@@ -54,7 +81,7 @@ const PrincipalAdmin = () => {
   }, [])
 
   return (
-    <div className={styles.containePostulation}>
+    <div className={styles.mainContainer}>
       <Header userperson="company" />
       <Popup
         message={error}
@@ -62,7 +89,11 @@ const PrincipalAdmin = () => {
         style={typeError}
         close={() => setWarning(false)}
       />
-      {api.data ? (
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <Loader size={100} />
+        </div>
+      ) : api.data ? (
         <div className={styles.containerinfoprincipal}>
           {dataa.map((postulation) => (
             <InfoTab
@@ -71,6 +102,12 @@ const PrincipalAdmin = () => {
               salary={`Q.${postulation.salario}.00`}
               company={postulation.nombre_empresa}
               labelbutton="Ver más"
+              onClick={() => {
+                hadleVerMas(postulation.id_oferta)
+              }}
+              verPostulantes={() => {
+                handleVerPostulantes(postulation.id_oferta)
+              }}
             />
           ))}
         </div>
