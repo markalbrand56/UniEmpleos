@@ -16,7 +16,8 @@ func Routes(router *gin.Engine) {
 	public.GET("/postulations/previews", controllers.GetOfferPreviews)
 
 	// Rutas de archivos
-	public.GET("/uploads/:filename", controllers.GetFile())
+	public.GET("/uploads/:filename", controllers.GetProfilePicture())
+	public.GET("cv/:filename", controllers.GetCV())
 
 	// Rutas protegidas
 	// Mensajes
@@ -41,6 +42,7 @@ func Routes(router *gin.Engine) {
 	students.Use(middlewares.JwtAuthentication())
 
 	students.PUT("/update", controllers.UpdateStudent)
+	students.PUT("/update/cv", controllers.UpdateCV())
 
 	// Carreras
 	careers := router.Group("api/careers")
