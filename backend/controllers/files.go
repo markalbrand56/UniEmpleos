@@ -108,7 +108,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		}
 
 		// Eliminar el archivo local. Ya no es necesario, ya que se subió al servidor de archivos
-		fmt.Println("Deleting file: " + dst)
+		//fmt.Println("Deleting file: " + dst)
 		if err := os.Remove(dst); err != nil {
 			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
 				Status:  http.StatusInternalServerError,
