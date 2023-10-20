@@ -65,7 +65,7 @@ const AdminShowPostulationDetails = ({ id }) => {
     }
   }, [quill, detalles])
 
-  const onclickAccept = async () => {
+  const onclickAccept = async (e) => {
     const variableApi = `/admins/delete/offers?id_oferta=${id}`
     const apiResponse = await api.handleRequest("DELETE", variableApi)
     if (apiResponse.status === 200) {
@@ -73,7 +73,7 @@ const AdminShowPostulationDetails = ({ id }) => {
       setError("Oferta eliminada con éxito")
       setWarning(true)
       setTimeout(() => {
-        navigate("/profileadmin")
+        navigate(`/publicProfileAdminEnterprise/${e}`)
       }, 5000)
     } else {
       setTypeError(1)
@@ -82,8 +82,8 @@ const AdminShowPostulationDetails = ({ id }) => {
     }
   }
 
-  const handleReturn = () => {
-    navigate("/profileadmin")
+  const handleReturn = (e) => {
+    navigate(`/publicProfileAdminEnterprise/${e}`)
   }
 
   return (
@@ -100,7 +100,9 @@ const AdminShowPostulationDetails = ({ id }) => {
             <div className={style.titleContainer}>
               <h4>{data.offer.puesto}</h4>
               <button
-                onClick={onclickAccept}
+                onClick={() => {
+                  onclickAccept(data.company.correo)
+                }}
                 type="button"
                 className={style.deleteButton}
               >
@@ -132,7 +134,9 @@ const AdminShowPostulationDetails = ({ id }) => {
             <Button
               label="Regresar"
               backgroundColor="transparet"
-              onClick={handleReturn}
+              onClick={() => {
+                handleReturn(data.company.correo)
+              }}
             />
           </div>
         </div>

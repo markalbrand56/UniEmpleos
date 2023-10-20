@@ -35,4 +35,8 @@ export default createRouter([
     "/publicprofileadminstudent/*",
     (id) => ({ page: "publicprofileadminstudent", props: { id } }),
   ],
+  [
+    "/publicprofileadminenterprise/*",
+    (id) => ({ page: "publicprofileadminenterprise", props: { id } }),
+  ],
 ])

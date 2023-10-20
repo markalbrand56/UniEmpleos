@@ -19,11 +19,10 @@ const PublicProfileAdminStudent = ({ id }) => {
   const [typeError, setTypeError] = useState(1)
   const [postulations, setPostulations] = useState([])
   const [studentInfo, setStudentInfo] = useState([])
-  const [loadingInfoStudent, setLoadingInfoStudent] = useState(false)
-  const [loadingPostulations, setLoadingPostulations] = useState(false)
+  const [loadingInfoStudent, setLoadingInfoStudent] = useState(true)
+  const [loadingPostulations, setLoadingPostulations] = useState(true)
 
   const obtainStudentInfo = async () => {
-    setLoadingInfoStudent(true)
     const data = await studentInfoApi.handleRequest("POST", "/admins/details", {
       correo: id,
     })
@@ -88,6 +87,9 @@ const PublicProfileAdminStudent = ({ id }) => {
   }
 
   const handleSuspended = () => {
+    setTimeout(() => {
+      obtainStudentInfo()
+    }, 5000)
     suspendedStudent()
   }
 
@@ -102,8 +104,6 @@ const PublicProfileAdminStudent = ({ id }) => {
   useEffect(() => {
     obtainStudentInfo()
   }, [])
-
-  console.log(studentInfo)
 
   return (
     <div className={style.mainContainer}>
@@ -132,7 +132,11 @@ const PublicProfileAdminStudent = ({ id }) => {
             name={studentInfo.nombre}
             lastName={studentInfo.apellido}
             mail={studentInfo.correo}
-            pfp={studentInfo.foto === "" ? "/images/pfp.svg" : `${API_URL}/api/uploads/${studentInfo.foto}`}
+            pfp={
+              studentInfo.foto === ""
+                ? "/images/pfp.svg"
+                : `${API_URL}/api/uploads/${studentInfo.foto}`
+            }
             suspended={studentInfo.suspendido}
             funcSuspended={handleSuspended}
             funcDelete={handleDelete}
