@@ -37,7 +37,6 @@ const ProfileAdminStudent = () => {
     obtainStudents()
   }, [])
 
-  console.log(studentsData.studets)
   return (
     <div className={style.mainContainer}>
       <Header />
