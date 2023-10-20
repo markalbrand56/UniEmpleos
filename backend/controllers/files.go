@@ -54,7 +54,6 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		file.Filename = newFileName
 
 		dst := "./uploads/" + newFileName
-		fmt.Println("File: " + dst)
 
 		// Eliminar archivos antiguos con el mismo prefijo de usuario
 		if err := deleteFilesWithPrefix("./uploads/", user_stripped); err != nil {
@@ -103,6 +102,17 @@ func UpdateProfilePicture() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
 				Status:  http.StatusInternalServerError,
 				Message: "Failed to upload file to server: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		// Eliminar el archivo local. Ya no es necesario, ya que se subió al servidor de archivos
+		fmt.Println("Deleting file: " + dst)
+		if err := os.Remove(dst); err != nil {
+			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
+				Status:  http.StatusInternalServerError,
+				Message: "Failed to delete local file: " + err.Error(),
 				Data:    nil,
 			})
 			return
@@ -216,6 +226,16 @@ func UpdateCV() gin.HandlerFunc {
 			return
 		}
 
+		// Eliminar el archivo local. Ya no es necesario, ya que se subió al servidor de archivos
+		if err := os.Remove(dst); err != nil {
+			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
+				Status:  http.StatusInternalServerError,
+				Message: "Failed to delete local file: " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
 		c.JSON(http.StatusOK, responses.StandardResponse{
 			Status:  http.StatusOK,
 			Message: "File uploaded successfully",
@@ -233,7 +253,7 @@ func deleteFilesWithPrefix(directory, prefix string) error {
 	}
 
 	for _, file := range files {
-		fmt.Println(file.Name())
+		//fmt.Println(file.Name())
 		if strings.HasPrefix(file.Name(), prefix) {
 			filePath := filepath.Join(directory, file.Name())
 			fmt.Println("Deleting file: " + filePath)

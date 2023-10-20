@@ -12,6 +12,10 @@ func main() {
 		panic(err)
 	}
 
+	if _, err := configs.CreateDirIfNotExist("./uploads/pdf"); err != nil {
+		panic(err)
+	}
+
 	router := gin.Default()
 
 	router.Use(CORS())
