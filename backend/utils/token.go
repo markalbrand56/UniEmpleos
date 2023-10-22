@@ -13,8 +13,6 @@ import (
 func GenerateToken(username string, userType string) (string, error) {
 	tokenLifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
 
-	fmt.Println("tokenLifespan: ", tokenLifespan)
-
 	if err != nil {
 		return "", err
 	}

@@ -901,3 +901,148 @@ Obtener los detalles de administrador de un usuario, dado su correo
     }
 }
 ```
+---
+
+# File Server 
+## Fotos de perfil
+
+### [PUT] /api/users/upload
+Sube una foto de perfil de un usuario. El usuario se obtiene del token.
+El nombre del archivo no es relevante, usando el usuario del token se genera un nombre único para el archivo.
+> **Note**
+> Auth required
+
+Header
+``` json
+{
+    "Content-Type": "multipart/form-data"
+}
+```
+
+Response
+``` json
+{
+    "status": 200,
+    "message": "File uploaded successfully",
+    "data": {
+        "filename": "alb21004_1504802402.jpg"
+    }
+}
+```
+
+### [GET] /api/uploads/:filename
+Devuelve una foto de perfil de un usuario. El nombre del archivo se obtiene en el **query parameter** de la url.
+> **Note**
+> Auth required
+
+Esto retorna directamente la imagen, no un json. Se puede usar en un tag img de html.
+
+### CÓDIGO DE DEMOSTRACIÓN
+``` html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFP Upload Test</title>
+</head>
+<body>
+    <h1>PFP Upload Test</h1>
+
+    <!-- Formulario para cargar archivos -->
+    <form id="uploadForm" enctype="multipart/form-data">
+        <!-- Campo oculto para el token de portador -->        
+        <label for="file">Selecciona un archivo:</label>
+        <input type="file" name="file" id="file" accept=".jpg, .jpeg, .png">
+        <br>
+        <button type="button" onclick="uploadFile()">Subir Archivo</button>
+    </form>
+
+    <hr>
+
+    <!-- Formulario para obtener la URL -->
+    <h2>Obtener URL del Archivo</h2>
+    <form action="#" method="GET">
+        <label for="fileUrl">Nombre del Archivo:</label>
+        <input type="text" name="fileUrl" id="fileUrl" placeholder="Ingresa la URL del archivo">
+        <button type="button" onclick="displayImage()">Obtener Imagen</button>
+    </form>
+
+    <!-- Imagen para mostrar la URL obtenida -->
+    <div id="imageContainer">
+        <p id="url"></p>
+        <img id="image" src="" alt="Imagen Cargada">
+    </div>
+
+    <script>
+        const local = "http://localhost:8080/api";
+        const api = "https://whole-letisha-markalbrand56.koyeb.app/api";
+        // Función para enviar el formulario con el token en los encabezados
+        function uploadFile() {
+            const form = document.getElementById('uploadForm');
+    
+            // Crear un objeto FormData para el formulario
+            const formData = new FormData(form);
+    
+            // Agregar el archivo al objeto FormData
+            const fileInput = document.getElementById('file');
+            formData.append('file', fileInput.files[0]);
+    
+            // Obtener el token de portador
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2OTgwMTkxMDYsInVzZXJUeXBlIjoic3R1ZGVudCIsInVzZXJuYW1lIjoiYWxiMjEwMDRAdXZnLmVkdS5ndCJ9.B9D0N_9t5nvHK9HZO4qdR85f24TcbTBjXXMb7eyM9ao";
+    
+            // Configurar los encabezados de la solicitud con el token de portador
+            const headers = new Headers();
+            headers.append('Authorization', `Bearer ${token}`);
+    
+            // Crear una solicitud PUT personalizada
+            const xhr = new XMLHttpRequest();
+
+            const localUrl = local + "/users/upload";
+            const apiUrl = api + "/users/upload";
+            
+            xhr.open('PUT', apiUrl, true);
+    
+            // Agregar los encabezados a la solicitud
+            headers.forEach((value, name) => {
+                xhr.setRequestHeader(name, value);
+            });
+    
+            // Enviar el objeto FormData como cuerpo de la solicitud
+            xhr.send(formData);
+    
+            // Manejar la respuesta si es necesario
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('Archivo subido exitosamente.');
+                    console.log(xhr.responseText);
+
+                    const response = JSON.parse(xhr.responseText);
+                    const urlContainer = document.getElementById('url');
+                    const filename = response.data.filename;
+                    
+                    urlContainer.innerHTML = filename;
+                } else {
+                    alert('Error al subir el archivo.');
+                    alert(xhr.responseText)
+                }
+            };
+        }
+
+        function displayImage() {
+            const url = document.getElementById('fileUrl').value;
+            const imageContainer = document.getElementById('imageContainer');
+            const image = document.getElementById('image');
+            const urlContainer = document.getElementById('url');
+
+            const newUrl = api + "/uploads/" + url;
+
+            image.src = newUrl;
+            imageContainer.style.display = 'block';
+            
+            urlContainer.innerHTML = newUrl;
+        }
+    </script>
+</body>
+</html>
+```
