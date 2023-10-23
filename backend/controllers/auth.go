@@ -170,7 +170,7 @@ func RoleFromToken(c *gin.Context) (string, error) {
 	return role, nil
 }
 
-func CurrentUser(c *gin.Context) {
+func UserFromToken(c *gin.Context) {
 	username, err := utils.TokenExtractUsername(c)
 
 	if err != nil {

@@ -16,6 +16,17 @@ type CareerInput struct {
 func NewCareer(c *gin.Context) {
 	var input CareerInput
 
+	err := IsAdmin(c)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "Error getting privileges: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
@@ -30,7 +41,7 @@ func NewCareer(c *gin.Context) {
 		Descripcion: input.Descripcion,
 	}
 
-	err := configs.DB.Create(&carrera).Error
+	err = configs.DB.Create(&carrera).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
