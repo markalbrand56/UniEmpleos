@@ -155,7 +155,7 @@ func RoleFromUser(usuario models.Usuario) (string, error) {
 }
 
 func RoleFromToken(c *gin.Context) (string, error) {
-	username, err := utils.ExtractTokenUsername(c)
+	username, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
 		return "", err
@@ -171,7 +171,7 @@ func RoleFromToken(c *gin.Context) (string, error) {
 }
 
 func CurrentUser(c *gin.Context) {
-	username, err := utils.ExtractTokenUsername(c)
+	username, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{

@@ -210,7 +210,7 @@ func GetPostulactionFromStudent(c *gin.Context) {
 	var data map[string]interface{}
 
 	// obten el id del estudiante a partir del token.
-	idEstudiante, err := utils.ExtractTokenUsername(c)
+	idEstudiante, err := utils.TokenExtractUsername(c)
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
 			Status:  400,
@@ -252,7 +252,7 @@ func GetPostulactionFromStudent(c *gin.Context) {
 
 func RetirePostulation(c *gin.Context) {
 	input := c.Query("id_postulacion")
-	user, err := utils.ExtractTokenUsername(c)
+	user, err := utils.TokenExtractUsername(c)
 
 	if input == "" {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{

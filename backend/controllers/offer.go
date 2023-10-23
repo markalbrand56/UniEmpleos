@@ -425,7 +425,7 @@ func GetApplicants(c *gin.Context) {
 		return
 	}
 
-	tokenUsername, err := utils.ExtractTokenUsername(c)
+	tokenUsername, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{

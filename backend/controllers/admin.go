@@ -29,7 +29,7 @@ func isAdmin(c *gin.Context) error {
 	}
 
 	if role != "admin" {
-		user, err := utils.ExtractTokenUsername(c)
+		user, err := utils.TokenExtractUsername(c)
 
 		if err != nil {
 			return fmt.Errorf("error getting username from token: %s", err.Error())
