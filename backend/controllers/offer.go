@@ -120,7 +120,7 @@ type OfferUpdateInput struct {
 
 func UpdateOffer(c *gin.Context) {
 	var input OfferUpdateInput
-	var offer models.Oferta
+	var updatedOffer models.Oferta
 
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -172,14 +172,14 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
-	offer = models.Oferta{
+	updatedOffer = models.Oferta{
 		Puesto:      input.Puesto,
 		Descripcion: input.Descripcion,
 		Requisitos:  input.Requisitos,
 		Salario:     input.Salario,
 	}
 
-	err = configs.DB.Model(&offer).Where("id_oferta = ? AND id_empresa = ?", input.Id_Oferta, input.IDEmpresa).Updates(offer).Error
+	err = configs.DB.Model(&updatedOffer).Where("id_oferta = ? AND id_empresa = ?", input.Id_Oferta, input.IDEmpresa).Updates(updatedOffer).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
