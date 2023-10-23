@@ -6,7 +6,6 @@ import (
 	"backend/responses"
 	"backend/utils"
 	"database/sql"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -47,6 +46,26 @@ func NewOffer(c *gin.Context) {
 		return
 	}
 
+	user, err := utils.TokenExtractUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error extracting information from token: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if user != input.IDEmpresa {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The user in the token does not match the one in the request body",
+			Data:    nil,
+		})
+		return
+	}
+
 	offer := models.Oferta{
 		IDEmpresa:   input.IDEmpresa,
 		Puesto:      input.Puesto,
@@ -56,7 +75,7 @@ func NewOffer(c *gin.Context) {
 	}
 
 	var inserted AfterInsert
-	err := configs.DB.Raw("INSERT INTO oferta (id_empresa, puesto, descripcion, requisitos, salario) VALUES (?, ?, ?, ?, ?) RETURNING id_oferta, id_empresa, puesto, descripcion, requisitos, salario", offer.IDEmpresa, offer.Puesto, offer.Descripcion, offer.Requisitos, offer.Salario).Scan(&inserted).Error
+	err = configs.DB.Raw("INSERT INTO oferta (id_empresa, puesto, descripcion, requisitos, salario) VALUES (?, ?, ?, ?, ?) RETURNING id_oferta, id_empresa, puesto, descripcion, requisitos, salario", offer.IDEmpresa, offer.Puesto, offer.Descripcion, offer.Requisitos, offer.Salario).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -66,8 +85,6 @@ func NewOffer(c *gin.Context) {
 		})
 		return
 	}
-
-	fmt.Println("\ncarreras: ", input.IdCarreras)
 
 	// Insert into oferta_carrera table
 	for _, idCarrera := range input.IdCarreras {
@@ -85,7 +102,7 @@ func NewOffer(c *gin.Context) {
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  http.StatusOK,
-		Message: "Offer and oferta_carrera created successfully",
+		Message: "Offer created successfully",
 		Data:    nil,
 	})
 
@@ -114,15 +131,34 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
+	user, err := utils.TokenExtractUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error extracting information from token: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if user != input.IDEmpresa {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The user in the token does not match the one in the request body",
+			Data:    nil,
+		})
+		return
+	}
+
 	offer = models.Oferta{
-		IDEmpresa:   input.IDEmpresa,
 		Puesto:      input.Puesto,
 		Descripcion: input.Descripcion,
 		Requisitos:  input.Requisitos,
 		Salario:     input.Salario,
 	}
 
-	err := configs.DB.Model(&offer).Where("id_oferta = ?", input.Id_Oferta).Updates(offer).Error
+	err = configs.DB.Model(&offer).Where("id_oferta = ? AND id_empresa = ?", input.Id_Oferta, input.IDEmpresa).Updates(offer).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
