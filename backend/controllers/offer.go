@@ -142,6 +142,27 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
+	originalOffer := models.Oferta{}
+	err = configs.DB.Where("id_oferta = ? AND id_empresa = ?", input.Id_Oferta, input.IDEmpresa).First(&originalOffer).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting original offer: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if originalOffer.IDEmpresa != user {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The user in the token does not match the owner of the offer",
+			Data:    nil,
+		})
+		return
+	}
+
 	if user != input.IDEmpresa {
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
