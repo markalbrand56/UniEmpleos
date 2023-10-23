@@ -33,7 +33,7 @@ func Routes(router *gin.Engine) {
 	users := router.Group("api/users")
 	users.Use(middlewares.JwtAuthentication())
 
-	users.GET("/", controllers.UserFromToken)
+	users.GET("/", controllers.GetCurrentUserDetails)
 	users.POST("/details", controllers.GetUserDetails)
 	users.PUT("/upload", controllers.UpdateProfilePicture())
 
