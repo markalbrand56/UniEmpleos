@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"backend/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"net/http"
@@ -105,7 +106,6 @@ type EstudianteUpdateInput struct {
 	Telefono    string `json:"telefono"`
 	Carrera     int    `json:"carrera"`
 	Semestre    int    `json:"semestre"`
-	CV          string `json:"cv"`
 	Foto        string `json:"foto"`
 	Universidad string `json:"universidad"`
 }
@@ -122,6 +122,39 @@ func UpdateStudent(c *gin.Context) {
 		return
 	}
 
+	var originalStudent models.Estudiante
+	err := configs.DB.Where("id_estudiante = ?", input.Correo).First(&originalStudent).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Student '" + input.Correo + "' not found: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	user, err := utils.TokenExtractUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Could not retrieve info from token. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Se verifica que el usuario sea el mismo que el del estudiante
+	if user != input.Correo {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "User " + user + " is not authorized to update student " + input.Correo,
+			Data:    nil,
+		})
+		return
+	}
+
 	nacimiento, _ := time.Parse("2006-01-02", input.Nacimiento)
 
 	// Crear una instancia del modelo Estudiante con los datos actualizados
@@ -132,11 +165,10 @@ func UpdateStudent(c *gin.Context) {
 		Telefono:    input.Telefono,
 		Carrera:     input.Carrera,
 		Semestre:    input.Semestre,
-		CV:          input.CV,
 		Universidad: input.Universidad,
 	}
 
-	err := configs.DB.Model(&models.Estudiante{}).Where("id_estudiante = ?", input.Correo).Updates(updatedStudent).Error
+	err = configs.DB.Model(&models.Estudiante{}).Where("id_estudiante = ?", input.Correo).Updates(updatedStudent).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{

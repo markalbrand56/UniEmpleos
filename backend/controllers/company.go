@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"backend/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"net/http"
@@ -12,7 +13,6 @@ import (
 type EmpresaInput struct {
 	Nombre   string `json:"nombre"`
 	Detalles string `json:"detalles"`
-	Foto     string `json:"foto"`
 	Correo   string `json:"correo"`
 	Telefono string `json:"telefono"`
 	Contra   string `json:"contra"`
@@ -33,7 +33,6 @@ func NewCompany(c *gin.Context) {
 	e := models.Empresa{
 		IdEmpresa: input.Correo,
 		Nombre:    input.Nombre,
-		Foto:      input.Foto,
 		Detalles:  input.Detalles,
 		Correo:    input.Correo,
 		Telefono:  input.Telefono,
@@ -94,11 +93,31 @@ func UpdateCompanies(c *gin.Context) {
 		return
 	}
 
+	user, err := utils.TokenExtractUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Could not retrieve info from token. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Se verifica que el usuario sea el mismo que el de la empresa
+	if user != input.Correo {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "User " + user + " is not authorized to update company " + input.Correo,
+			Data:    nil,
+		})
+		return
+	}
+
 	// No se puede actualizar el correo/id de la empresa
-	err := configs.DB.Model(&models.Empresa{}).Where("id_empresa = ?", input.Correo).Updates(models.Empresa{
+	err = configs.DB.Model(&models.Empresa{}).Where("id_empresa = ?", input.Correo).Updates(models.Empresa{
 		Nombre:   input.Nombre,
 		Detalles: input.Detalles,
-		Foto:     input.Foto,
 		Telefono: input.Telefono,
 	}).Error
 

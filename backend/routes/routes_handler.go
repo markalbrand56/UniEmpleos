@@ -33,7 +33,7 @@ func Routes(router *gin.Engine) {
 	users := router.Group("api/users")
 	users.Use(middlewares.JwtAuthentication())
 
-	users.GET("/", controllers.CurrentUser)
+	users.GET("/", controllers.GetCurrentUserDetails)
 	users.POST("/details", controllers.GetUserDetails)
 	users.PUT("/upload", controllers.UpdateProfilePicture())
 
@@ -83,6 +83,6 @@ func Routes(router *gin.Engine) {
 	postulations := router.Group("api/postulations")
 	postulations.Use(middlewares.JwtAuthentication())
 	postulations.POST("/", controllers.NewPostulation)
-	postulations.GET("/getFromStudent", controllers.GetPostulactionFromStudent)
+	postulations.GET("/getFromStudent", controllers.GetPostulationFromStudent)
 	postulations.DELETE("/", controllers.RetirePostulation)
 }

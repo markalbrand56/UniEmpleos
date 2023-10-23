@@ -20,16 +20,16 @@ type EstudianteGetAdmin struct {
 	Suspendido   bool      `json:"suspendido"`
 }
 
-func isAdmin(c *gin.Context) error {
+func IsAdmin(c *gin.Context) error {
 	// Solo retorna un error si el usuario no es un administrador
-	role, err := RoleFromToken(c)
+	role, err := utils.TokenExtractRole(c)
 
 	if err != nil {
 		return fmt.Errorf("error getting role from token: %s", err.Error())
 	}
 
 	if role != "admin" {
-		user, err := utils.ExtractTokenUsername(c)
+		user, err := utils.TokenExtractUsername(c)
 
 		if err != nil {
 			return fmt.Errorf("error getting username from token: %s", err.Error())
@@ -44,7 +44,7 @@ func isAdmin(c *gin.Context) error {
 func AdminGetStudents(c *gin.Context) {
 	var estudiantes []EstudianteGetAdmin
 
-	err := isAdmin(c)
+	err := IsAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -92,7 +92,7 @@ type EmpresaGetAdmin struct {
 func AdminGetCompanies(c *gin.Context) {
 	var empresas []EmpresaGetAdmin
 
-	err := isAdmin(c)
+	err := IsAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -136,7 +136,7 @@ type SuspendAccountInput struct {
 func AdminSuspendAccount(c *gin.Context) {
 	var input SuspendAccountInput
 
-	err := isAdmin(c)
+	err := IsAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -218,7 +218,7 @@ func AdminDeleteOffer(c *gin.Context) {
 	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
 	idOferta := c.Query("id_oferta")
 
-	err := isAdmin(c)
+	err := IsAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -252,7 +252,7 @@ func AdminDeletePostulation(c *gin.Context) {
 	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
 	idPostulacion := c.Query("id_postulacion")
 
-	err := isAdmin(c)
+	err := IsAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -283,7 +283,7 @@ func AdminDeletePostulation(c *gin.Context) {
 func AdminDeleteUser(c *gin.Context) {
 	idUsuario := c.Query("usuario")
 
-	err := isAdmin(c)
+	err := IsAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -369,7 +369,7 @@ func AdminGetUserDetails(c *gin.Context) {
 		return
 	}
 
-	err := isAdmin(c)
+	err := IsAdmin(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{

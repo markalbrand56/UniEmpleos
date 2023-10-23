@@ -6,7 +6,6 @@ import (
 	"backend/responses"
 	"backend/utils"
 	"database/sql"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -47,6 +46,26 @@ func NewOffer(c *gin.Context) {
 		return
 	}
 
+	user, err := utils.TokenExtractUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error extracting information from token: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if user != input.IDEmpresa {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The user in the token does not match the one in the request body",
+			Data:    nil,
+		})
+		return
+	}
+
 	offer := models.Oferta{
 		IDEmpresa:   input.IDEmpresa,
 		Puesto:      input.Puesto,
@@ -56,7 +75,7 @@ func NewOffer(c *gin.Context) {
 	}
 
 	var inserted AfterInsert
-	err := configs.DB.Raw("INSERT INTO oferta (id_empresa, puesto, descripcion, requisitos, salario) VALUES (?, ?, ?, ?, ?) RETURNING id_oferta, id_empresa, puesto, descripcion, requisitos, salario", offer.IDEmpresa, offer.Puesto, offer.Descripcion, offer.Requisitos, offer.Salario).Scan(&inserted).Error
+	err = configs.DB.Raw("INSERT INTO oferta (id_empresa, puesto, descripcion, requisitos, salario) VALUES (?, ?, ?, ?, ?) RETURNING id_oferta, id_empresa, puesto, descripcion, requisitos, salario", offer.IDEmpresa, offer.Puesto, offer.Descripcion, offer.Requisitos, offer.Salario).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -66,8 +85,6 @@ func NewOffer(c *gin.Context) {
 		})
 		return
 	}
-
-	fmt.Println("\ncarreras: ", input.IdCarreras)
 
 	// Insert into oferta_carrera table
 	for _, idCarrera := range input.IdCarreras {
@@ -85,7 +102,7 @@ func NewOffer(c *gin.Context) {
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  http.StatusOK,
-		Message: "Offer and oferta_carrera created successfully",
+		Message: "Offer created successfully",
 		Data:    nil,
 	})
 
@@ -103,7 +120,7 @@ type OfferUpdateInput struct {
 
 func UpdateOffer(c *gin.Context) {
 	var input OfferUpdateInput
-	var offer models.Oferta
+	var updatedOffer models.Oferta
 
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -114,15 +131,55 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
-	offer = models.Oferta{
-		IDEmpresa:   input.IDEmpresa,
+	user, err := utils.TokenExtractUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error extracting information from token: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	originalOffer := models.Oferta{}
+	err = configs.DB.Where("id_oferta = ? AND id_empresa = ?", input.Id_Oferta, input.IDEmpresa).First(&originalOffer).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting original offer: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if originalOffer.IDEmpresa != user {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The user in the token does not match the owner of the offer",
+			Data:    nil,
+		})
+		return
+	}
+
+	if user != input.IDEmpresa {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The user in the token does not match the one in the request body",
+			Data:    nil,
+		})
+		return
+	}
+
+	updatedOffer = models.Oferta{
 		Puesto:      input.Puesto,
 		Descripcion: input.Descripcion,
 		Requisitos:  input.Requisitos,
 		Salario:     input.Salario,
 	}
 
-	err := configs.DB.Model(&offer).Where("id_oferta = ?", input.Id_Oferta).Updates(offer).Error
+	err = configs.DB.Model(&updatedOffer).Where("id_oferta = ? AND id_empresa = ?", input.Id_Oferta, input.IDEmpresa).Updates(updatedOffer).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -382,20 +439,40 @@ func DeleteOffer(c *gin.Context) {
 		return
 	}
 
-	// @mark, esto lo hace la base de datos con el ON DELETE CASCADE.
-	// Delete oferta_carrera
-	err := configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.OfertaCarrera{}).Error
+	user, err := utils.TokenExtractUsername(c)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
-			Message: "Error deleting oferta_carrera: " + err.Error(),
+			Message: "Error extracting information from token: " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	// Delete oferta
-	err = configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
+	// Verifica si el usuario es el dueño de la oferta
+	var offer models.Oferta
+	err = configs.DB.Where("id_oferta = ?", idOferta).First(&offer).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting offer: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if offer.IDEmpresa != user {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The user in the token does not match the owner of the offer",
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Where("id_oferta = ? AND id_empresa = ?", idOferta, user).Delete(&models.Oferta{}).Error
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
@@ -425,7 +502,7 @@ func GetApplicants(c *gin.Context) {
 		return
 	}
 
-	tokenUsername, err := utils.ExtractTokenUsername(c)
+	tokenUsername, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -438,12 +515,21 @@ func GetApplicants(c *gin.Context) {
 
 	// Verificación con el token para que no se pueda ver las postulaciones de otras empresas
 	var offer models.Oferta
-	err = configs.DB.Where("id_oferta = ? AND id_empresa = ?", input.IdOferta, tokenUsername).First(&offer).Error
+	err = configs.DB.Where("id_oferta = ?", input.IdOferta).First(&offer).Error
 
 	if err != nil {
+		c.JSON(http.StatusNotFound, responses.StandardResponse{
+			Status:  http.StatusNotFound,
+			Message: "Error getting offer. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if offer.IDEmpresa != tokenUsername {
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
-			Message: "Error verifying ownership of the offer. " + err.Error(),
+			Message: "The user in the token does not match the owner of the offer",
 			Data:    nil,
 		})
 		return

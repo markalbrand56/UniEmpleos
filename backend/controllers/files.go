@@ -17,7 +17,7 @@ import (
 
 func UpdateProfilePicture() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user, err := utils.ExtractTokenUsername(c)
+		user, err := utils.TokenExtractUsername(c)
 		acceptedFileTypes := []string{"png", "jpg", "jpeg"}
 
 		if err != nil {
@@ -66,7 +66,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		}
 
 		// Actualizar en base de datos
-		userType, err := utils.ExtractTokenUserType(c)
+		userType, err := utils.TokenExtractRole(c)
 
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, responses.StandardResponse{
@@ -96,7 +96,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 
 		// send the file via HTTP to the file server
 		url := "http://ec2-13-57-42-212.us-west-1.compute.amazonaws.com/upload/"
-		bearerToken := "Bearer " + utils.ExtractToken(c)
+		bearerToken := "Bearer " + utils.ExtractTokenFromRequest(c)
 
 		if err := utils.UploadFileToServer(url, bearerToken, file, dst); err != nil {
 			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
@@ -130,7 +130,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 
 func UpdateCV() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user, err := utils.ExtractTokenUsername(c)
+		user, err := utils.TokenExtractUsername(c)
 		acceptedFileTypes := []string{"pdf"}
 
 		if err != nil {
@@ -180,7 +180,7 @@ func UpdateCV() gin.HandlerFunc {
 		}
 
 		// Actualizar en base de datos
-		userType, err := utils.ExtractTokenUserType(c)
+		userType, err := utils.TokenExtractRole(c)
 
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, responses.StandardResponse{
@@ -215,7 +215,7 @@ func UpdateCV() gin.HandlerFunc {
 
 		// send the file via HTTP to the file server
 		url := "http://ec2-13-57-42-212.us-west-1.compute.amazonaws.com/upload/pdf/"
-		bearerToken := "Bearer " + utils.ExtractToken(c)
+		bearerToken := "Bearer " + utils.ExtractTokenFromRequest(c)
 
 		if err := utils.UploadFileToServer(url, bearerToken, file, dst); err != nil {
 			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
