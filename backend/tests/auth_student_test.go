@@ -51,9 +51,32 @@ func TestLogin(t *testing.T) { // no es necesario eliminar usuarios.
 
 	router.ServeHTTP(w, req)
 
-	fmt.Println(w.Body.String())
 	// Comprueba la respuesta HTTP y el cuerpo de la respuesta
 	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
+
+	// get to /api/users to get the user data sending the token from login
+	var LoginResponse struct {
+		Status  int    `json:"status"`
+		Message string `json:"message"`
+		Data    struct {
+			Role  string `json:"role"`
+			Token string `json:"token"`
+		} `json:"data"`
+	}
+
+	err := json.Unmarshal(w.Body.Bytes(), &LoginResponse)
+	assert.NoError(t, err, "Error unmarshalling login response")
+
+	w = httptest.NewRecorder()
+
+	req = httptest.NewRequest("GET", "/api/users/", nil)
+
+	req.Header.Set("Authorization", "Bearer "+LoginResponse.Data.Token)
+
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
+
 }
 
 func TestNewStudent(t *testing.T) {
@@ -90,7 +113,7 @@ func TestUpdateStudent(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code, "Status code is not 200")
 
 	// Paso 2: Extraer el token de la respuesta
-	var loginResponse struct {
+	var LoginResponse struct {
 		Status  int    `json:"status"`
 		Message string `json:"message"`
 		Data    struct {
@@ -99,7 +122,7 @@ func TestUpdateStudent(t *testing.T) {
 		} `json:"data"`
 	}
 
-	err := json.Unmarshal(w.Body.Bytes(), &loginResponse)
+	err := json.Unmarshal(w.Body.Bytes(), &LoginResponse)
 	assert.NoError(t, err, "Error unmarshalling login response")
 
 	// Paso 3: Usar el token para hacer la actualización del estudiante
@@ -109,7 +132,7 @@ func TestUpdateStudent(t *testing.T) {
 	body = bytes.NewBufferString(jsonData)
 
 	req = httptest.NewRequest("PUT", "/api/students/update", body)
-	req.Header.Set("Authorization", "Bearer "+loginResponse.Data.Token)
+	req.Header.Set("Authorization", "Bearer "+LoginResponse.Data.Token)
 
 	router.ServeHTTP(w, req)
 
