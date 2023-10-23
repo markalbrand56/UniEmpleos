@@ -93,7 +93,7 @@ func UpdateCompanies(c *gin.Context) {
 		return
 	}
 
-	user, err := utils.ExtractTokenUsername(c)
+	user, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
