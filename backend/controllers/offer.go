@@ -439,20 +439,40 @@ func DeleteOffer(c *gin.Context) {
 		return
 	}
 
-	// @mark, esto lo hace la base de datos con el ON DELETE CASCADE.
-	// Delete oferta_carrera
-	err := configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.OfertaCarrera{}).Error
+	user, err := utils.TokenExtractUsername(c)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
-			Message: "Error deleting oferta_carrera: " + err.Error(),
+			Message: "Error extracting information from token: " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	// Delete oferta
-	err = configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
+	// Verifica si el usuario es el dueño de la oferta
+	var offer models.Oferta
+	err = configs.DB.Where("id_oferta = ?", idOferta).First(&offer).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting offer: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if offer.IDEmpresa != user {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The user in the token does not match the owner of the offer",
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Where("id_oferta = ? AND id_empresa = ?", idOferta, user).Delete(&models.Oferta{}).Error
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
