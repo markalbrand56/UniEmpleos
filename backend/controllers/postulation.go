@@ -222,27 +222,20 @@ type PostulationFromStudentResult struct {
 	Salario       float64 `json:"salario"`
 }
 
-func GetPostulactionFromStudent(c *gin.Context) {
+func GetPostulationFromStudent(c *gin.Context) {
 	var results []PostulationFromStudentResult
 	var data map[string]interface{}
 
-	// obten el id del estudiante a partir del token.
 	idEstudiante, err := utils.TokenExtractUsername(c)
+
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error getting id estudiante",
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Could not retrieve info from token. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
-
-	// en postgreSQL:
-	//select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario
-	//from postulacion p
-	//join oferta o
-	//on p.id_oferta = o.id_oferta
-	//where id_estudiante = 'mor21146@uvg.edu.gt';
 
 	err = configs.DB.Raw("select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario from postulacion p join oferta o on p.id_oferta = o.id_oferta where id_estudiante = ?", idEstudiante).Scan(&results).Error
 
@@ -292,12 +285,22 @@ func RetirePostulation(c *gin.Context) {
 	// verify that the postulation exists
 	var postulation models.Postulacion
 
-	err = configs.DB.Where("id_postulacion = ? AND id_estudiante = ?", input, user).First(&postulation).Error
+	err = configs.DB.Where("id_postulacion = ?", input).First(&postulation).Error
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, responses.StandardResponse{
 			Status:  http.StatusNotFound,
 			Message: "Error getting postulation. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// verify that the postulation belongs to the user
+	if postulation.IdEstudiante != user {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The postulation does not belong to the user in the token",
 			Data:    nil,
 		})
 		return

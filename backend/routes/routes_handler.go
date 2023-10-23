@@ -83,6 +83,6 @@ func Routes(router *gin.Engine) {
 	postulations := router.Group("api/postulations")
 	postulations.Use(middlewares.JwtAuthentication())
 	postulations.POST("/", controllers.NewPostulation)
-	postulations.GET("/getFromStudent", controllers.GetPostulactionFromStudent)
+	postulations.GET("/getFromStudent", controllers.GetPostulationFromStudent)
 	postulations.DELETE("/", controllers.RetirePostulation)
 }
