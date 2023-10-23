@@ -515,12 +515,21 @@ func GetApplicants(c *gin.Context) {
 
 	// Verificación con el token para que no se pueda ver las postulaciones de otras empresas
 	var offer models.Oferta
-	err = configs.DB.Where("id_oferta = ? AND id_empresa = ?", input.IdOferta, tokenUsername).First(&offer).Error
+	err = configs.DB.Where("id_oferta = ?", input.IdOferta).First(&offer).Error
 
 	if err != nil {
+		c.JSON(http.StatusNotFound, responses.StandardResponse{
+			Status:  http.StatusNotFound,
+			Message: "Error getting offer. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if offer.IDEmpresa != tokenUsername {
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
-			Message: "Error verifying ownership of the offer. " + err.Error(),
+			Message: "The user in the token does not match the owner of the offer",
 			Data:    nil,
 		})
 		return
