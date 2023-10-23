@@ -34,10 +34,10 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		fmt.Println("Username upload: " + user_stripped)
 
 		// single file
-		file, _ := c.FormFile("file")
+		fileHeader, _ := c.FormFile("file")
 
 		// get the file type from filename
-		fileType := file.Filename[strings.LastIndex(file.Filename, ".")+1:]
+		fileType := fileHeader.Filename[strings.LastIndex(fileHeader.Filename, ".")+1:]
 
 		if !utils.Contains(acceptedFileTypes, fileType) {
 			c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -51,7 +51,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		randomNumber := rand.Intn(9999999999-1111111111) + 1111111111
 		newFileName := user_stripped + "_" + fmt.Sprint(randomNumber) + "." + fileType
 
-		file.Filename = newFileName
+		fileHeader.Filename = newFileName
 
 		dst := "./uploads/" + newFileName
 
@@ -84,7 +84,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		}
 
 		// Save locally
-		err = c.SaveUploadedFile(file, dst)
+		err = c.SaveUploadedFile(fileHeader, dst)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
 				Status:  http.StatusInternalServerError,
@@ -98,7 +98,7 @@ func UpdateProfilePicture() gin.HandlerFunc {
 		url := "http://ec2-13-57-42-212.us-west-1.compute.amazonaws.com/upload/"
 		bearerToken := "Bearer " + utils.ExtractTokenFromRequest(c)
 
-		if err := utils.UploadFileToServer(url, bearerToken, file, dst); err != nil {
+		if err := utils.UploadFileToServer(url, bearerToken, fileHeader, dst); err != nil {
 			c.JSON(http.StatusInternalServerError, responses.StandardResponse{
 				Status:  http.StatusInternalServerError,
 				Message: "Failed to upload file to server: " + err.Error(),
