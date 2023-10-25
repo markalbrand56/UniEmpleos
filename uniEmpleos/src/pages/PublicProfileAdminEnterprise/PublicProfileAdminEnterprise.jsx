@@ -165,7 +165,7 @@ const PublicProfileAdminEnterprise = ({ id }) => {
         ) : offers ? (
           offers.map((offer) => (
             <InfoTab
-              key={offer.id_empresa}
+              key={[offer.id_empresa, offer.id_oferta]}
               title={offer.puesto}
               salary={`Q.${offer.salario}.00`}
               company={enterpriseInfo.nombre}
