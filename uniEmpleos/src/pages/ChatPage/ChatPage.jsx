@@ -50,6 +50,12 @@ const ChatPage = () => {
 
   useEffect(() => {
     obtainMessages()
+    if (currentChat !== "") {
+      const intervalMensajesChatActual = setInterval(() => {
+        obtainMessages()
+      }, 5000)
+      return () => clearInterval(intervalMensajesChatActual)
+    }
   }, [currentChat])
 
   const scrollDown = () => {
@@ -73,7 +79,7 @@ const ChatPage = () => {
     scrollDown()
     obtainMessages()
   }
-
+  
   const handleChat = (receptor, id) => {
     setCurrentChat(receptor)
     setIdCurrentChat(id)
@@ -91,22 +97,12 @@ const ChatPage = () => {
 
   //Intervals
   // Actualizar lista de chats
-
   useEffect(() => {
     obtainLastChats()
     const intervalListadeChats = setInterval(() => {
       obtainLastChats()
-    }, 10000)
+    }, 5000)
     return () => clearInterval(intervalListadeChats)
-  }, [])
-
-  // Actualizar mensajes de chat actual
-
-  useEffect(() => {
-    const intervalMensajesChatActual = setInterval(() => {
-      obtainMessages()
-    }, 10000)
-    return () => clearInterval(intervalMensajesChatActual)
   }, [])
 
   return (
@@ -121,43 +117,24 @@ const ChatPage = () => {
       <div className={style.generalChatContainer}>
         <div className={style.chatsContainer}>
           {apiLastChats.data && apiLastChats.data.messages.length > 0 ? (
-            apiLastChats.data.messages.map((chat) => {
-              if (chat.last_message.length === 0) {
-                return null
-              } else {
-                const fileType = isImage(chat.last_message)
-                const pfpUrl = chat.user_photo
-                  ? API_URL + "/api/uploads/" + chat.user_photo
-                  : "/images/pfp.svg"
-                if (fileType) {
-                  return (
-                    <Chat
-                      pfp={pfpUrl}
-                      name={chat.user_name}
-                      lastChat="Foto"
-                      key={chat.postulation_id}
-                      id_postulacion={chat.postulation_id.toString()}
-                      onClick={() =>
-                        handleChat(chat.user_id, chat.postulation_id)
-                      }
-                    />
-                  )
-                } else {
-                  return (
-                    <Chat
-                      pfp={pfpUrl}
-                      name={chat.user_name}
-                      lastChat={chat.last_message}
-                      key={chat.postulation_id}
-                      id_postulacion={chat.postulation_id.toString()}
-                      onClick={() =>
-                        handleChat(chat.user_id, chat.postulation_id)
-                      }
-                    />
-                  )
-                }
-              }
-            })
+            apiLastChats.data.messages.map((chat) =>
+              chat.last_message.length === 0 ? null : (
+                <Chat
+                  pfp={
+                    chat.user_photo
+                      ? API_URL + "/api/uploads/" + chat.user_photo
+                      : "/images/pfp.svg"
+                  }
+                  name={chat.user_name}
+                  lastChat={
+                    isImage(chat.last_message) ? "Foto" : chat.last_message
+                  }
+                  key={chat.postulation_id}
+                  id_postulacion={chat.postulation_id.toString()}
+                  onClick={() => handleChat(chat.user_id, chat.postulation_id)}
+                />
+              )
+            )
           ) : (
             <div className={style.noUsersMessage}>No hay chats recientes.</div>
           )}
@@ -171,31 +148,17 @@ const ChatPage = () => {
               const pfpUrlEmisor = message.emisor_foto
                 ? API_URL + "/api/uploads/" + message.emisor_foto
                 : "/images/pfp.svg"
-              if (fileType) {
-                return (
-                  <Message
-                    key={[message.id, message.id_emisor, number]}
-                    pfp={pfpUrlEmisor}
-                    name={message.emisor_nombre}
-                    time={message.tiempo}
-                    message=""
-                    file={message.mensaje}
-                    side={side}
-                  />
-                )
-              } else {
-                return (
-                  <Message
-                    key={[message.id, message.id_emisor, number]}
-                    pfp={pfpUrlEmisor}
-                    name={message.emisor_nombre}
-                    time={message.tiempo}
-                    message={message.mensaje}
-                    file=""
-                    side={side}
-                  />
-                )
-              }
+              return (
+                <Message
+                  key={[message.id, message.id_emisor, number]}
+                  pfp={pfpUrlEmisor}
+                  name={message.emisor_nombre}
+                  time={message.tiempo}
+                  message={fileType ? "" : message.mensaje}
+                  file={fileType ? message.mensaje : ""}
+                  side={side}
+                />
+              )
             })
           ) : (
             <div className={style.noMessagesMessage}>No hay mensajes.</div>
