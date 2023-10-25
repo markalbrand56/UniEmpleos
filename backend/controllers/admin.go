@@ -486,3 +486,57 @@ func AdminGetUserDetails(c *gin.Context) {
 		})
 	}
 }
+
+type PostulationsResults struct {
+	IdUsuario     string `json:"id_usuario"`
+	Nombre        string `json:"nombre"`
+	Apellido      string `json:"apellido"`
+	IdPostulacion int    `json:"id_postulacion"`
+	IdOferta      int    `json:"id_oferta"`
+	Estado        string `json:"estado"`
+}
+
+func GetPostulationsOfStudentAsAdmin(c *gin.Context) {
+	// Devolver lo mismo que GetPostulationsFromStudent pero como admin.
+
+	var results []PostulationsResults
+	var data map[string]interface{}
+
+	// id del estudiante como query.
+	idEstudiante := c.Query("id_estudiante")
+
+	err := IsAdmin(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting privileges. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	err = configs.DB.Raw("select u.usuario, e.nombre, e.apellido, p.id_postulacion, p.id_oferta, p.estado from usuario u join estudiante e on u.usuario = e.id_estudiante join postulacion p on e.id_estudiante = p.id_estudiante where u.usuario = ?", idEstudiante).Scan(&results).Error
+	fmt.Println(err)
+	fmt.Println(results)
+
+	if err != nil {
+		c.JSON(400, responses.StandardResponse{
+			Status:  400,
+			Message: "Error getting postulations",
+			Data:    nil,
+		})
+		return
+	}
+
+	// meter los resultados en un mapa
+	data = map[string]interface{}{
+		"postulations": results,
+	}
+
+	c.JSON(200, responses.StandardResponse{
+		Status:  200,
+		Message: "Postulations retrieved successfully",
+		Data:    data,
+	})
+}
