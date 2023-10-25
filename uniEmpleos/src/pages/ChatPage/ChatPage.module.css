@@ -93,14 +93,8 @@
 }
 
 .buttonSend {
-  width: 10%;
+  width: 15%;
   height: 100%;
-}
-
-.buttonFile {
-  margin: 0;
-  height: 100%;
-  display: flex;
 }
 
 .deleteImageButton {
@@ -114,15 +108,6 @@
   width: 20px;
   height: 20px;
   padding: 0;
-}
-
-.deleteImageButton:focus {
-  outline: none;
-}
-
-.deleteImageButton img {
-  width: 100%;
-  height: 100%;
 }
 
 .button {
