@@ -901,7 +901,7 @@ Obtener los detalles de administrador de un usuario, dado su correo
     }
 }
 ```
-### [POST] api/admins/GetPostulationsFromStudent
+### [POST] api/admins/postulations?id_estudiante=prueba@prueba
 Devuelve las postulaciones de un Estudiante.
 > **Note**
 > Auth required
