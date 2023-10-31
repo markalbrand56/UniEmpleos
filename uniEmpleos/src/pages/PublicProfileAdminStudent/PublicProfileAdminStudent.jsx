@@ -43,7 +43,20 @@ const PublicProfileAdminStudent = ({ id }) => {
     setLoadingInfoStudent(false)
   }
 
-  const obtainPostulationsStudent = async () => {}
+  const obtainPostulationsStudent = async () => {
+    const data = await postulationsApi.handleRequest(
+      "POST",
+      `/admins/postulations?id_estudiante=${id}`
+    )
+    if (data.status === 200) {
+      setPostulations(data.data.postulations)
+    } else {
+      setTypeError(1)
+      setError("Error al obtener las postulaciones")
+      setWarning(true)
+    }
+    setLoadingPostulations(false)
+  }
 
   const suspendedStudent = async () => {
     const data = await api.handleRequest("POST", "/admins/suspend", {
@@ -97,12 +110,13 @@ const PublicProfileAdminStudent = ({ id }) => {
     deleteStudent()
   }
 
-  const handleDeletePostulation = (e) => {
-    console.log(e)
+  const handleShowMore = (id_oferta, id_postulacion) => {
+    navigate(`/adminSPDS/${id_oferta}-${id_postulacion}-${id}`)
   }
 
   useEffect(() => {
     obtainStudentInfo()
+    obtainPostulationsStudent()
   }, [])
 
   return (
@@ -145,38 +159,27 @@ const PublicProfileAdminStudent = ({ id }) => {
       </div>
       <h1 className={style.title}>Postulaciones del estudiante</h1>
       <div className={style.postulationsContainer}>
-        <InfoTab
-          title="Postulacion1"
-          company={"Empresa1"}
-          labelbutton="Eliminar postulacion"
-          onClick={() => {
-            handleDeletePostulation("1")
-          }}
-        />
-        <InfoTab
-          title="Postulacion1"
-          company={"Empresa1"}
-          labelbutton="Eliminar postulacion"
-          onClick={() => {
-            handleDeletePostulation("1")
-          }}
-        />
-        <InfoTab
-          title="Postulacion1"
-          company={"Empresa1"}
-          labelbutton="Eliminar postulacion"
-          onClick={() => {
-            handleDeletePostulation("1")
-          }}
-        />
-        <InfoTab
-          title="Postulacion1"
-          company={"Empresa1"}
-          labelbutton="Eliminar postulacion"
-          onClick={() => {
-            handleDeletePostulation("1")
-          }}
-        />
+        {loadingPostulations ? (
+          <Loader size={100} />
+        ) : postulations.length ? (
+          postulations.map((postulation) => (
+            <InfoTab
+              key={[postulation.id_oferta, postulation.id_postulacion]}
+              title={postulation.id_oferta}
+              company={postulation.id_postulacion}
+              salary={postulation.estado}
+              labelbutton="Ver más"
+              onClick={() => {
+                handleShowMore(
+                  postulation.id_oferta,
+                  postulation.id_postulacion
+                )
+              }}
+            />
+          ))
+        ) : (
+          <h1 style={{ color: "#000" }}>No hay postulaciones</h1>
+        )}
       </div>
     </div>
   )

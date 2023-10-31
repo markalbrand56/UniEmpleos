@@ -18,8 +18,6 @@ const PostulantesPage = ({ id }) => {
   const [typeError, setTypeError] = useState(1)
   const [loading, setLoading] = useState(false)
 
-  console.log(id)
-
   const obtainPostulantes = async () => {
     setLoading(true)
     const datos = await api.handleRequest("POST", "/offers/applicants", {
@@ -40,7 +38,7 @@ const PostulantesPage = ({ id }) => {
   }, [])
 
   const handleClickUsuario = (idUsuario) => {
-    navigate(`/publicprofile/${idUsuario}`)
+    navigate(`/publicprofile/${idUsuario}-${id}`)
   }
 
   return (
