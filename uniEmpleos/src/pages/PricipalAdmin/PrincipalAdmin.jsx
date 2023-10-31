@@ -1,88 +1,45 @@
-import Joi from "joi"
 import React, { useEffect, useState } from "react"
-import { useStoreon } from "storeon/react"
-import { set } from "date-fns"
-import useConfig from "../../Hooks/Useconfig"
-import styles from "./PrincipalAdmin.module.css"
-import InfoTab from "../../components/InfoTab/InfoTab"
-import { Header } from "../../components/Header/Header"
-import { navigate } from "../../store"
+import style from "./PrincipalAdmin.module.css"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
+import Header from "../../components/Header/Header"
 import Loader from "../../components/Loader/Loader"
+import API_URL from "../../api"
+import InfoStudent from "../../components/InfoStudent/InfoStudent"
+import { navigate } from "../../store"
 
-const schema = Joi.object({
-  token: Joi.string().required(),
-  idoffert: Joi.string().required(),
-  id_user: Joi.string().required(),
-})
 
 const PrincipalAdmin = () => {
-  const form = useConfig(schema, {
-    token: "a",
-    idoffert: "a",
-    id_user: "a",
-  })
-
-  const { user } = useStoreon("user")
-  const api = useApi()
-  const obtainPostulantes = useApi()
-  const [dataa, setData] = useState([])
+  const enterprisesApi = useApi()
+  const [enterprises, setEnterprises] = useState([])
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typeError, setTypeError] = useState(1)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  const obtenerPreviews = async () => {
-    setLoading(true)
-    const datos = await api.handleRequest("GET", "/postulations/previews", {
-      id_empresa: user.id_user,
-    })
-    if (datos.status === 200) {
-      if (datos.data.postulations) {
-        setData(datos.data.postulations)
-      } else {
-        setTypeError(2)
-        setError("No tiene niguna oferta activa")
-        setWarning(true)
-      }
+  const obtainEnterprises = async () => {
+    const data = await enterprisesApi.handleRequest("GET", "/admins/companies")
+    if (data.status === 200) {
+      setEnterprises(data.data)
     } else {
       setTypeError(1)
-      setError("Ups, algo salio mal al obtener las ofertas")
+      setError("Ups, algo salio mal al obtener las empresas")
       setWarning(true)
     }
     setLoading(false)
   }
 
-  const handleVerPostulantes = async (id) => {
-    const datos = await obtainPostulantes.handleRequest(
-      "POST",
-      "/offers/applicants",
-      {
-        id_oferta: parseInt(id, 10),
-      }
-    )
-    console.log(datos)
-    if (datos.data) {
-      navigate(`/postulantes/${id}`)
-    } else {
-      setTypeError(2)
-      setError("La oferta no tiene postulantes")
-      setWarning(true)
-    }
-  }
-
-  const hadleVerMas = (id) => {
-    navigate(`/adminSPD/${id}`)
+  const handleClick = (e) => {
+    navigate(`/publicProfileAdminEnterprise/${e}`)
   }
 
   useEffect(() => {
-    obtenerPreviews()
+    obtainEnterprises()
   }, [])
 
   return (
-    <div className={styles.mainContainer}>
-      <Header userperson="company" />
+    <div className={style.mainContainer}>
+      <Header />
       <Popup
         message={error}
         status={warning}
@@ -90,30 +47,31 @@ const PrincipalAdmin = () => {
         close={() => setWarning(false)}
       />
       {loading ? (
-        <div className={styles.loadingContainer}>
-          <Loader size={100} />
-        </div>
-      ) : api.data ? (
-        <div className={styles.containerinfoprincipal}>
-          {dataa.map((postulation) => (
-            <InfoTab
-              title={postulation.puesto}
-              area={postulation.nombre_carreras}
-              salary={`Q.${postulation.salario}.00`}
-              company={postulation.nombre_empresa}
-              labelbutton="Ver más"
-              onClick={() => {
-                hadleVerMas(postulation.id_oferta)
-              }}
-              verPostulantes={() => {
-                handleVerPostulantes(postulation.id_oferta)
-              }}
-            />
-          ))}
-        </div>
+        <Loader size={100} />
       ) : (
-        <div className={styles.containerinfomain}>
-          <h1>No tiene niguna oferta activa</h1>
+        <div className={style.enterprisesContainer}>
+          {enterprises.companies ? (
+            enterprises.companies.map((enterprise) => {
+              const pfpUrlEmisor =
+                enterprise.foto === ""
+                  ? "/images/pfp.svg"
+                  : `${API_URL}/api/uploads/${enterprise.foto}`
+              return (
+                <InfoStudent
+                  key={enterprise.id_empresa}
+                  nombre={enterprise.nombre}
+                  pfp={pfpUrlEmisor}
+                  onClick={() => {
+                    handleClick(enterprise.id_empresa)
+                  }}
+                  showState
+                  state={enterprise.suspendido}
+                />
+              )
+            })
+          ) : (
+            <h1 style={{color: "#000"}}>No hay empresas</h1>
+          )}
         </div>
       )}
     </div>
