@@ -24,11 +24,26 @@ export default createRouter([
   ["/postulantes/*", (id) => ({ page: "postulantes", props: { id } })],
   [
     "/publicprofile/*",
-    (correo) => ({ page: "publicprofile", props: { correo } }),
+    (params) => ({ page: "publicprofile", props: { params } }),
   ],
   [
     "/adminSPD/*",
     (id) => ({ page: "adminShowPostulationDetails", props: { id } }),
   ],
   ["/profileadminstudent", () => ({ page: "adminStudent" })],
+  [
+    "/publicprofileadminstudent/*",
+    (id) => ({ page: "publicprofileadminstudent", props: { id } }),
+  ],
+  [
+    "/publicprofileadminenterprise/*",
+    (id) => ({ page: "publicprofileadminenterprise", props: { id } }),
+  ],
+  [
+    "/adminSPDS/*",
+    (param) => ({
+      page: "adminShowPostulationDetailsStudent",
+      props: { param },
+    }),
+  ],
 ])

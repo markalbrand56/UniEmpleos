@@ -9,7 +9,6 @@ import Message from "../../components/Message/Message"
 import Input from "../../components/Input/Input"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
 import useIsImage from "../../Hooks/useIsImage"
 import { formatDuration } from "date-fns"
@@ -24,7 +23,6 @@ const ChatPage = () => {
 
   const [currentChat, setCurrentChat] = useState("")
   const [textMessage, setTextMessage] = useState("")
-  const [uploadedImage, setUploadedImage] = useState("")
   const [idCurrentChat, setIdCurrentChat] = useState()
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
@@ -72,34 +70,12 @@ const ChatPage = () => {
   }, [cambioChats])
 
   const sendMessage = async () => {
-    if (uploadedImage !== "" && textMessage !== "") {
-      await apiSendMessage.handleRequest("POST", "/messages/send", {
-        id_emisor: user.id_user,
-        id_receptor: currentChat,
-        mensaje: textMessage,
-        id_postulacion: idCurrentChat,
-      })
-      await apiSendMessage.handleRequest("POST", "/messages/send", {
-        id_emisor: user.id_user,
-        id_receptor: currentChat,
-        mensaje: uploadedImage,
-        id_postulacion: idCurrentChat,
-      })
-    } else if (uploadedImage === "") {
-      await apiSendMessage.handleRequest("POST", "/messages/send", {
-        id_emisor: user.id_user,
-        id_receptor: currentChat,
-        mensaje: textMessage,
-        id_postulacion: idCurrentChat,
-      })
-    } else if (textMessage === "") {
-      await apiSendMessage.handleRequest("POST", "/messages/send", {
-        id_emisor: user.id_user,
-        id_receptor: currentChat,
-        mensaje: uploadedImage,
-        id_postulacion: idCurrentChat,
-      })
-    }
+    await apiSendMessage.handleRequest("POST", "/messages/send", {
+      id_emisor: user.id_user,
+      id_receptor: currentChat,
+      mensaje: textMessage,
+      id_postulacion: idCurrentChat,
+    })
     scrollDown()
     obtainMessages()
   }
@@ -111,17 +87,6 @@ const ChatPage = () => {
 
   const handleInputChange = (e) => {
     setTextMessage(e.target.value)
-  }
-
-  const handleUploadFile = (uploadedImage) => {
-    const fileType = isImage(uploadedImage)
-    if (fileType) {
-      setUploadedImage(uploadedImage)
-    } else {
-      setTypePopUp(2)
-      setError("El archivo debe ser una imagen")
-      setWarning(true)
-    }
   }
 
   const handleSendMessage = () => {
@@ -208,38 +173,19 @@ const ChatPage = () => {
                 onChange={handleInputChange}
               />
             </div>
-            <div
-              className={style.buttonFile}
-              style={uploadedImage === "" ? { width: "5%" } : { width: "15%" }}
-            >
-              <ImageUploader
-                onImageUpload={handleUploadFile}
-                image={uploadedImage}
-              />
-              {uploadedImage === "" ? null : (
-                <button
-                  type="button"
-                  className={style.deleteImageButton}
-                  onClick={() => setUploadedImage("")}
-                  alt="Eliminar imagen"
-                >
-                  <img src="/images/delete.svg" alt="delete" />
-                </button>
-              )}
-            </div>
             <div className={style.buttonSend}>
               <button
                 type="button"
                 className={style.button}
                 style={{
                   backgroundColor:
-                    (textMessage === "" && uploadedImage === "") ||
+                    (textMessage === "") ||
                     currentChat === ""
                       ? "#D6CFF2"
                       : "#9c8bdf",
                 }}
                 disabled={
-                  (textMessage === "" && uploadedImage === "") ||
+                  (textMessage === "") ||
                   currentChat === ""
                 }
                 onClick={handleSendMessage}

@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
-import style from "./AdminShowPostulationDetails.module.css"
+import style from "./AdminShowPostulationDetailsStudent.module.css"
 import Loader from "../../components/Loader/Loader"
 import OfertaInfo from "../../components/ofertaInfo/OfertaInfo"
 import { useQuill } from "react-quilljs"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 
-const AdminShowPostulationDetails = ({ id }) => {
+const AdminShowPostulationDetailsStudent = ({ param }) => {
+  const idOferta = param.split("-")[0]
+  const idPostulacion = param.split("-")[1]
+  const idEstudiante = param.split("-")[2]
+  
   const postulationDetails = useApi()
   const api = useApi()
   const [data, setData] = useState(null)
@@ -30,7 +34,7 @@ const AdminShowPostulationDetails = ({ id }) => {
       "POST",
       "/offers/all",
       {
-        id_oferta: id,
+        id_oferta: idOferta,
       }
     )
 
@@ -65,15 +69,15 @@ const AdminShowPostulationDetails = ({ id }) => {
     }
   }, [quill, detalles])
 
-  const onclickAccept = async (e) => {
-    const variableApi = `/admins/delete/offers?id_oferta=${id}`
+  const onclickAccept = async () => {
+    const variableApi = `/admins/postulation?id_postulacion=${parseInt(idPostulacion, 10)}`
     const apiResponse = await api.handleRequest("DELETE", variableApi)
     if (apiResponse.status === 200) {
       setTypeError(3)
-      setError("Oferta eliminada con éxito")
+      setError("Postulación eliminada exitosamente")
       setWarning(true)
       setTimeout(() => {
-        navigate(`/publicProfileAdminEnterprise/${e}`)
+        navigate(`/publicprofileadminstudent/${idEstudiante}`)
       }, 5000)
     } else {
       setTypeError(1)
@@ -82,8 +86,8 @@ const AdminShowPostulationDetails = ({ id }) => {
     }
   }
 
-  const handleReturn = (e) => {
-    navigate(`/publicProfileAdminEnterprise/${e}`)
+  const handleReturn = () => {
+    navigate(`/publicprofileadminstudent/${idEstudiante}`)
   }
 
   return (
@@ -149,4 +153,4 @@ const AdminShowPostulationDetails = ({ id }) => {
   )
 }
 
-export default AdminShowPostulationDetails
+export default AdminShowPostulationDetailsStudent

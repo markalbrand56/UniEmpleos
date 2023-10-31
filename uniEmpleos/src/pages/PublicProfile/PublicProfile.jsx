@@ -13,7 +13,9 @@ import { navigate } from "../../store"
 import style from "./PublicProfile.module.css"
 import API_URL from "../../api"
 
-const PublicProfile = ({ correo }) => {
+const PublicProfile = ({ params }) => {
+  const correo = params.split("-")[0]
+  const idOferta = params.split("-")[1]
   const api = useApi()
   const carreraApi = useApi()
   const [warning, setWarning] = useState(false)
@@ -57,7 +59,7 @@ const PublicProfile = ({ correo }) => {
       setError("Ups, algo salio mal al obtener el perfil")
       setWarning(true)
       setTimeout(() => {
-        navigate("/postulacionempresa")
+        navigate(`/postulantes/${idOferta}`)
       }, 5000)
     }
   }
@@ -90,7 +92,7 @@ const PublicProfile = ({ correo }) => {
           left: "20px",
           cursor: "pointer",
         }}
-        onClick={() => navigate("/postulacionempresa")}
+        onClick={() => navigate(`/postulantes/${idOferta}`)}
       />
       {usuario ? (
         <div className={style.infoContainer}>

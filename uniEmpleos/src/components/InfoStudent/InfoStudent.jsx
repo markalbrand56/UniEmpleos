@@ -18,17 +18,19 @@ const InfoStudent = ({
           <img className={style.pfp} src={pfp} alt={`${nombre} ${apellido}`} />
         </div>
         <div className={style.infoContainer}>
-          <span className={style.name}>{`${nombre} ${apellido}`}</span>
+          {apellido ? (
+            <span className={style.name}>{`${nombre} ${apellido}`}</span>
+          ) : (
+            <span className={style.name}>{`${nombre}`}</span>
+          )}
           {universidad && (
             <span className={style.university}>{universidad}</span>
           )}
           {showState && (
             <div className={style.stateContainer}>
               <span>Estado:</span>
-              <span
-                style={state ? { color: "#FF0000" } : { color: "#00FF00" }}
-              >
-                {`${state}`}
+              <span style={state ? { color: "#FF0000" } : { color: "#000" }}>
+                {state ? "Suspendido" : "Activo"}
               </span>
             </div>
           )}
@@ -40,7 +42,7 @@ const InfoStudent = ({
 
 InfoStudent.propTypes = {
   nombre: PropTypes.string.isRequired,
-  apellido: PropTypes.string.isRequired,
+  apellido: PropTypes.string,
   universidad: PropTypes.string,
   pfp: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
