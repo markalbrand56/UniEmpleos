@@ -130,3 +130,46 @@
 .inputTextArea {
   width: 480px;
 }
+
+@media (max-width: 768px) {
+  .editProfileContainer{
+    padding: 0;
+    width: 90%;
+  }
+
+  .inputsContainer {
+    width: 100%;
+    padding: 0;
+  }
+
+  .editProfileContainer>div {
+    padding: 20px 0px;
+    margin: 20px 0;
+  }
+
+  .inputSubContainer {
+    width: 90%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .inputSubContainerDataGroup1 {
+    width: 90%;
+  }
+
+  .grupoDatos1 {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+
+  .inputTextArea {
+    width: 90%;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+}

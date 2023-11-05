@@ -177,6 +177,7 @@ button.buttonlogo:focus{
 
   .nav-elements.active {
     width: 100%;
+    z-index: 999;
   }
 
   .nav-elements ul {

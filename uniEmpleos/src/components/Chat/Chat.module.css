@@ -90,4 +90,10 @@
   .lastChat {
     display: none;
   }
+
+  .pfp {
+    width: 40%;
+    height: 60px;
+  }
+
 }
