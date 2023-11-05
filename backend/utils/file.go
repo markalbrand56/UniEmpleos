@@ -19,9 +19,9 @@ func Contains(slice []string, item string) bool {
 	return false
 }
 
-func UploadFileToServer(url string, bearer string, file *multipart.FileHeader, dst string) error {
+func UploadFileToServer(url string, bearer string, fileHeader *multipart.FileHeader, dst string) error {
 	// Abrir el archivo
-	f, err := file.Open()
+	f, err := fileHeader.Open()
 	if err != nil {
 		return err
 	}
