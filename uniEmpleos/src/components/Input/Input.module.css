@@ -60,3 +60,15 @@
   width: 15px;
   height: 15px;
 }
+
+@media (max-width: 600px){
+  .inputContainer input {
+    width: 100%;
+    margin: 0;
+    padding-left: 0;
+  }
+
+  .inputContainer{
+    width: 100%;
+  }
+}

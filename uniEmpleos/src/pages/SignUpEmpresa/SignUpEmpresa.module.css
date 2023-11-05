@@ -120,3 +120,36 @@
   align-items: center;
   padding: 0 10px 0 10px;
 }
+
+@media (max-width: 600px){
+
+  .inputsContainer{
+    width: 80%;
+
+  }
+
+  .grupoDatos1{
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+
+  .inputTextArea {
+    width: 80%;
+  }
+
+  .inputSubContainer{
+    width: 100%;
+  }
+
+  .inputTextArea {
+    width: 100%;
+  }
+
+  .buttonContainer{
+    width: 100%;
+    padding: 0;
+  }
+
+}
