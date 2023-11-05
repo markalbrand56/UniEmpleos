@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { IoSearchCircle } from "react-icons/io5"
 import Header from "../../components/Header/Header"
 import style from "./AdminStudent.module.css"
 import InfoStudent from "../../components/InfoStudent/InfoStudent"
@@ -37,6 +38,20 @@ const ProfileAdminStudent = () => {
     obtainStudents()
   }, [])
 
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const [showSearch, setShowSearch] = useState(false)
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value)
+  }
+
+  const filteredStudents = studentsData.studets
+    ? studentsData.studets.filter((student) =>
+        student.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : []
+
   return (
     <div className={style.mainContainer}>
       <Header />
@@ -46,12 +61,28 @@ const ProfileAdminStudent = () => {
         style={typeError}
         close={() => setWarning(false)}
       />
+      <div className={style.searchContainer}>
+        <IoSearchCircle
+          size={40}
+          color="#94bd0f"
+          onClick={() => setShowSearch(!showSearch)}
+        />
+        {showSearch && (
+          <input
+            className={style.searchBar}
+            type="text"
+            placeholder="Buscar"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        )}
+      </div>
       {loading ? (
         <Loader size={100} />
       ) : (
         <div className={style.studentsContainer}>
-          {studentsData.studets ? (
-            studentsData.studets.map((student) => {
+          {filteredStudents.length > 0 ? (
+            filteredStudents.map((student) => {
               const pfpUrlEmisor =
                 student.foto === ""
                   ? "/images/pfp.svg"
