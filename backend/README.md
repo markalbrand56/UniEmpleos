@@ -851,7 +851,7 @@ Query param
 }
 ```
 
-### [POST] api/admin/details
+### [POST] api/admins/details
 Obtener los detalles de administrador de un usuario, dado su correo
 > **Note**
 > Auth required
@@ -901,6 +901,57 @@ Obtener los detalles de administrador de un usuario, dado su correo
     }
 }
 ```
+### [POST] api/admins/postulations?id_estudiante=prueba@prueba
+Devuelve las postulaciones de un Estudiante.
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "id_estudiante": "string"
+}
+```
+
+#### Response
+```json 
+{
+  "status": 200,
+  "message": "Postulations retrieved successfully",
+  "data": {
+    "postulations": [
+      {
+        "id_usuario": "",
+        "nombre": "Javier Alejandro",
+        "apellido": "Azurdia",
+        "id_postulacion": 242,
+        "id_oferta": 402,
+        "estado": "enviada"
+      },
+      {
+        "id_usuario": "",
+        "nombre": "Javier Alejandro",
+        "apellido": "Azurdia",
+        "id_postulacion": 244,
+        "id_oferta": 460,
+        "estado": "enviada"
+      },
+      {
+        "id_usuario": "",
+        "nombre": "Javier Alejandro",
+        "apellido": "Azurdia",
+        "id_postulacion": 276,
+        "id_oferta": 512,
+        "estado": "Enviada"
+      }
+    ]
+  }
+}
+
+```
+
+
+
 ---
 
 # File Server 
