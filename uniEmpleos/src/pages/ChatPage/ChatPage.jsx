@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState, useRef } from "react"
+import { FaUserFriends } from "react-icons/fa"
 import { useStoreon } from "storeon/react"
 import style from "./ChatPage.module.css"
 import { Header } from "../../components/Header/Header"
@@ -79,11 +80,6 @@ const ChatPage = () => {
     scrollDown()
     obtainMessages()
   }
-  
-  const handleChat = (receptor, id) => {
-    setCurrentChat(receptor)
-    setIdCurrentChat(id)
-  }
 
   const handleInputChange = (e) => {
     setTextMessage(e.target.value)
@@ -105,6 +101,20 @@ const ChatPage = () => {
     return () => clearInterval(intervalListadeChats)
   }, [])
 
+  // Estado para controlar la visibilidad del contenedor de chats
+  const [showChats, setShowChats] = useState(false)
+
+  // Función para alternar la visibilidad del contenedor de chats
+  const toggleChats = () => {
+    setShowChats(!showChats)
+  }
+
+  const handleChat = (receptor, id) => {
+    setCurrentChat(receptor)
+    setIdCurrentChat(id)
+    setShowChats(false)
+  }
+
   return (
     <div className={style.container}>
       <Header userperson="student" />
@@ -114,8 +124,15 @@ const ChatPage = () => {
         style={typePopUp}
         close={() => setWarning(false)}
       />
+      <button type="button" className={style.menuButton} onClick={toggleChats}>
+        <FaUserFriends size={30} color="#000" />
+      </button>
       <div className={style.generalChatContainer}>
-        <div className={style.chatsContainer}>
+        <div
+          className={`${style.chatsContainer} ${
+            showChats ? style.showChat : style.hideChat
+          }`}
+        >
           {apiLastChats.data && apiLastChats.data.messages.length > 0 ? (
             apiLastChats.data.messages.map((chat) =>
               chat.last_message.length === 0 ? null : (
@@ -139,7 +156,12 @@ const ChatPage = () => {
             <div className={style.noUsersMessage}>No hay chats recientes.</div>
           )}
         </div>
-        <div className={style.currentChatContainer} ref={chatContainerRef}>
+        <div
+          className={`${style.currentChatContainer} ${
+            showChats ? style.hide : style.show
+          }`}
+          ref={chatContainerRef}
+        >
           {apiMessages.data && apiMessages.data.messages.length > 0 ? (
             apiMessages.data.messages.map((message, number) => {
               const side = message.id_emisor === user.id_user ? "right" : "left"

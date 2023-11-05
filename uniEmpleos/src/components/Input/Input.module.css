@@ -65,7 +65,8 @@
   .inputContainer input {
     width: 100%;
     margin: 0;
-    padding-left: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
   .inputContainer{
