@@ -2,7 +2,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background-color: #f1f1f1;
+  background-color: #fff;
   flex-direction: column;
   height: 100%;
   width: 100%;
@@ -125,4 +125,34 @@
   justify-content: center;
   align-items: center;
   padding: 0 10px 0 10px;
+}
+
+@media (max-width: 768px) {
+  .editProfileContainer{
+    padding: 0;
+    width: 90%;
+  }
+
+  .inputsContainer {
+    width: 100%;
+    padding: 0;
+  }
+
+  .editProfileContainer>div {
+    padding: 20px 0px;
+    margin: 20px 0;
+  }
+
+  .inputSubContainer {
+    width: 90%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .inputSubContainerDataGroup1 {
+    width: 90%;
+  }
+
 }
