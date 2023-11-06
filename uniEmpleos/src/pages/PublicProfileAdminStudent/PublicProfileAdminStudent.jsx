@@ -140,7 +140,7 @@ const PublicProfileAdminStudent = ({ id }) => {
       />
       <div className={style.infoProfileContainer}>
         {loadingInfoStudent && studentInfo ? (
-          <Loader size={100} />
+          <Loader size={200} />
         ) : (
           <PublicProfileAdmin
             name={studentInfo.nombre}
@@ -159,9 +159,7 @@ const PublicProfileAdminStudent = ({ id }) => {
       </div>
       <h1 className={style.title}>Postulaciones del estudiante</h1>
       <div className={style.postulationsContainer}>
-        {loadingPostulations ? (
-          <Loader size={100} />
-        ) : postulations.length ? (
+        {postulations.length ? (
           postulations.map((postulation) => (
             <InfoTab
               key={[postulation.id_oferta, postulation.id_postulacion]}

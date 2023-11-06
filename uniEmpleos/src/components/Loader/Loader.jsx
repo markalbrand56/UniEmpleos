@@ -21,15 +21,10 @@ const Loader = ({ size }) => {
   ]
 
   return (
-    <div
-      className={style.loader}
-      style={{ width: `${size}px`, height: `${size}px` }}
-    >
-      <span className={style.loader__bar} style={customStyle[0]}></span>
-      <span className={style.loader__bar} style={customStyle[1]}></span>
-      <span className={style.loader__bar} style={customStyle[2]}></span>
-      <span className={style.loader__bar} style={customStyle[3]}></span>
-      <span className={style.loader__bar} style={customStyle[4]}></span>
+    <div className={style.threebody}>
+      <div className={style.threebody__dot} />
+      <div className={style.threebody__dot} />
+      <div className={style.threebody__dot} />
     </div>
   )
 }

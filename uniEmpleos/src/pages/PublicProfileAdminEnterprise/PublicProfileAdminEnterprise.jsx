@@ -160,9 +160,7 @@ const PublicProfileAdminEnterprise = ({ id }) => {
       </div>
       <h1 className={style.title}>Ofertas de la empresa</h1>
       <div className={style.offersContainer}>
-        {loadingOffers ? (
-          <Loader size={100} />
-        ) : offers ? (
+        {offers ? (
           offers.map((offer) => (
             <InfoTab
               key={[offer.id_empresa, offer.id_oferta]}
