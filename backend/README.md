@@ -432,28 +432,50 @@ Devuelve la información para las preview de las ofertas disponibles
                 "nombre_carreras": "Ingenieria en Sistemas",
                 "nombre_empresa": "Valve Corporation",
                 "puesto": "Desarrollador de Videojuegos",
-                "salario": 15000
+                "salario": 15000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             },
             {
                 "id_oferta": 4,
                 "nombre_carreras": "Ingenieria en Sistemas",
                 "nombre_empresa": "Simán",
                 "puesto": "DataBase Administrator",
-                "salario": 10000
+                "salario": 10000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             },
             {
                 "id_oferta": 1,
-                "nombre_carreras": "Ingenieria en Sistemas, Ingenieria en mecánica industrial",
+                "nombre_carreras": "Ingenieria en Sistemas",
                 "nombre_empresa": "Empresa INC",
                 "puesto": "Desarrollador Web Junior",
-                "salario": 5000
+                "salario": 5000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
+            },
+            {
+                "id_oferta": 1,
+                "nombre_carreras": "Ingenieria en mecánica industrial",
+                "nombre_empresa": "Empresa INC",
+                "puesto": "Desarrollador Web Junior",
+                "salario": 5000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             },
             {
                 "id_oferta": 2,
                 "nombre_carreras": "Ingenieria en Sistemas",
                 "nombre_empresa": "Empresa INC",
                 "puesto": "Desarrollador Full Stack",
-                "salario": 10000
+                "salario": 10000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             }
         ]
     }
