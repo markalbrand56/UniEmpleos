@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
+import { BiArrowBack } from "react-icons/bi"
 import style from "./PublicProfileAdminEnterprise.module.css"
 import useApi from "../../Hooks/useApi"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import Popup from "../../components/Popup/Popup"
-import { BiArrowBack } from "react-icons/bi"
 import { navigate } from "../../store"
 import Loader from "../../components/Loader/Loader"
 import PublicProfileAdmin from "../../components/PublicProfile/PublicProfileAdmin"
@@ -141,40 +141,42 @@ const PublicProfileAdminEnterprise = ({ id }) => {
         onClick={() => navigate("/profileadmin")}
       />
       <div className={style.infoProfileContainer}>
-        {loadingInfoEnterprise && enterpriseInfo ? (
+        {loadingInfoEnterprise && enterpriseInfo && loadingOffers ? (
           <Loader size={100} />
         ) : (
-          <PublicProfileAdmin
-            name={enterpriseInfo.nombre}
-            mail={enterpriseInfo.correo}
-            pfp={
-              enterpriseInfo.foto === ""
-                ? "/images/pfp.svg"
-                : `${API_URL}/api/uploads/${enterpriseInfo.foto}`
-            }
-            suspended={enterpriseInfo.suspendido}
-            funcSuspended={handleSuspended}
-            funcDelete={handleDelete}
-          />
-        )}
-      </div>
-      <h1 className={style.title}>Ofertas de la empresa</h1>
-      <div className={style.offersContainer}>
-        {offers ? (
-          offers.map((offer) => (
-            <InfoTab
-              key={[offer.id_empresa, offer.id_oferta]}
-              title={offer.puesto}
-              salary={`Q.${offer.salario}.00`}
-              company={enterpriseInfo.nombre}
-              labelbutton="Ver más"
-              onClick={() => {
-                handleShowMore(offer.id_oferta)
-              }}
+          <div className={style.infoEnterpriseContainer}>
+            <PublicProfileAdmin
+              name={enterpriseInfo.nombre}
+              mail={enterpriseInfo.correo}
+              pfp={
+                enterpriseInfo.foto === ""
+                  ? "/images/pfp.svg"
+                  : `${API_URL}/api/uploads/${enterpriseInfo.foto}`
+              }
+              suspended={enterpriseInfo.suspendido}
+              funcSuspended={handleSuspended}
+              funcDelete={handleDelete}
             />
-          ))
-        ) : (
-          <h1 style={{ color: "#000" }}>No hay ofertas</h1>
+            <h1 className={style.title}>Ofertas de la empresa</h1>
+            <div className={style.offersContainer}>
+              {offers ? (
+                offers.map((offer) => (
+                  <InfoTab
+                    key={[offer.id_empresa, offer.id_oferta]}
+                    title={offer.puesto}
+                    salary={`Q.${offer.salario}.00`}
+                    company={enterpriseInfo.nombre}
+                    labelbutton="Ver más"
+                    onClick={() => {
+                      handleShowMore(offer.id_oferta)
+                    }}
+                  />
+                ))
+              ) : (
+                <h1 style={{ color: "#000" }}>No hay ofertas</h1>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -1,8 +1,9 @@
 import React from "react"
-import style from "./PublicProfileAdmin.module.css"
 import { BiUser } from "react-icons/bi"
 import { HiOutlineMailOpen } from "react-icons/hi"
+import style from "./PublicProfileAdmin.module.css"
 import Button from "../Button/Button"
+
 const PublicProfileAdmin = ({
   name,
   lastName,
@@ -33,11 +34,11 @@ const PublicProfileAdmin = ({
         <div className={style.suspendedContainer}>
           <Button
             label={suspended ? "Activar" : "Suspender"}
-            backgroundColor={suspended ? "#00FF00" : "#FF0000"}
+            backgroundColor={suspended ? "#00FF00" : "#707070"}
             textColor="#FFFFFF"
             onClick={funcSuspended}
           />
-          <Button 
+          <Button
             label="Eliminar"
             backgroundColor="#FF0000"
             textColor="#FFFFFF"

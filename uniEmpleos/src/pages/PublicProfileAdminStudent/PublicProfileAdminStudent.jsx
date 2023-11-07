@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react"
+import { BiArrowBack } from "react-icons/bi"
 import style from "./PublicProfileAdminStudent.module.css"
 import PublicProfileAdmin from "../../components/PublicProfile/PublicProfileAdmin"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
 import { navigate } from "../../store"
-import { BiArrowBack } from "react-icons/bi"
 import Loader from "../../components/Loader/Loader"
 import API_URL from "../../api"
 
@@ -139,44 +139,46 @@ const PublicProfileAdminStudent = ({ id }) => {
         onClick={() => navigate("/profileadminstudent")}
       />
       <div className={style.infoProfileContainer}>
-        {loadingInfoStudent && studentInfo ? (
+        {loadingInfoStudent && studentInfo && loadingPostulations ? (
           <Loader size={200} />
         ) : (
-          <PublicProfileAdmin
-            name={studentInfo.nombre}
-            lastName={studentInfo.apellido}
-            mail={studentInfo.correo}
-            pfp={
-              studentInfo.foto === ""
-                ? "/images/pfp.svg"
-                : `${API_URL}/api/uploads/${studentInfo.foto}`
-            }
-            suspended={studentInfo.suspendido}
-            funcSuspended={handleSuspended}
-            funcDelete={handleDelete}
-          />
-        )}
-      </div>
-      <h1 className={style.title}>Postulaciones del estudiante</h1>
-      <div className={style.postulationsContainer}>
-        {postulations.length ? (
-          postulations.map((postulation) => (
-            <InfoTab
-              key={[postulation.id_oferta, postulation.id_postulacion]}
-              title={postulation.id_oferta}
-              company={postulation.id_postulacion}
-              salary={postulation.estado}
-              labelbutton="Ver más"
-              onClick={() => {
-                handleShowMore(
-                  postulation.id_oferta,
-                  postulation.id_postulacion
-                )
-              }}
+          <div className={style.infoStudentContainer}>
+            <PublicProfileAdmin
+              name={studentInfo.nombre}
+              lastName={studentInfo.apellido}
+              mail={studentInfo.correo}
+              pfp={
+                studentInfo.foto === ""
+                  ? "/images/pfp.svg"
+                  : `${API_URL}/api/uploads/${studentInfo.foto}`
+              }
+              suspended={studentInfo.suspendido}
+              funcSuspended={handleSuspended}
+              funcDelete={handleDelete}
             />
-          ))
-        ) : (
-          <h1 style={{ color: "#000" }}>No hay postulaciones</h1>
+            <h1 className={style.title}>Postulaciones del estudiante</h1>
+            <div className={style.postulationsContainer}>
+              {postulations.length ? (
+                postulations.map((postulation) => (
+                  <InfoTab
+                    key={[postulation.id_oferta, postulation.id_postulacion]}
+                    title={postulation.id_oferta}
+                    company={postulation.id_postulacion}
+                    salary={postulation.estado}
+                    labelbutton="Ver más"
+                    onClick={() => {
+                      handleShowMore(
+                        postulation.id_oferta,
+                        postulation.id_postulacion
+                      )
+                    }}
+                  />
+                ))
+              ) : (
+                <h1 style={{ color: "#000" }}>No hay postulaciones</h1>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -6,15 +6,15 @@
   width: calc(100% - 40px);
   height: calc(100% - 40px);
   color: #000;
-  gap: 10%;
+  gap: 20px;
   padding: 20px;
 }
 
 .pfpContainer {
   display: flex;
   align-items: center;
-  justify-content: end;
-  height: 80%;
+  justify-content: center;
+  height: 500px;
   width: 50%;
 }
 
@@ -66,6 +66,7 @@
 
   .mainContainer {
     flex-direction: column;
+    padding-top: 20%;
   }
 
   .pfpContainer {
