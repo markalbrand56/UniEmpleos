@@ -155,26 +155,25 @@ func GetOfferPreviews(c *gin.Context) {
 		return
 	}
 
-	groupedPostulations := make(map[int][]string)
-	for _, p := range postulations {
-		groupedPostulations[p.IdOferta] = append(groupedPostulations[p.IdOferta], p.NombreCarrera)
-	}
-
-	combinedPostulations := make([]map[string]interface{}, 0)
-	for id, carreras := range groupedPostulations {
-		combinedCarreras := strings.Join(carreras, ", ")
-
-		combinedPostulations = append(combinedPostulations, map[string]interface{}{
-			"id_oferta":       id,
-			"puesto":          getPuestosByIDOferta(postulations, id)[0],
-			"nombre_empresa":  getNombreEmpresaByIDOferta(postulations, id),
-			"nombre_carreras": combinedCarreras,
-			"salario":         getSalarioByIDOferta(postulations, id),
-		})
-	}
-
 	data = map[string]interface{}{
-		"postulations": combinedPostulations,
+		"postulations": make([]map[string]interface{}, 0),
+	}
+
+	for _, p := range postulations {
+		carreras := strings.Split(p.NombreCarrera, ", ")
+		for _, carrera := range carreras {
+			postulation := map[string]interface{}{
+				"id_oferta":       p.IdOferta,
+				"puesto":          getPuestosByIDOferta(postulations, p.IdOferta)[0],
+				"nombre_empresa":  getNombreEmpresaByIDOferta(postulations, p.IdOferta),
+				"nombre_carreras": carrera,
+				"salario":         getSalarioByIDOferta(postulations, p.IdOferta),
+				"jornada":         p.Jornada,
+				"hora_inicio":     p.HoraInicio,
+				"hora_fin":        p.HoraFin,
+			}
+			data["postulations"] = append(data["postulations"].([]map[string]interface{}), postulation)
+		}
 	}
 
 	c.JSON(200, responses.StandardResponse{
@@ -182,6 +181,33 @@ func GetOfferPreviews(c *gin.Context) {
 		Message: "Postulations retrieved successfully",
 		Data:    data,
 	})
+}
+
+func getJornadaByIDOferta(postulations []models.ViewPrevPostulaciones, id int) string {
+	for _, p := range postulations {
+		if p.IdOferta == id {
+			return p.Jornada
+		}
+	}
+	return ""
+}
+
+func getHoraInicioByIDOferta(postulations []models.ViewPrevPostulaciones, id int) time.Time {
+	for _, p := range postulations {
+		if p.IdOferta == id {
+			return p.HoraInicio
+		}
+	}
+	return time.Time{}
+}
+
+func getHoraFinByIDOferta(postulations []models.ViewPrevPostulaciones, id int) time.Time {
+	for _, p := range postulations {
+		if p.IdOferta == id {
+			return p.HoraFin
+		}
+	}
+	return time.Time{}
 }
 
 func getPuestosByIDOferta(postulations []models.ViewPrevPostulaciones, id int) []string {
