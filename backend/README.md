@@ -490,6 +490,9 @@ Devuelve las ofertas de trabajo publicadas por una compañia
                     2,
                     3
                 ]
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             },
             {
                 "id_oferta": 60,
