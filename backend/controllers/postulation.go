@@ -160,61 +160,6 @@ func GetOfferPreviews(c *gin.Context) {
 	})
 }
 
-func getJornadaByIDOferta(postulations []models.ViewPrevPostulaciones, id int) string {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.Jornada
-		}
-	}
-	return ""
-}
-
-func getHoraInicioByIDOferta(postulations []models.ViewPrevPostulaciones, id int) time.Time {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.HoraInicio
-		}
-	}
-	return time.Time{}
-}
-
-func getHoraFinByIDOferta(postulations []models.ViewPrevPostulaciones, id int) time.Time {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.HoraFin
-		}
-	}
-	return time.Time{}
-}
-
-func getPuestosByIDOferta(postulations []models.ViewPrevPostulaciones, id int) []string {
-	var puestos []string
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			puestos = append(puestos, p.Puesto)
-		}
-	}
-	return puestos
-}
-
-func getNombreEmpresaByIDOferta(postulations []models.ViewPrevPostulaciones, id int) string {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.NombreEmpresa
-		}
-	}
-	return ""
-}
-
-func getSalarioByIDOferta(postulations []models.ViewPrevPostulaciones, id int) float64 {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.Salario
-		}
-	}
-	return 0
-}
-
 type PostulationFromStudentResult struct {
 	IDPostulacion int     `json:"id_postulacion"`
 	IDOferta      int     `json:"id_oferta"`
