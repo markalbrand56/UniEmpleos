@@ -371,6 +371,9 @@ Crea una oferta de trabajo
 	"requisitos"    : "string" 
 	"salario"	: "double"
 	"id_carreras"    : "[]string"
+	"jornada"	: "string"
+	"hora_inicio"	: "time"
+	"hora_fin"	: "time"
 }
 ```
 
@@ -397,6 +400,9 @@ Actualiza una oferta de trabajo
     "requisitos"    : "string" 
     "salario"	    : "double"
     "id_carreras"   : "[]string"
+    "jornada"       : "string"
+    "hora_inicio"   : "time"
+    "hora_fin"      : "time"
 }
 ```
 
@@ -426,28 +432,50 @@ Devuelve la información para las preview de las ofertas disponibles
                 "nombre_carreras": "Ingenieria en Sistemas",
                 "nombre_empresa": "Valve Corporation",
                 "puesto": "Desarrollador de Videojuegos",
-                "salario": 15000
+                "salario": 15000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             },
             {
                 "id_oferta": 4,
                 "nombre_carreras": "Ingenieria en Sistemas",
                 "nombre_empresa": "Simán",
                 "puesto": "DataBase Administrator",
-                "salario": 10000
+                "salario": 10000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             },
             {
                 "id_oferta": 1,
-                "nombre_carreras": "Ingenieria en Sistemas, Ingenieria en mecánica industrial",
+                "nombre_carreras": "Ingenieria en Sistemas",
                 "nombre_empresa": "Empresa INC",
                 "puesto": "Desarrollador Web Junior",
-                "salario": 5000
+                "salario": 5000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
+            },
+            {
+                "id_oferta": 1,
+                "nombre_carreras": "Ingenieria en mecánica industrial",
+                "nombre_empresa": "Empresa INC",
+                "puesto": "Desarrollador Web Junior",
+                "salario": 5000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             },
             {
                 "id_oferta": 2,
                 "nombre_carreras": "Ingenieria en Sistemas",
                 "nombre_empresa": "Empresa INC",
                 "puesto": "Desarrollador Full Stack",
-                "salario": 10000
+                "salario": 10000,
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             }
         ]
     }
@@ -484,6 +512,9 @@ Devuelve las ofertas de trabajo publicadas por una compañia
                     2,
                     3
                 ]
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             },
             {
                 "id_oferta": 60,
@@ -492,6 +523,9 @@ Devuelve las ofertas de trabajo publicadas por una compañia
                 "descripcion": "{\"ops\":[{\"insert\":\"Puesto Dummy\"},{\"attributes\":{\"align\":\"center\"},\"insert\":\"\\n\"}]}",
                 "requisitos": "requisitos dummy",
                 "id_carreras": null
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             }
         ]
     }
@@ -530,6 +564,9 @@ Devuelve todos los detalles de una oferta según el ID. Devuelve además la info
             "descripcion": "Desarrollador web junior encargado de Diseñar, desarrollar, dar mantenimiento y soporte a las aplicaciones web",
             "requisitos": "Conocimientos en HTML, CSS, Javascript, PHP, MySQL, React, NodeJS",
             "salario": 5000
+            "jornada": "Medio Tiempo",
+            "hora_inicio": "0000-01-01T08:00:00Z",
+            "hora_fin": "0000-01-01T12:00:00Z"
         }
     }
 }
@@ -543,17 +580,10 @@ Devuelve todos los detalles de una oferta según el ID. Devuelve además la info
 	"Data": "nil"
 }
 ```
-### [DELETE] api/offers/
-Elimina una oferta de trabajo. También elimina cualquier postulación asociada a la oferta
+### [DELETE] api/offers/?id_oferta=579
+Elimina una oferta de trabajo. También elimina cualquier postulación asociada a la oferta. Se pasa el id de la oferta como query param
 > **Note**
 > Auth required
-
-#### Params
-``` json
-{
-    "id_oferta"    : int
-}
-```
 
 #### Response
 ``` json
