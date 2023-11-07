@@ -371,6 +371,9 @@ Crea una oferta de trabajo
 	"requisitos"    : "string" 
 	"salario"	: "double"
 	"id_carreras"    : "[]string"
+	"jornada"	: "string"
+	"hora_inicio"	: "time"
+	"hora_fin"	: "time"
 }
 ```
 
@@ -397,6 +400,9 @@ Actualiza una oferta de trabajo
     "requisitos"    : "string" 
     "salario"	    : "double"
     "id_carreras"   : "[]string"
+    "jornada"       : "string"
+    "hora_inicio"   : "time"
+    "hora_fin"      : "time"
 }
 ```
 
@@ -492,6 +498,9 @@ Devuelve las ofertas de trabajo publicadas por una compañia
                 "descripcion": "{\"ops\":[{\"insert\":\"Puesto Dummy\"},{\"attributes\":{\"align\":\"center\"},\"insert\":\"\\n\"}]}",
                 "requisitos": "requisitos dummy",
                 "id_carreras": null
+                "jornada": "Tiempo completo",
+                "hora_inicio": "0000-01-01T17:00:00Z",
+                "hora_fin": "0000-01-01T17:00:00Z"
             }
         ]
     }
@@ -530,6 +539,9 @@ Devuelve todos los detalles de una oferta según el ID. Devuelve además la info
             "descripcion": "Desarrollador web junior encargado de Diseñar, desarrollar, dar mantenimiento y soporte a las aplicaciones web",
             "requisitos": "Conocimientos en HTML, CSS, Javascript, PHP, MySQL, React, NodeJS",
             "salario": 5000
+            "jornada": "Medio Tiempo",
+            "hora_inicio": "0000-01-01T08:00:00Z",
+            "hora_fin": "0000-01-01T12:00:00Z"
         }
     }
 }
@@ -543,17 +555,10 @@ Devuelve todos los detalles de una oferta según el ID. Devuelve además la info
 	"Data": "nil"
 }
 ```
-### [DELETE] api/offers/
-Elimina una oferta de trabajo. También elimina cualquier postulación asociada a la oferta
+### [DELETE] api/offers/?id_oferta=579
+Elimina una oferta de trabajo. También elimina cualquier postulación asociada a la oferta. Se pasa el id de la oferta como query param
 > **Note**
 > Auth required
-
-#### Params
-``` json
-{
-    "id_oferta"    : int
-}
-```
 
 #### Response
 ``` json

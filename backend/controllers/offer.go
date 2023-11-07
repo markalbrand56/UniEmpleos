@@ -9,24 +9,31 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type OfferInput struct {
-	IDEmpresa   string   `json:"id_empresa"`
-	Puesto      string   `json:"puesto"`
-	Descripcion string   `json:"descripcion"`
-	Requisitos  string   `json:"requisitos"`
-	Salario     float64  `json:"salario"`
-	IdCarreras  []string `json:"id_carreras"`
+	IDEmpresa   string    `json:"id_empresa"`
+	Puesto      string    `json:"puesto"`
+	Descripcion string    `json:"descripcion"`
+	Requisitos  string    `json:"requisitos"`
+	Salario     float64   `json:"salario"`
+	IdCarreras  []string  `json:"id_carreras"`
+	Jornada     string    `json:"jornada"`
+	HoraInicio  time.Time `json:"hora_inicio"`
+	HoraFin     time.Time `json:"hora_fin"`
 }
 
 type AfterInsert struct {
-	IdOferta    int     `json:"id_oferta"`
-	IDEmpresa   string  `json:"id_empresa"`
-	Puesto      string  `json:"puesto"`
-	Descripcion string  `json:"descripcion"`
-	Requisitos  string  `json:"requisitos"`
-	Salario     float64 `json:"salario"`
+	IdOferta    int       `json:"id_oferta"`
+	IDEmpresa   string    `json:"id_empresa"`
+	Puesto      string    `json:"puesto"`
+	Descripcion string    `json:"descripcion"`
+	Requisitos  string    `json:"requisitos"`
+	Salario     float64   `json:"salario"`
+	Jornada     string    `json:"jornada"`
+	HoraInicio  time.Time `json:"hora_inicio"`
+	HoraFin     time.Time `json:"hora_fin"`
 }
 
 type AfterInsert2 struct {
@@ -72,10 +79,13 @@ func NewOffer(c *gin.Context) {
 		Descripcion: input.Descripcion,
 		Requisitos:  input.Requisitos,
 		Salario:     input.Salario,
+		Jornada:     input.Jornada,
+		HoraInicio:  input.HoraInicio,
+		HoraFin:     input.HoraFin,
 	}
 
 	var inserted AfterInsert
-	err = configs.DB.Raw("INSERT INTO oferta (id_empresa, puesto, descripcion, requisitos, salario) VALUES (?, ?, ?, ?, ?) RETURNING id_oferta, id_empresa, puesto, descripcion, requisitos, salario", offer.IDEmpresa, offer.Puesto, offer.Descripcion, offer.Requisitos, offer.Salario).Scan(&inserted).Error
+	err = configs.DB.Raw("INSERT INTO oferta (id_empresa, puesto, descripcion, requisitos, salario, jornada, hora_inicio, hora_fin) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id_oferta, id_empresa, puesto, descripcion, requisitos, salario, jornada, hora_inicio, hora_fin", offer.IDEmpresa, offer.Puesto, offer.Descripcion, offer.Requisitos, offer.Salario, offer.Jornada, offer.HoraInicio, offer.HoraFin).Scan(&inserted).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -109,13 +119,16 @@ func NewOffer(c *gin.Context) {
 }
 
 type OfferUpdateInput struct {
-	Id_Oferta   int      `json:"id_oferta"`
-	IDEmpresa   string   `json:"id_empresa"`
-	Puesto      string   `json:"puesto"`
-	Descripcion string   `json:"descripcion"`
-	Requisitos  string   `json:"requisitos"`
-	Salario     float64  `json:"salario"`
-	IdCarreras  []string `json:"id_carreras"`
+	Id_Oferta   int       `json:"id_oferta"`
+	IDEmpresa   string    `json:"id_empresa"`
+	Puesto      string    `json:"puesto"`
+	Descripcion string    `json:"descripcion"`
+	Requisitos  string    `json:"requisitos"`
+	Salario     float64   `json:"salario"`
+	IdCarreras  []string  `json:"id_carreras"`
+	Jornada     string    `json:"jornada"`
+	HoraInicio  time.Time `json:"hora_inicio"`
+	HoraFin     time.Time `json:"hora_fin"`
 }
 
 func UpdateOffer(c *gin.Context) {
@@ -177,6 +190,9 @@ func UpdateOffer(c *gin.Context) {
 		Descripcion: input.Descripcion,
 		Requisitos:  input.Requisitos,
 		Salario:     input.Salario,
+		Jornada:     input.Jornada,
+		HoraInicio:  input.HoraInicio,
+		HoraFin:     input.HoraFin,
 	}
 
 	err = configs.DB.Model(&updatedOffer).Where("id_oferta = ? AND id_empresa = ?", input.Id_Oferta, input.IDEmpresa).Updates(updatedOffer).Error
@@ -297,13 +313,16 @@ type GetOfferByCompanyInput struct {
 }
 
 type GetOfferByCompanyResponse struct {
-	Id_Oferta   int     `json:"id_oferta"`
-	IDEmpresa   string  `json:"id_empresa"`
-	Puesto      string  `json:"puesto"`
-	Descripcion string  `json:"descripcion"`
-	Requisitos  string  `json:"requisitos"`
-	Salario     float64 `json:"salario"`
-	IdCarreras  []int   `json:"id_carreras"`
+	Id_Oferta   int       `json:"id_oferta"`
+	IDEmpresa   string    `json:"id_empresa"`
+	Puesto      string    `json:"puesto"`
+	Descripcion string    `json:"descripcion"`
+	Requisitos  string    `json:"requisitos"`
+	Salario     float64   `json:"salario"`
+	IdCarreras  []int     `json:"id_carreras"`
+	Jornada     string    `json:"jornada"`
+	HoraInicio  time.Time `json:"hora_inicio"`
+	HoraFin     time.Time `json:"hora_fin"`
 }
 
 func GetOfferByCompany(c *gin.Context) {
@@ -328,7 +347,10 @@ func GetOfferByCompany(c *gin.Context) {
 		o.descripcion,
 		o.requisitos,
 		o.salario,
-		oc.id_carrera
+		oc.id_carrera,
+		o.jornada,
+		o.hora_inicio,
+		o.hora_fin
 	FROM
 		oferta o
 	LEFT JOIN
@@ -377,6 +399,9 @@ func GetOfferByCompany(c *gin.Context) {
 			&offer.Requisitos,
 			&offer.Salario,
 			&idCarrera,
+			&offer.Jornada,
+			&offer.HoraInicio,
+			&offer.HoraFin,
 		); err != nil {
 			c.JSON(400, responses.StandardResponse{
 				Status:  400,
