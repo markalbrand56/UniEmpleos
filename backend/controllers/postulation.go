@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -142,100 +141,23 @@ type PostulationResult struct {
 
 func GetOfferPreviews(c *gin.Context) {
 	var postulations []models.ViewPrevPostulaciones
-	var data map[string]interface{}
 
 	err := configs.DB.Find(&postulations).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error getting postulations",
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting postulations. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	data = map[string]interface{}{
-		"postulations": make([]map[string]interface{}, 0),
-	}
-
-	for _, p := range postulations {
-		carreras := strings.Split(p.NombreCarrera, ", ")
-		for _, carrera := range carreras {
-			postulation := map[string]interface{}{
-				"id_oferta":       p.IdOferta,
-				"puesto":          getPuestosByIDOferta(postulations, p.IdOferta)[0],
-				"nombre_empresa":  getNombreEmpresaByIDOferta(postulations, p.IdOferta),
-				"nombre_carreras": carrera,
-				"salario":         getSalarioByIDOferta(postulations, p.IdOferta),
-				"jornada":         p.Jornada,
-				"hora_inicio":     p.HoraInicio,
-				"hora_fin":        p.HoraFin,
-			}
-			data["postulations"] = append(data["postulations"].([]map[string]interface{}), postulation)
-		}
-	}
-
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
-		Message: "Postulations retrieved successfully",
-		Data:    data,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
+		Message: "Previews of offers retrieved successfully",
+		Data:    map[string]interface{}{"postulations": postulations},
 	})
-}
-
-func getJornadaByIDOferta(postulations []models.ViewPrevPostulaciones, id int) string {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.Jornada
-		}
-	}
-	return ""
-}
-
-func getHoraInicioByIDOferta(postulations []models.ViewPrevPostulaciones, id int) time.Time {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.HoraInicio
-		}
-	}
-	return time.Time{}
-}
-
-func getHoraFinByIDOferta(postulations []models.ViewPrevPostulaciones, id int) time.Time {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.HoraFin
-		}
-	}
-	return time.Time{}
-}
-
-func getPuestosByIDOferta(postulations []models.ViewPrevPostulaciones, id int) []string {
-	var puestos []string
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			puestos = append(puestos, p.Puesto)
-		}
-	}
-	return puestos
-}
-
-func getNombreEmpresaByIDOferta(postulations []models.ViewPrevPostulaciones, id int) string {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.NombreEmpresa
-		}
-	}
-	return ""
-}
-
-func getSalarioByIDOferta(postulations []models.ViewPrevPostulaciones, id int) float64 {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.Salario
-		}
-	}
-	return 0
 }
 
 type PostulationFromStudentResult struct {
