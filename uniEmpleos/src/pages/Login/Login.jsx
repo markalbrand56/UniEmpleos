@@ -44,7 +44,7 @@ const LogIn = () => {
       if (role === "student") {
         navigate("/profile")
       } else if (role === "enterprise") {
-        navigate("/profilecompany")
+        navigate("/postulacionempresa")
       } else if (role === "admin") {
         navigate("/profileadmin")
       }

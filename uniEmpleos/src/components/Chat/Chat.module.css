@@ -6,7 +6,7 @@
   width: auto;
   border-radius: 10px;
   /* Sombras más pronunciadas */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px #94bd0f;
   animation: chatAnimation 0.5s ease-in-out;
 }
 
@@ -24,7 +24,7 @@
 }
 
 .button {
-  background-color: #e1dede;
+  background-color: #fff;
   border: none;
   border-radius: 5px;
   padding: 5px;
@@ -39,11 +39,11 @@
 
 .button:focus {
   outline: none;
-  background-color: #d1cece;
+  background-color: #94bd0f75;
 }
 
 .button:hover {
-  background-color: #d1cece;
+  background-color: #94bd0f75;
 }
 
 .pfp {
@@ -83,4 +83,17 @@
   color: #252525;
   font-weight: normal;
   text-align: start;
+}
+
+
+@media (max-width: 768px) {
+  .lastChat {
+    display: none;
+  }
+
+  .pfp {
+    width: 40%;
+    height: 60px;
+  }
+
 }

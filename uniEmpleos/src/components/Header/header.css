@@ -21,8 +21,6 @@
   display: flex;
   gap: 20px;
   align-items: center;
-  position: relative;
-  right: 60%;
 }
 
 .actions a {
@@ -82,7 +80,6 @@ button.buttonlogo:focus{
 }
 
 .container {
-  max-width: 1100px;
   margin: 0 auto;
   padding: 0 15px;
   display: flex;
@@ -180,6 +177,7 @@ button.buttonlogo:focus{
 
   .nav-elements.active {
     width: 100%;
+    z-index: 999;
   }
 
   .nav-elements ul {

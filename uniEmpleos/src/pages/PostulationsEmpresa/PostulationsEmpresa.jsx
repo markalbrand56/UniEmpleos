@@ -7,6 +7,8 @@ import InfoTab from "../../components/InfoTab/InfoTab"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
+import Popup from "../../components/Popup/Popup"
+import Loader from "../../components/Loader/Loader"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -23,17 +25,24 @@ const PostulationsEmpresa = () => {
 
   const { user } = useStoreon("user")
   const api = useApi()
+  const obtainPostulantes = useApi()
 
   const [dataa, setData] = useState([])
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState("")
+  const [typeError, setTypeError] = useState(1)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (api.data) {
       const { offers } = api.data
       setData(offers)
     }
+    setLoading(false)
   }, [api.data])
 
   useEffect(() => {
+    setLoading(true)
     api.handleRequest("POST", "/offers/company", {
       id_empresa: user.id_user,
     })
@@ -48,13 +57,39 @@ const PostulationsEmpresa = () => {
       )
   }
 
+  const handleVerPostulantes = async (id) => {
+    const datos = await obtainPostulantes.handleRequest(
+      "POST",
+      "/offers/applicants",
+      {
+        id_oferta: parseInt(id, 10),
+      }
+    )
+    if (datos.data) {
+      navigate(`/postulantes/${id}`)
+    } else {
+      setTypeError(2)
+      setError("La oferta no tiene postulantes")
+      setWarning(true)
+    }
+  }
+
   return (
     <div className={styles.containePostulation}>
-      <Header userperson="company" />
-      {api.data ? (
+      <Header />
+      <Popup
+        message={error}
+        status={warning}
+        style={typeError}
+        close={() => setWarning(false)}
+      />
+      {loading ? (
+        <Loader size={100} />
+      ) : dataa.length > 0 ? (
         <div className={styles.containerinfoprincipal}>
           {dataa.map((postulation) => (
             <InfoTab
+              key={postulation.id_oferta}
               title={postulation.puesto}
               area={postulation.nombre_carreras}
               salary={`Q.${postulation.salario}.00`}
@@ -63,12 +98,15 @@ const PostulationsEmpresa = () => {
               onClick={() => {
                 saveidlocalstorage(postulation.id_oferta)
               }}
+              verPostulantes={() => {
+                handleVerPostulantes(postulation.id_oferta)
+              }}
             />
           ))}
         </div>
       ) : (
         <div className={styles.containerinfomain}>
-          <h1>No tiene niguna oferta activa</h1>
+          <h1 style={{color: "#000"}}>No tiene niguna oferta activa</h1>
         </div>
       )}
     </div>

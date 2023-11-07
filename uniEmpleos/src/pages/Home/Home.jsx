@@ -3,6 +3,7 @@ import styles from "./Home.module.css"
 import Infocontainer from "../../components/Infocontainer/Infocontainer"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
+import HeaderHome from "../../components/HeaderHome/HeaderHome"
 
 const Home = () => {
   const handleNav = (path) => {
@@ -13,30 +14,7 @@ const Home = () => {
     <div className={styles.homeContainer}>
       <div className={styles.homeContent}>
         <div className={styles.topcontent}>
-          <img src="/images/Ue_2.svg" alt="Logo" />
-          <div className={styles.button}>
-            <Button
-              primary
-              label="Iniciar Sesión"
-              backgroundColor="transparent"
-              size="large"
-              onClick={(event) => {
-                event.preventDefault()
-                handleNav("/login")
-              }}
-            />
-            <Button
-              primary
-              label="Registrarse"
-              backgroundColor="#A08AE5"
-              size="large"
-              noborder
-              onClick={(event) => {
-                event.preventDefault()
-                handleNav("/signup")
-              }}
-            />
-          </div>
+          <HeaderHome />
         </div>
         <div className={styles.image}>
           <img src="/images/Uniempleos.png" alt="Uniempleos" />

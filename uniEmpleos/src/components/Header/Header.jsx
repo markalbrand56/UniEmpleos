@@ -2,9 +2,8 @@ import React, { useState } from "react"
 import { useStoreon } from "storeon/react"
 import PropTypes from "prop-types"
 import { FaBars, FaTimes } from "react-icons/fa"
-import {AiOutlineLogout} from "react-icons/ai"
+import { LuLogOut } from "react-icons/lu"
 import Logo from "../Logo/Logo"
-import Button from "../Button/Button"
 import "./header.css"
 import { navigate } from "../../store"
 
@@ -44,11 +43,11 @@ export const Header = () => {
             <div className="actionlinks">
               <a href="/editprofileestudiante">Perfil</a>
               <a href="/profile">Vacantes</a>
-              <a href="/chat">Chat</a>
               <a href="/postulaciones">Postulaciones</a>
+              <a href="/chat">Chat</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
-              <AiOutlineLogout size={30} style={{ color: "#000" }} />
+              <LuLogOut size={30} style={{ color: "#000" }} />
             </div>
           </div>
         )
@@ -56,13 +55,13 @@ export const Header = () => {
         return (
           <div className="actions">
             <div className="actionlinks">
-              <a href="/newoffer">Añadir Empleo</a>
+              <a href="/editprofileempresa">Perfil</a>
+              <a href="/newoffer">Crear Empleo</a>
               <a href="/postulacionempresa">Mis Ofertas</a>
-              <a href="/editprofileempresa">Profile</a>
               <a href="/chat">Chat</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
-              <AiOutlineLogout size={30} style={{ color: "#000" }} />
+              <LuLogOut size={30} style={{ color: "#000" }} />
             </div>
           </div>
         )
@@ -70,12 +69,11 @@ export const Header = () => {
         return (
           <div className="actions">
             <div className="actionlinks">
-              <a href="/jobs">Vacantes</a>
-              <a href="/postulantes">Postulantes</a>
-              <a href="/profile">Perfil</a>
+              <a href="/profileadmin">Empresas</a>
+              <a href="/profileadminstudent">Estudiantes</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
-              <AiOutlineLogout size={30} style={{ color: "#000" }} />
+              <LuLogOut size={30} style={{ color: "#000" }} />
             </div>
           </div>
         )

@@ -2,18 +2,14 @@ import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
 import Select from "react-select"
 import makeAnimated from "react-select/animated"
-import { ca } from "date-fns/locale"
+import ImageDirectUploader from "@components/ImageDirectUploader/ImageDirectUploader.jsx"
 import style from "./EditProfileEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
-import DropDown from "../../components/dropDown/DropDown"
 import { Header } from "../../components/Header/Header"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import useIsImage from "../../Hooks/useIsImage"
-import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
-import ImageDirectUploader from "@components/ImageDirectUploader/ImageDirectUploader.jsx"
 import API_URL from "@/api.js"
 
 const animatedComponents = makeAnimated()
@@ -21,7 +17,6 @@ const animatedComponents = makeAnimated()
 const EditProfileEstudiante = () => {
   const { user } = useStoreon("user")
   const api = useApi()
-  const isImage = useIsImage()
   const apiCareers = useApi()
   const publishChanges = useApi()
 
@@ -33,7 +28,7 @@ const EditProfileEstudiante = () => {
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
   const [semestre, setSemestre] = useState(1)
-  const [uploadedImage, setUploadedImage] = useState("")
+  const [uploadedImage, setUploadedImage] = useState("/images/pfp.svg")
   const [updatedImage, setUpdatedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
@@ -63,7 +58,8 @@ const EditProfileEstudiante = () => {
   useEffect(() => {
     if (api.data) {
       const { usuario } = api.data
-      const fotoUrl = API_URL + "/api/uploads/" + usuario.foto
+      // console.log("Foto from API", usuario.foto)
+      const fotoUrl = (api.data.usuario.foto === "") ? "/images/pfp.svg" : (API_URL + "/api/uploads/" + api.data.usuario.foto)
       setNombre(usuario.nombre)
       setApellido(usuario.apellido)
       const date = new Date(usuario.nacimiento)
@@ -104,7 +100,6 @@ const EditProfileEstudiante = () => {
   useEffect(() => {
     if (updatedImage !== "") {
       const fotoUrl = API_URL + "/api/uploads/" + updatedImage
-      console.log("New image ", fotoUrl)
       setUploadedImage(fotoUrl)
     }
   }, [updatedImage])
@@ -170,7 +165,6 @@ const EditProfileEstudiante = () => {
           telefono,
           semestre,
           cv: "",
-          foto: uploadedImage,
           correo: user.id_user,
         }
       )
@@ -184,15 +178,18 @@ const EditProfileEstudiante = () => {
     }
   }
 
+  // modificaciones de la imagen
+  const [inputStyle, setInputStyle] = useState(false)
+  const [archivo, setArchivo] = useState()
 
-  const handleUploadFile = (uploadedImage) => {
-    const fileType = isImage(uploadedImage)
-    if (fileType) {
-      setUploadedImage(uploadedImage)
+  const handleInputChange = (event) => {
+    const selectedFiles = event.target.files
+    if (selectedFiles.length > 0) {
+      setInputStyle(true)
+      setArchivo(event.target.files[0].name)
     } else {
-      setTypePopUp(2)
-      setError("El archivo debe ser una imagen")
-      setWarning(true)
+      setInputStyle(false)
+      setArchivo("")
     }
   }
 
@@ -203,12 +200,13 @@ const EditProfileEstudiante = () => {
     if (file) {
       const updated = await api.updateProfilePicture(file)
       if (updated.status === 200) {
-        console.log("Updated", updated.data.filename)
         setUpdatedImage(updated.data.filename)
         window.location.reload()
       } else {
         setTypePopUp(2)
-        setError("Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde")
+        setError(
+          "Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde"
+        )
         setWarning(true)
       }
     } else {
@@ -230,14 +228,16 @@ const EditProfileEstudiante = () => {
         <Header userperson="student" />
       </div>
       <div className={style.imgContainer}>
-        <img
-          src={uploadedImage}
-          alt="profile"
-        />
+        <img src={uploadedImage} alt="profile" />
       </div>
       <div className={style.editProfileContainer}>
         <div className={style.inputsContainer}>
-          <ImageDirectUploader uploader={uploadFile} />
+          <ImageDirectUploader
+            uploader={uploadFile}
+            handleInputChange={handleInputChange}
+            isSelected={inputStyle}
+            archivo={archivo}
+          />
           <div className={style.inputSubContainer}>
             <span>Nombres</span>
             <ComponentInput

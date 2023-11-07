@@ -1,0 +1,51 @@
+.mainContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.infoProfileContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.postulationContainer {
+  width: 100%;
+  height: 60%;
+}
+
+.offersContainer {
+  padding: 0 20px;
+  height: 50%;
+  width: calc(100% - 40px);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.infoEnterpriseContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10%;
+}
+
+.title {
+  color: #333;
+  text-align: center;
+  margin: 0 0 60px 0;
+}
+
+@media screen and (max-width: 768px) {
+  .title{
+    margin: 10%;
+  }
+}

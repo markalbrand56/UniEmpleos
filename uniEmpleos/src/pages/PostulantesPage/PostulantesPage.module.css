@@ -1,0 +1,27 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.mainContainer h1{
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #333333;
+    text-align: left;
+    padding: 20px;
+}
+
+.infoStudentContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 30px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.sinPostulantes {
+    color: #000;
+}

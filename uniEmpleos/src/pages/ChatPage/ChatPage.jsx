@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState, useRef } from "react"
+import { FaUserFriends } from "react-icons/fa"
 import { useStoreon } from "storeon/react"
 import style from "./ChatPage.module.css"
 import { Header } from "../../components/Header/Header"
@@ -9,7 +10,6 @@ import Message from "../../components/Message/Message"
 import Input from "../../components/Input/Input"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
 import useIsImage from "../../Hooks/useIsImage"
 import { formatDuration } from "date-fns"
@@ -24,7 +24,6 @@ const ChatPage = () => {
 
   const [currentChat, setCurrentChat] = useState("")
   const [textMessage, setTextMessage] = useState("")
-  const [uploadedImage, setUploadedImage] = useState("")
   const [idCurrentChat, setIdCurrentChat] = useState()
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
@@ -38,21 +37,27 @@ const ChatPage = () => {
     })
   }
 
-  useEffect(() => {
-    obtainMessages()
-  }, [currentChat])
-
   const obtainMessages = async () => {
     if (currentChat !== "") {
       await apiMessages.handleRequest("POST", "/messages/get", {
         id_emisor: user.id_user,
         id_receptor: currentChat,
       })
-      if (cambioChats !== apiMessages.data){
+      if (cambioChats !== apiMessages.data) {
         setCambioChats(apiMessages.data)
       }
     }
   }
+
+  useEffect(() => {
+    obtainMessages()
+    if (currentChat !== "") {
+      const intervalMensajesChatActual = setInterval(() => {
+        obtainMessages()
+      }, 5000)
+      return () => clearInterval(intervalMensajesChatActual)
+    }
+  }, [currentChat])
 
   const scrollDown = () => {
     chatContainerRef.current.scrollTo({
@@ -66,56 +71,18 @@ const ChatPage = () => {
   }, [cambioChats])
 
   const sendMessage = async () => {
-    if (uploadedImage !== "" && textMessage !== "") {
-      await apiSendMessage.handleRequest("POST", "/messages/send", {
-        id_emisor: user.id_user,
-        id_receptor: currentChat,
-        mensaje: textMessage,
-        id_postulacion: idCurrentChat,
-      })
-      await apiSendMessage.handleRequest("POST", "/messages/send", {
-        id_emisor: user.id_user,
-        id_receptor: currentChat,
-        mensaje: uploadedImage,
-        id_postulacion: idCurrentChat,
-      })
-    } else if (uploadedImage === "") {
-      await apiSendMessage.handleRequest("POST", "/messages/send", {
-        id_emisor: user.id_user,
-        id_receptor: currentChat,
-        mensaje: textMessage,
-        id_postulacion: idCurrentChat,
-      })
-    } else if (textMessage === "") {
-      await apiSendMessage.handleRequest("POST", "/messages/send", {
-        id_emisor: user.id_user,
-        id_receptor: currentChat,
-        mensaje: uploadedImage,
-        id_postulacion: idCurrentChat,
-      })
-    }
+    await apiSendMessage.handleRequest("POST", "/messages/send", {
+      id_emisor: user.id_user,
+      id_receptor: currentChat,
+      mensaje: textMessage,
+      id_postulacion: idCurrentChat,
+    })
     scrollDown()
     obtainMessages()
   }
 
-  const handleChat = (receptor, id) => {
-    setCurrentChat(receptor)
-    setIdCurrentChat(id)
-  }
-
   const handleInputChange = (e) => {
     setTextMessage(e.target.value)
-  }
-
-  const handleUploadFile = (uploadedImage) => {
-    const fileType = isImage(uploadedImage)
-    if (fileType) {
-      setUploadedImage(uploadedImage)
-    } else {
-      setTypePopUp(2)
-      setError("El archivo debe ser una imagen")
-      setWarning(true)
-    }
   }
 
   const handleSendMessage = () => {
@@ -126,23 +93,27 @@ const ChatPage = () => {
 
   //Intervals
   // Actualizar lista de chats
-
   useEffect(() => {
     obtainLastChats()
     const intervalListadeChats = setInterval(() => {
       obtainLastChats()
-    }, 10000)
+    }, 5000)
     return () => clearInterval(intervalListadeChats)
   }, [])
 
-  // Actualizar mensajes de chat actual
+  // Estado para controlar la visibilidad del contenedor de chats
+  const [showChats, setShowChats] = useState(false)
 
-  useEffect(() => {
-    const intervalMensajesChatActual = setInterval(() => {
-      obtainMessages()
-    }, 10000)
-    return () => clearInterval(intervalMensajesChatActual)
-  }, [])
+  // Función para alternar la visibilidad del contenedor de chats
+  const toggleChats = () => {
+    setShowChats(!showChats)
+  }
+
+  const handleChat = (receptor, id) => {
+    setCurrentChat(receptor)
+    setIdCurrentChat(id)
+    setShowChats(false)
+  }
 
   return (
     <div className={style.container}>
@@ -153,80 +124,63 @@ const ChatPage = () => {
         style={typePopUp}
         close={() => setWarning(false)}
       />
+      <button type="button" className={style.menuButton} onClick={toggleChats}>
+        <FaUserFriends size={30} color="#000" />
+      </button>
       <div className={style.generalChatContainer}>
-        <div className={style.chatsContainer}>
+        <div
+          className={`${style.chatsContainer} ${
+            showChats ? style.showChat : style.hideChat
+          }`}
+        >
           {apiLastChats.data && apiLastChats.data.messages.length > 0 ? (
-            apiLastChats.data.messages.map((chat) => {
-              if (chat.last_message.length === 0) {
-                return null
-              } else {
-                const fileType = isImage(chat.last_message)
-                const pfpUrl = chat.user_photo ? API_URL + "/api/uploads/" + chat.user_photo : "/images/pfp.svg"
-                if (fileType) {
-                  return (
-                    <Chat
-                      pfp={pfpUrl}
-                      name={chat.user_name}
-                      lastChat="Foto"
-                      key={chat.postulation_id}
-                      id_postulacion={chat.postulation_id.toString()}
-                      onClick={() =>
-                        handleChat(chat.user_id, chat.postulation_id)
-                      }
-                    />
-                  )
-                } else {
-                  return (
-                    <Chat
-                      pfp={pfpUrl}
-                      name={chat.user_name}
-                      lastChat={chat.last_message}
-                      key={chat.postulation_id}
-                      id_postulacion={chat.postulation_id.toString()}
-                      onClick={() =>
-                        handleChat(chat.user_id, chat.postulation_id)
-                      }
-                    />
-                  )
-                }
-              }
-            })
+            apiLastChats.data.messages.map((chat) =>
+              chat.last_message.length === 0 ? null : (
+                <Chat
+                  pfp={
+                    chat.user_photo
+                      ? API_URL + "/api/uploads/" + chat.user_photo
+                      : "/images/pfp.svg"
+                  }
+                  name={chat.user_name}
+                  lastChat={
+                    isImage(chat.last_message) ? "Foto" : chat.last_message
+                  }
+                  key={chat.postulation_id}
+                  id_postulacion={chat.postulation_id.toString()}
+                  onClick={() => handleChat(chat.user_id, chat.postulation_id)}
+                />
+              )
+            )
           ) : (
             <div className={style.noUsersMessage}>No hay chats recientes.</div>
           )}
         </div>
-        <div className={style.currentChatContainer} ref={chatContainerRef}>
+        <div
+          className={`${style.currentChatContainer} ${
+            showChats ? style.hide : style.show
+          }`}
+          ref={chatContainerRef}
+        >
           {apiMessages.data && apiMessages.data.messages.length > 0 ? (
             apiMessages.data.messages.map((message, number) => {
               const side = message.id_emisor === user.id_user ? "right" : "left"
               number += 1
               const fileType = isImage(message.mensaje)
-              const pfpUrlEmisor = message.emisor_foto ? API_URL + "/api/uploads/" + message.emisor_foto : "/images/pfp.svg"
-              if (fileType) {
-                return (
-                  <Message
-                    key={[message.id, message.id_emisor, number]}
-                    pfp={pfpUrlEmisor}
-                    name={message.emisor_nombre}
-                    time={message.tiempo}
-                    message=""
-                    file={message.mensaje}
-                    side={side}
-                  />
-                )
-              } else {
-                return (
-                  <Message
-                    key={[message.id, message.id_emisor, number]}
-                    pfp={pfpUrlEmisor}
-                    name={message.emisor_nombre}
-                    time={message.tiempo}
-                    message={message.mensaje}
-                    file=""
-                    side={side}
-                  />
-                )
-              }
+              const pfpUrlEmisor = message.emisor_foto
+                ? API_URL + "/api/uploads/" + message.emisor_foto
+                : "/images/pfp.svg"
+              return (
+                <Message
+                  key={[message.id, message.id_emisor, number]}
+                  pfp={pfpUrlEmisor}
+                  name={message.emisor_nombre}
+                  time={message.tiempo}
+                  message={fileType ? "" : message.mensaje}
+                  file={fileType ? message.mensaje : ""}
+                  side={side}
+                />
+              )
             })
           ) : (
             <div className={style.noMessagesMessage}>No hay mensajes.</div>
@@ -241,38 +195,19 @@ const ChatPage = () => {
                 onChange={handleInputChange}
               />
             </div>
-            <div
-              className={style.buttonFile}
-              style={uploadedImage === "" ? { width: "5%" } : { width: "15%" }}
-            >
-              <ImageUploader
-                onImageUpload={handleUploadFile}
-                image={uploadedImage}
-              />
-              {uploadedImage === "" ? null : (
-                <button
-                  type="button"
-                  className={style.deleteImageButton}
-                  onClick={() => setUploadedImage("")}
-                  alt="Eliminar imagen"
-                >
-                  <img src="/images/delete.svg" alt="delete" />
-                </button>
-              )}
-            </div>
             <div className={style.buttonSend}>
               <button
                 type="button"
                 className={style.button}
                 style={{
                   backgroundColor:
-                    (textMessage === "" && uploadedImage === "") ||
+                    (textMessage === "") ||
                     currentChat === ""
                       ? "#D6CFF2"
                       : "#9c8bdf",
                 }}
                 disabled={
-                  (textMessage === "" && uploadedImage === "") ||
+                  (textMessage === "") ||
                   currentChat === ""
                 }
                 onClick={handleSendMessage}

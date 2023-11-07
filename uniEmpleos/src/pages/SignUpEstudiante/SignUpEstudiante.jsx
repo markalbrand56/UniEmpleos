@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react"
 import Select from "react-select"
-import makeAnimated from "react-select/animated"
 import style from "./SignUpEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import API_URL from "../../api"
-import DropDown from "../../components/dropDown/DropDown"
-import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
-import useIsImage from "../../Hooks/useIsImage"
 import useApi from "../../Hooks/useApi"
 
 const SignUpEstudiante = () => {
-  const isImage = useIsImage()
   const api = useApi()
 
   const [nombre, setNombre] = useState("")
@@ -31,7 +26,6 @@ const SignUpEstudiante = () => {
   const [error, setError] = useState("")
 
   const [carreras, setCarreras] = useState([])
-  const [uploadedImage, setUploadedImage] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [typeError, setTypeError] = useState(1)
 
@@ -151,10 +145,10 @@ const SignUpEstudiante = () => {
         nacimiento: edad,
         correo,
         telefono,
-        carrera: parseInt(carrera, 10),
+        carrera: carreraId,
         semestre: parseInt(semestre, 10),
-        cv: " ",
-        foto: uploadedImage,
+        cv: "",
+        foto: "",
         contra: password,
         universidad,
       })
@@ -174,17 +168,6 @@ const SignUpEstudiante = () => {
         setError("Upss algo salio mal")
         setWarning(true)
       }
-    }
-  }
-
-  const handleUploadFile = (image) => {
-    const fileType = isImage(image)
-    if (fileType) {
-      setUploadedImage(image)
-    } else {
-      setTypeError(2)
-      setError("El archivo debe ser una imagen")
-      setWarning(true)
     }
   }
 
@@ -337,18 +320,6 @@ const SignUpEstudiante = () => {
               value={semestres.find((option) => option.label === semestre)}
               onChange={handleSemestre}
             />
-          </div>
-          <div className={style.inputSubContainerDataGroup1}>
-            <span>Foto de perfil</span>
-            <div className={style.imageUploaderContainer}>
-              <ImageUploader
-                onImageUpload={handleUploadFile}
-                image={uploadedImage}
-                width="30px"
-                height="30px"
-                placeholderImage="/images/pfp.svg"
-              />
-            </div>
           </div>
         </div>
         <div className={style.buttonContainer}>
