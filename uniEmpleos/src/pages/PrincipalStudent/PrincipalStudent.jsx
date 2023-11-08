@@ -86,7 +86,7 @@ const PrincipalStudent = () => {
     dataa.data.postulations.map((postulation) => {
       const regex = new RegExp(carrera)
       if (
-        regex.test(postulation.nombre_carreras) &&
+        regex.test(postulation.nombre_carrera) &&
         carrera !== "" &&
         postulaciones &&
         !postulaciones.includes(postulation.id_oferta)
