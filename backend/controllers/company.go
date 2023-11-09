@@ -74,10 +74,13 @@ func NewCompany(c *gin.Context) {
 		return
 	}
 
+	// Se crea el token
+	token, err := utils.GenerateToken(input.Correo, configs.Company)
+
 	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  http.StatusOK,
 		Message: "Company created successfully",
-		Data:    nil,
+		Data:    map[string]interface{}{"token": token},
 	})
 }
 

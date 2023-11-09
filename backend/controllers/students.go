@@ -20,8 +20,6 @@ type EstudianteInput struct {
 	Telefono    string `json:"telefono"`
 	Carrera     int    `json:"carrera"`
 	Semestre    int    `json:"semestre"`
-	CV          string `json:"cv"`
-	Foto        string `json:"foto"`
 	Contra      string `json:"contra"`
 	Universidad string `json:"universidad"`
 }
@@ -49,8 +47,8 @@ func NewStudent(c *gin.Context) {
 		Telefono:     input.Telefono,
 		Carrera:      input.Carrera,
 		Semestre:     input.Semestre,
-		CV:           input.CV,
-		Foto:         input.Foto,
+		CV:           "",
+		Foto:         "",
 		Correo:       input.Correo,
 		Universidad:  input.Universidad,
 	}
@@ -91,10 +89,13 @@ func NewStudent(c *gin.Context) {
 		return
 	}
 
+	// Se crea el token
+	token, err := utils.GenerateToken(input.Correo, configs.Student)
+
 	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  200,
 		Message: "Student created successfully",
-		Data:    nil,
+		Data:    map[string]interface{}{"token": token},
 	})
 }
 
