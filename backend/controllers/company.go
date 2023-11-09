@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"backend/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"net/http"
@@ -12,7 +13,6 @@ import (
 type EmpresaInput struct {
 	Nombre   string `json:"nombre"`
 	Detalles string `json:"detalles"`
-	Foto     string `json:"foto"`
 	Correo   string `json:"correo"`
 	Telefono string `json:"telefono"`
 	Contra   string `json:"contra"`
@@ -23,8 +23,8 @@ func NewCompany(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON: " + err.Error(),
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -33,7 +33,6 @@ func NewCompany(c *gin.Context) {
 	e := models.Empresa{
 		IdEmpresa: input.Correo,
 		Nombre:    input.Nombre,
-		Foto:      input.Foto,
 		Detalles:  input.Detalles,
 		Correo:    input.Correo,
 		Telefono:  input.Telefono,
@@ -49,7 +48,7 @@ func NewCompany(c *gin.Context) {
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
 			c.JSON(http.StatusConflict, responses.StandardResponse{
-				Status:  409,
+				Status:  http.StatusConflict,
 				Message: "User with this email already exists",
 				Data:    nil,
 			})
@@ -57,7 +56,7 @@ func NewCompany(c *gin.Context) {
 		}
 
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "Error creating user. " + err.Error(),
 			Data:    nil,
 		})
@@ -68,7 +67,7 @@ func NewCompany(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "Error creating company. " + err.Error(),
 			Data:    nil,
 		})
@@ -76,7 +75,7 @@ func NewCompany(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Company created successfully",
 		Data:    nil,
 	})
@@ -86,35 +85,54 @@ func UpdateCompanies(c *gin.Context) {
 	var input EmpresaInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON: " + err.Error(),
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	user, err := utils.TokenExtractUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Could not retrieve info from token. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Se verifica que el usuario sea el mismo que el de la empresa
+	if user != input.Correo {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "User " + user + " is not authorized to update company " + input.Correo,
 			Data:    nil,
 		})
 		return
 	}
 
 	// No se puede actualizar el correo/id de la empresa
-	err := configs.DB.Model(&models.Empresa{}).Where("id_empresa = ?", input.Correo).Updates(models.Empresa{
+	err = configs.DB.Model(&models.Empresa{}).Where("id_empresa = ?", input.Correo).Updates(models.Empresa{
 		Nombre:   input.Nombre,
 		Detalles: input.Detalles,
-		Foto:     input.Foto,
 		Telefono: input.Telefono,
 	}).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error updating",
+			Status:  http.StatusBadRequest,
+			Message: "Error updating company. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Company updated successfully",
 		Data:    nil,
 	})
-
 }

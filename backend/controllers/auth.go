@@ -8,37 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"time"
 )
-
-type RegisterInput struct {
-	Usuario string `json:"usuario"`
-	Contra  string `json:"contra"`
-}
-
-func Register(c *gin.Context) {
-	var input RegisterInput
-
-	// En esta línea se hace el binding del JSON que viene en el body del request a la variable input
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{Status: 400, Message: "Invalid input", Data: nil})
-		return
-	}
-
-	u := models.Usuario{
-		Usuario:    input.Usuario,
-		Contra:     input.Contra,
-		Suspendido: false,
-	}
-
-	_, err := u.SaveUser()
-
-	if err != nil {
-		c.JSON(400, responses.StandardResponse{Status: 400, Message: "Error creating user", Data: nil})
-		return
-	}
-
-	c.JSON(200, responses.StandardResponse{Status: 200, Message: "Usuario created successfully", Data: nil})
-}
 
 type LoginInput struct {
 	Usuario string `json:"usuario"`
@@ -49,7 +20,11 @@ func Login(c *gin.Context) {
 	var input LoginInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{Status: 400, Message: "Invalid input", Data: nil})
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 
@@ -62,8 +37,8 @@ func Login(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-			Status:  401,
-			Message: "Invalid credentials: " + err.Error(),
+			Status:  http.StatusUnauthorized,
+			Message: "Invalid credentials",
 			Data:    nil,
 		})
 		return
@@ -74,7 +49,7 @@ func Login(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, responses.StandardResponse{
 			Status:  404,
-			Message: "Invalid credentials",
+			Message: "Could not verify role: " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -180,19 +155,13 @@ func RoleFromUser(usuario models.Usuario) (string, error) {
 }
 
 func RoleFromToken(c *gin.Context) (string, error) {
-	username, err := utils.ExtractTokenUsername(c)
+	username, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
 		return "", err
 	}
 
-	u, err := models.GetUserByUsername(username)
-
-	if err != nil {
-		return "", err
-	}
-
-	role, err := RoleFromUser(u)
+	role, err := RoleFromUser(models.Usuario{Usuario: username})
 
 	if err != nil {
 		return "", err
@@ -201,8 +170,8 @@ func RoleFromToken(c *gin.Context) (string, error) {
 	return role, nil
 }
 
-func CurrentUser(c *gin.Context) {
-	username, err := utils.ExtractTokenUsername(c)
+func GetCurrentUserDetails(c *gin.Context) {
+	username, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -286,6 +255,26 @@ func CurrentUser(c *gin.Context) {
 	)
 }
 
+type PublicDetailsStudent struct {
+	Correo      string    `json:"correo"`
+	Nombre      string    `json:"nombre"`
+	Apellido    string    `json:"apellido"`
+	Nacimiento  time.Time `json:"nacimiento"`
+	Telefono    string    `json:"telefono"`
+	Carrera     int       `json:"carrera"`
+	Semestre    int       `json:"semestre"`
+	CV          string    `json:"cv"`
+	Foto        string    `json:"foto"`
+	Universidad string    `json:"universidad"`
+}
+
+type PublicDetailsEnterprise struct {
+	Correo   string `json:"correo"`
+	Nombre   string `json:"nombre"`
+	Foto     string `json:"foto"`
+	Detalles string `json:"detalles"`
+}
+
 type UserDetailsInput struct {
 	Correo string `json:"correo"`
 }
@@ -294,63 +283,92 @@ func GetUserDetails(c *gin.Context) {
 	var input UserDetailsInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{Status: 400, Message: "Invalid input", Data: nil})
-		return
-	}
-
-	var estudiante models.Estudiante
-	var empresa models.Empresa
-	var administrador models.Administrador
-
-	err := configs.DB.Where("correo = ?", input.Correo).First(&estudiante).Error
-	if err == nil {
-		c.JSON(http.StatusOK, responses.StandardResponse{
-			Status:  200,
-			Message: "User found",
-			Data: map[string]interface{}{
-				"estudiante": estudiante,
-			},
-		})
-		return
-	}
-
-	err = configs.DB.Where("correo = ?", input.Correo).First(&empresa).Error
-
-	if err == nil {
-		c.JSON(http.StatusOK, responses.StandardResponse{
-			Status:  200,
-			Message: "User found",
-			Data: map[string]interface{}{
-				"empresa": empresa,
-			},
-		})
-		return
-	}
-
-	err = configs.DB.Where("correo = ?", input.Correo).First(&administrador).Error
-
-	if err == nil {
-		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-			Status:  401,
-			Message: "Access denied",
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
+	var estudiante models.Estudiante
+	var empresa models.Empresa
+
+	userType, err := RoleFromUser(models.Usuario{Usuario: input.Correo})
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
+			Status:  http.StatusBadRequest,
 			Message: "User not found. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  400,
-		Message: "User not found",
-		Data:    nil,
-	},
-	)
+	switch userType {
+	case "student":
+		err = configs.DB.Where("id_estudiante = ?", input.Correo).First(&estudiante).Error
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "Student not found. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  http.StatusOK,
+			Message: "Student found",
+			Data: map[string]interface{}{
+				"student": PublicDetailsStudent{
+					Correo:      estudiante.Correo,
+					Nombre:      estudiante.Nombre,
+					Apellido:    estudiante.Apellido,
+					Nacimiento:  estudiante.Nacimiento,
+					Telefono:    estudiante.Telefono,
+					Carrera:     estudiante.Carrera,
+					Semestre:    estudiante.Semestre,
+					CV:          estudiante.CV,
+					Foto:        estudiante.Foto,
+					Universidad: estudiante.Universidad,
+				},
+			},
+		})
+	case "enterprise":
+		err = configs.DB.Where("id_empresa = ?", input.Correo).First(&empresa).Error
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.StandardResponse{
+				Status:  http.StatusBadRequest,
+				Message: "Enterprise not found. " + err.Error(),
+				Data:    nil,
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.StandardResponse{
+			Status:  http.StatusOK,
+			Message: "Enterprise found",
+			Data: map[string]interface{}{
+				"company": PublicDetailsEnterprise{
+					Correo:   empresa.Correo,
+					Nombre:   empresa.Nombre,
+					Foto:     empresa.Foto,
+					Detalles: empresa.Detalles,
+				},
+			},
+		})
+	case "admin":
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "Admins cannot be viewed",
+			Data:    nil,
+		})
+	default:
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "User not found. " + err.Error(),
+			Data:    nil,
+		})
+	}
 }

@@ -13,7 +13,7 @@ func JwtAuthentication() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, responses.StandardResponse{
 				Status:  401,
-				Message: "Unauthorized: " + err.Error(),
+				Message: "Unauthorized, token is invalid: " + err.Error(),
 				Data:    nil,
 			})
 

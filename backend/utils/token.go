@@ -13,8 +13,6 @@ import (
 func GenerateToken(username string, userType string) (string, error) {
 	tokenLifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
 
-	fmt.Println("tokenLifespan: ", tokenLifespan)
-
 	if err != nil {
 		return "", err
 	}
@@ -30,7 +28,7 @@ func GenerateToken(username string, userType string) (string, error) {
 }
 
 func TokenValid(c *gin.Context) error {
-	tokenString := ExtractToken(c)
+	tokenString := ExtractTokenFromRequest(c)
 	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -43,7 +41,7 @@ func TokenValid(c *gin.Context) error {
 	return nil
 }
 
-func ExtractToken(c *gin.Context) string {
+func ExtractTokenFromRequest(c *gin.Context) string {
 	token := c.Query("token")
 	if token != "" {
 		return token
@@ -55,9 +53,9 @@ func ExtractToken(c *gin.Context) string {
 	return ""
 }
 
-func ExtractTokenUsername(c *gin.Context) (string, error) {
+func TokenExtractUsername(c *gin.Context) (string, error) {
 
-	tokenString := ExtractToken(c)
+	tokenString := ExtractTokenFromRequest(c)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
@@ -76,9 +74,9 @@ func ExtractTokenUsername(c *gin.Context) (string, error) {
 	return "", nil
 }
 
-func ExtractTokenUserType(c *gin.Context) (string, error) {
+func TokenExtractRole(c *gin.Context) (string, error) {
 
-	tokenString := ExtractToken(c)
+	tokenString := ExtractTokenFromRequest(c)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])

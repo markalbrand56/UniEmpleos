@@ -2,15 +2,21 @@ import requests
 import concurrent.futures
 
 # URL y JSON de solicitud
-url = "https://whole-letisha-markalbrand56.koyeb.app/api/login"
+url = "http://127.0.0.1:8080/api/login"
 payload = {
-    "usuario": "prueba@prueba",
-    "contra": "prueba"
+    "usuario": "empresa@prueba.com",
+    "contra": "empresaprueba"
 }
+fails = 0
 
 
 # Función para enviar una solicitud HTTP
 def send_request(url, payload):
+    # wait between 0.0 and 2.0 seconds
+    import time
+    import random
+    time.sleep(random.random() * 2)
+
     try:
         response = requests.post(url, json=payload)
         if response.status_code == 200:

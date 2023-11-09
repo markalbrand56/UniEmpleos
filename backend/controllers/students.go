@@ -4,6 +4,7 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/responses"
+	"backend/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"net/http"
@@ -97,13 +98,58 @@ func NewStudent(c *gin.Context) {
 	})
 }
 
+type EstudianteUpdateInput struct {
+	Nombre      string `json:"nombre"`
+	Apellido    string `json:"apellido"`
+	Nacimiento  string `json:"nacimiento"`
+	Correo      string `json:"correo"`
+	Telefono    string `json:"telefono"`
+	Carrera     int    `json:"carrera"`
+	Semestre    int    `json:"semestre"`
+	Foto        string `json:"foto"`
+	Universidad string `json:"universidad"`
+}
+
 func UpdateStudent(c *gin.Context) {
-	var input EstudianteInput
+	var input EstudianteUpdateInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error binding JSON: " + err.Error(),
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Invalid input. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	var originalStudent models.Estudiante
+	err := configs.DB.Where("id_estudiante = ?", input.Correo).First(&originalStudent).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Student '" + input.Correo + "' not found: " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	user, err := utils.TokenExtractUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Could not retrieve info from token. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// Se verifica que el usuario sea el mismo que el del estudiante
+	if user != input.Correo {
+		c.JSON(http.StatusUnauthorized, responses.StandardResponse{
+			Status:  http.StatusUnauthorized,
+			Message: "User " + user + " is not authorized to update student " + input.Correo,
 			Data:    nil,
 		})
 		return
@@ -111,23 +157,31 @@ func UpdateStudent(c *gin.Context) {
 
 	nacimiento, _ := time.Parse("2006-01-02", input.Nacimiento)
 
-	var inserted models.EstudianteGet
+	// Crear una instancia del modelo Estudiante con los datos actualizados
+	updatedStudent := models.Estudiante{
+		Nombre:      input.Nombre,
+		Apellido:    input.Apellido,
+		Nacimiento:  nacimiento,
+		Telefono:    input.Telefono,
+		Carrera:     input.Carrera,
+		Semestre:    input.Semestre,
+		Universidad: input.Universidad,
+	}
 
-	err := configs.DB.Raw("UPDATE estudiante SET nombre = ?, apellido = ?, nacimiento = ?, telefono = ?, carrera = ?, semestre = ?, cv = ?, foto = ?, universidad = ? WHERE id_estudiante = ? RETURNING id_estudiante", input.Nombre, input.Apellido, nacimiento, input.Telefono, input.Carrera, input.Semestre, input.CV, input.Foto, input.Universidad, input.Correo).Scan(&inserted).Error
+	err = configs.DB.Model(&models.Estudiante{}).Where("id_estudiante = ?", input.Correo).Updates(updatedStudent).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
-			Status:  400,
-			Message: "Error updating. " + err.Error(),
+			Status:  http.StatusBadRequest,
+			Message: "Error updating student. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, responses.StandardResponse{
-		Status:  200,
+		Status:  http.StatusOK,
 		Message: "Student updated successfully",
 		Data:    nil,
 	})
-
 }

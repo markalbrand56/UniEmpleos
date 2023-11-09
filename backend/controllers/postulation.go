@@ -5,10 +5,10 @@ import (
 	"backend/models"
 	"backend/responses"
 	"backend/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -20,6 +20,10 @@ type PostulationInput struct {
 
 type GetPostulationInput struct {
 	IdOferta int `json:"id_oferta"`
+}
+
+type PuestoResult struct {
+	Puesto string
 }
 
 func NewPostulation(c *gin.Context) {
@@ -34,6 +38,26 @@ func NewPostulation(c *gin.Context) {
 		return
 	}
 
+	user, err := utils.TokenExtractUsername(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Unauthorized. Cannot get information from token. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	if user != input.IdEstudiante {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The user in the token does not match the user in the request.",
+			Data:    nil,
+		})
+		return
+	}
+
 	postulation := models.Postulacion{
 		IdOferta:     input.IdOferta,
 		IdEstudiante: input.IdEstudiante,
@@ -42,40 +66,57 @@ func NewPostulation(c *gin.Context) {
 
 	var inserted models.PostulacionGet
 
-	// TODO: Delete Raw
-	err := configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
+	err = configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
 
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
 			c.JSON(http.StatusConflict, responses.StandardResponse{
-				Status:  409,
+				Status:  http.StatusConflict,
 				Message: "This postulation already exists",
 				Data:    nil,
 			})
 			return
 		}
 
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error creating. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	// Nuevo query
-	err = configs.DB.Exec("INSERT INTO mensaje (id_postulacion, id_emisor, id_receptor, mensaje, tiempo) VALUES (?, ?, (SELECT id_empresa FROM oferta WHERE id_oferta = ?), 'Hola, me acabo de postular a esta oferta.', ?)", inserted.IdPostulacion, inserted.IdEstudiante, inserted.IdOferta, time.Now()).Error
+	var resultado PuestoResult
+
+	// Obtener el valor de "puesto" de la oferta
+	err = configs.DB.Model(models.Oferta{}).Select("puesto").Where("id_oferta = ?", input.IdOferta).Scan(&resultado).Error
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting 'puesto' from oferta. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	puesto := resultado.Puesto
+
+	// Mensaje con el valor de "puesto"
+	mensaje := fmt.Sprintf("Hola, me acabo de postular al puesto de '%s'.", puesto)
+
+	// Nuevo query
+	err = configs.DB.Exec("INSERT INTO mensaje (id_postulacion, id_emisor, id_receptor, mensaje, tiempo) VALUES (?, ?, (SELECT id_empresa FROM oferta WHERE id_oferta = ?), ?, ?)", inserted.IdPostulacion, inserted.IdEstudiante, input.IdOferta, mensaje, time.Now()).Error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
 			Message: "Error creating initial message. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
 		Message: "Postulation created successfully",
 		Data:    nil,
 	})
@@ -100,74 +141,23 @@ type PostulationResult struct {
 
 func GetOfferPreviews(c *gin.Context) {
 	var postulations []models.ViewPrevPostulaciones
-	var data map[string]interface{}
 
 	err := configs.DB.Find(&postulations).Error
 
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error getting postulations",
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Error getting postulations. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
 
-	groupedPostulations := make(map[int][]string)
-	for _, p := range postulations {
-		groupedPostulations[p.IdOferta] = append(groupedPostulations[p.IdOferta], p.NombreCarrera)
-	}
-
-	combinedPostulations := make([]map[string]interface{}, 0)
-	for id, carreras := range groupedPostulations {
-		combinedCarreras := strings.Join(carreras, ", ")
-
-		combinedPostulations = append(combinedPostulations, map[string]interface{}{
-			"id_oferta":       id,
-			"puesto":          getPuestosByIDOferta(postulations, id)[0],
-			"nombre_empresa":  getNombreEmpresaByIDOferta(postulations, id),
-			"nombre_carreras": combinedCarreras,
-			"salario":         getSalarioByIDOferta(postulations, id),
-		})
-	}
-
-	data = map[string]interface{}{
-		"postulations": combinedPostulations,
-	}
-
-	c.JSON(200, responses.StandardResponse{
-		Status:  200,
-		Message: "Postulations retrieved successfully",
-		Data:    data,
+	c.JSON(http.StatusOK, responses.StandardResponse{
+		Status:  http.StatusOK,
+		Message: "Previews of offers retrieved successfully",
+		Data:    map[string]interface{}{"postulations": postulations},
 	})
-}
-
-func getPuestosByIDOferta(postulations []models.ViewPrevPostulaciones, id int) []string {
-	var puestos []string
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			puestos = append(puestos, p.Puesto)
-		}
-	}
-	return puestos
-}
-
-func getNombreEmpresaByIDOferta(postulations []models.ViewPrevPostulaciones, id int) string {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.NombreEmpresa
-		}
-	}
-	return ""
-}
-
-func getSalarioByIDOferta(postulations []models.ViewPrevPostulaciones, id int) float64 {
-	for _, p := range postulations {
-		if p.IdOferta == id {
-			return p.Salario
-		}
-	}
-	return 0
 }
 
 type PostulationFromStudentResult struct {
@@ -180,27 +170,20 @@ type PostulationFromStudentResult struct {
 	Salario       float64 `json:"salario"`
 }
 
-func GetPostulactionFromStudent(c *gin.Context) {
+func GetPostulationFromStudent(c *gin.Context) {
 	var results []PostulationFromStudentResult
 	var data map[string]interface{}
 
-	// obten el id del estudiante a partir del token.
-	idEstudiante, err := utils.ExtractTokenUsername(c)
+	idEstudiante, err := utils.TokenExtractUsername(c)
+
 	if err != nil {
-		c.JSON(400, responses.StandardResponse{
-			Status:  400,
-			Message: "Error getting id estudiante",
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Could not retrieve info from token. " + err.Error(),
 			Data:    nil,
 		})
 		return
 	}
-
-	// en postgreSQL:
-	//select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario
-	//from postulacion p
-	//join oferta o
-	//on p.id_oferta = o.id_oferta
-	//where id_estudiante = 'mor21146@uvg.edu.gt';
 
 	err = configs.DB.Raw("select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario from postulacion p join oferta o on p.id_oferta = o.id_oferta where id_estudiante = ?", idEstudiante).Scan(&results).Error
 
@@ -227,7 +210,7 @@ func GetPostulactionFromStudent(c *gin.Context) {
 
 func RetirePostulation(c *gin.Context) {
 	input := c.Query("id_postulacion")
-	user, err := utils.ExtractTokenUsername(c)
+	user, err := utils.TokenExtractUsername(c)
 
 	if input == "" {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -250,12 +233,22 @@ func RetirePostulation(c *gin.Context) {
 	// verify that the postulation exists
 	var postulation models.Postulacion
 
-	err = configs.DB.Where("id_postulacion = ? AND id_estudiante = ?", input, user).First(&postulation).Error
+	err = configs.DB.Where("id_postulacion = ?", input).First(&postulation).Error
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, responses.StandardResponse{
 			Status:  http.StatusNotFound,
 			Message: "Error getting postulation. " + err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
+	// verify that the postulation belongs to the user
+	if postulation.IdEstudiante != user {
+		c.JSON(http.StatusForbidden, responses.StandardResponse{
+			Status:  http.StatusForbidden,
+			Message: "The postulation does not belong to the user in the token",
 			Data:    nil,
 		})
 		return
