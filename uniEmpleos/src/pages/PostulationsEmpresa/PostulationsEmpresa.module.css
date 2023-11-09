@@ -42,4 +42,9 @@ a.buttoncreateoffer:hover {
     .buttoncreateoffer {
         width: 80%;
     }
+
+    .containerinfomain h1{
+        font-size: 30px;
+        width: 80%;
+    }
 }
