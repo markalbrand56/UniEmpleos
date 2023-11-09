@@ -10,6 +10,12 @@ import (
 var DB *gorm.DB
 var FileServer = "http://ec2-13-57-42-212.us-west-1.compute.amazonaws.com/files/"
 
+const (
+	Student = "student"
+	Company = "enterprise"
+	Admin   = "admin"
+)
+
 func SetupDB() {
 	envs := EnvPG()
 
