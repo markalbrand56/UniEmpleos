@@ -1,5 +1,5 @@
 import Joi from "joi"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { useStoreon } from "storeon/react"
 import useConfig from "../../Hooks/Useconfig"
 import styles from "./PostulationsEmpresa.module.css"
@@ -9,6 +9,8 @@ import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
 import Loader from "../../components/Loader/Loader"
+import { Player } from '@lottiefiles/react-lottie-player'
+import upload from './upload.json'
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -17,6 +19,8 @@ const schema = Joi.object({
 })
 
 const PostulationsEmpresa = () => {
+  const container = useRef(null)
+
   const form = useConfig(schema, {
     token: "a",
     idoffert: "a",
@@ -41,11 +45,23 @@ const PostulationsEmpresa = () => {
     setLoading(false)
   }, [api.data])
 
-  useEffect(() => {
+  const handleOffers = async () => {
     setLoading(true)
-    api.handleRequest("POST", "/offers/company", {
+    const data = await api.handleRequest("POST", "/offers/company", {
       id_empresa: user.id_user,
     })
+    if (data.status === 200) {
+      setData(data.data.offers)
+    } else {
+      setTypeError(1)
+      setError("Error al obtener las ofertas de la empresa")
+      setWarning(true)
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    handleOffers()
   }, [])
 
   const saveidlocalstorage = (id) => {
@@ -85,7 +101,7 @@ const PostulationsEmpresa = () => {
       />
       {loading ? (
         <Loader size={100} />
-      ) : dataa.length > 0 ? (
+      ) : dataa ? (
         <div className={styles.containerinfoprincipal}>
           {dataa.map((postulation) => (
             <InfoTab
@@ -107,6 +123,17 @@ const PostulationsEmpresa = () => {
       ) : (
         <div className={styles.containerinfomain}>
           <h1 style={{color: "#000"}}>No tiene niguna oferta activa</h1>
+          <Player
+          src={upload}
+          className="player"
+          loop
+          autoplay
+          style={{ height: '400px', width: '400px' }}
+        />
+          <a href="/newoffer" className={styles.buttoncreateoffer}>
+            Crear oferta de trabajo
+          </a>
+          <div className={styles.containerlottie} ref={container} />
         </div>
       )}
     </div>
