@@ -41,12 +41,13 @@ func NewCareer(c *gin.Context) {
 		Descripcion: input.Descripcion,
 	}
 
-	err = configs.DB.Create(&carrera).Error
+	// Por alguna razón RAW si permite que el id se autoincremente
+	err = configs.DB.Raw("INSERT INTO carrera (nombre, descripcion) VALUES (?, ?)", carrera.Nombre, carrera.Descripcion).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
-			Message: "Error creating career" + err.Error(),
+			Message: "Error creating career: " + err.Error(),
 			Data:    nil,
 		})
 		return

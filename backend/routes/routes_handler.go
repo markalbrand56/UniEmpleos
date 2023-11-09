@@ -48,7 +48,6 @@ func Routes(router *gin.Engine) {
 	careers := router.Group("api/careers")
 	careers.Use(middlewares.JwtAuthentication())
 
-	careers.POST("/", controllers.NewCareer)
 	public.GET("/careers", controllers.GetCareers)
 
 	// Empresas
@@ -68,6 +67,7 @@ func Routes(router *gin.Engine) {
 	admins.DELETE("/postulation", controllers.AdminDeletePostulation)
 	admins.POST("/details", controllers.AdminGetUserDetails)
 	admins.POST("/postulations", controllers.GetPostulationsOfStudentAsAdmin)
+	admins.POST("/careers", controllers.NewCareer)
 
 	// Ofertas
 	offers := router.Group("api/offers")

@@ -979,6 +979,29 @@ Devuelve las postulaciones de un Estudiante.
 
 ```
 
+### [POST] api/admins/carreers
+Crea una carrera para la base de datos
+
+> **Note**
+> Auth required
+
+#### Params
+``` json
+{
+    "nombre": "string",
+    "descripcion": "string"
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Career created successfully",
+    "data": null
+}
+```
+
 
 
 ---
