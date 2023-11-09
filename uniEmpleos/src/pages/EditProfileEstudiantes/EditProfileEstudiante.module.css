@@ -14,6 +14,18 @@
 
 .imgContainer {
   margin: 10px 0;
+  position: relative;
+}
+
+.imageSvg {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+  z-index: 2;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: #000;
 }
 
 .imgContainer img {
@@ -48,13 +60,6 @@
   background-color: #FFF;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   padding: 20px 20px;
-}
-
-.editProfileContainer svg {
-  width: 100vw;
-  z-index: 0;
-  position: absolute;
-  bottom: 0px;
 }
 
 .editProfileContainer div a {
@@ -125,6 +130,21 @@
   justify-content: center;
   align-items: center;
   padding: 0 10px 0 10px;
+}
+
+.cvContainer {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: calc(100% - 24px);
+  padding: 0 12px;
+}
+
+.cvSvg {
+  position: absolute;
+  right: 30px;
+  top: calc(50% + 5.5px);
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
