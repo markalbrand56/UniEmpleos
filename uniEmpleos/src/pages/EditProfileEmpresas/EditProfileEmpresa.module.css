@@ -18,6 +18,18 @@
 
 .imgContainer {
   margin: 10px 0;
+  position: relative;
+}
+
+.imageSvg {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+  z-index: 2;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: #000;
 }
 
 .imgContainer img {

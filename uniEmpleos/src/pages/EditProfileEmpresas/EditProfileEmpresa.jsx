@@ -12,9 +12,12 @@ import ImageUploader from "../../components/ImageUploader/ImageUploader"
 import Popup from "../../components/Popup/Popup"
 import ImageDirectUploader from "../../components/ImageDirectUploader/ImageDirectUploader"
 import API_URL from "@/api.js"
+import InputFile from "../../components/InputFile/InputFile"
+import { TbEdit } from "react-icons/tb"
 
 const EditProfileEmpresa = () => {
   const api = useApi()
+  const apiImage = useApi()
   const isImage = useIsImage()
   const { user } = useStoreon("user")
 
@@ -22,11 +25,12 @@ const EditProfileEmpresa = () => {
   const [correo, setCorreo] = useState("")
   const [detalles, setDetalles] = useState("")
   const [telefono, setTelefono] = useState("")
-  const [uploadedImage, setUploadedImage] = useState("/images/pfp.svg")
-  const [updatedImage, setUpdatedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typePopUp, setTypePopUp] = useState(1)
+  const [pfp, setPfp] = useState("")
+  const [pfpText, setPfpText] = useState("")
+  const [pfpPreview, setPfpPreview] = useState("/images/pfp.svg")
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -55,26 +59,17 @@ const EditProfileEmpresa = () => {
           ? "/images/pfp.svg"
           : API_URL + "/api/uploads/" + api.data.usuario.foto
 
-      console.log("Foto", fotoUrl)
       setNombre(api.data.usuario.nombre)
       setCorreo(api.data.usuario.correo)
       setDetalles(api.data.usuario.detalles)
       setTelefono(parseInt(api.data.usuario.telefono, 10))
-      setUploadedImage(fotoUrl)
+      setPfpPreview(fotoUrl)
     }
   }, [api.data])
 
   useEffect(() => {
     api.handleRequest("GET", "/users/")
   }, [])
-
-  useEffect(() => {
-    if (updatedImage !== "") {
-      const fotoUrl = API_URL + "/api/uploads/" + updatedImage
-      console.log("New image ", fotoUrl)
-      setUploadedImage(fotoUrl)
-    }
-  }, [updatedImage])
 
   const body = {
     nombre,
@@ -85,6 +80,19 @@ const EditProfileEmpresa = () => {
 
   // Con esto se pueden hacer las llamadas al status
   const handleButton = async () => {
+    if (pfp) {
+      const data = await apiImage.updateProfilePicture(pfp)
+      console.log("pfp", pfp)
+      if (data.status === 200) {
+        console.log("Foto actualizada")
+      } else {
+        setTypePopUp(2)
+        setError(
+          "Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde"
+        )
+        setWarning(true)
+      }
+    }
     if (nombre === "" || detalles === "" || telefono === "") {
       setTypePopUp(2)
       setError("Todos los campos son obligatorios")
@@ -109,42 +117,21 @@ const EditProfileEmpresa = () => {
     }
   }
 
-  const uploadFile = async () => {
-    event.preventDefault()
-    const file = document.getElementById("file").files[0]
-
-    if (file) {
-      const updated = await api.updateProfilePicture(file)
-      if (updated.status === 200) {
-        console.log("Updated", updated.data.filename)
-        setUpdatedImage(updated.data.filename)
-        window.location.reload()
-      } else {
-        setTypePopUp(2)
-        setError(
-          "Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde"
-        )
-        setWarning(true)
-      }
+  const handleImageSelect = (event) => {
+    const selectedFile = event.target.files[0]
+    if (
+      selectedFile &&
+      (selectedFile.type === "image/png" ||
+        selectedFile.type === "image/jpeg" ||
+        selectedFile.type === "image/jpg")
+    ) {
+      setPfpText(selectedFile.name)
+      setPfp(selectedFile)
+      setPfpPreview(URL.createObjectURL(selectedFile))
     } else {
       setTypePopUp(2)
-      setError("Debes seleccionar un archivo")
+      setError("Debes seleccionar un archivo PNG, JPG o JPEG")
       setWarning(true)
-    }
-  }
-
-  // modificaciones de la imagen
-  const [inputStyle, setInputStyle] = useState(false)
-  const [archivo, setArchivo] = useState()
-
-  const handleInputChange = (event) => {
-    const selectedFiles = event.target.files
-    if (selectedFiles.length > 0) {
-      setInputStyle(true)
-      setArchivo(event.target.files[0].name)
-    } else {
-      setInputStyle(false)
-      setArchivo("")
     }
   }
 
@@ -161,17 +148,23 @@ const EditProfileEmpresa = () => {
       </div>
       <div className={style.contentContainer}>
         <div className={style.imgContainer}>
-          <img src={uploadedImage} alt="profile" />
+          <img src={pfpPreview} alt="profile picture" />
+          <div>
+            <label>
+              <TbEdit size={25} color="#fff" className={style.imageSvg} />
+              <input
+                type="file"
+                accept=".jpg, .jpeg, .png"
+                className={style.inputImage}
+                style={{ display: "none" }}
+                onChange={handleImageSelect}
+              />
+            </label>
+          </div>
         </div>
         <div className={style.editProfileContainer}>
           <div className={style.inputsContainer}>
             <div className={style.grupoDatos1}>
-              <ImageDirectUploader
-                uploader={uploadFile}
-                handleInputChange={handleInputChange}
-                isSelected={inputStyle}
-                archivo={archivo}
-              />
               <div className={style.inputSubContainer}>
                 <span>Nombre</span>
                 <ComponentInput

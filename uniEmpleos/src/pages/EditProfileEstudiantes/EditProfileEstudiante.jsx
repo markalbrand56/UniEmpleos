@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
 import Select from "react-select"
-import makeAnimated from "react-select/animated"
+import makeAnimated, { Input } from "react-select/animated"
 import ImageDirectUploader from "@components/ImageDirectUploader/ImageDirectUploader.jsx"
 import style from "./EditProfileEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
@@ -11,6 +11,9 @@ import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
 import API_URL from "@/api.js"
+import InputFile from "../../components/InputFile/InputFile"
+import { AiOutlineCloudDownload } from "react-icons/ai"
+import { TbEdit } from "react-icons/tb"
 
 const animatedComponents = makeAnimated()
 
@@ -19,6 +22,8 @@ const EditProfileEstudiante = () => {
   const api = useApi()
   const apiCareers = useApi()
   const publishChanges = useApi()
+  const apiImage = useApi()
+  const apiCV = useApi()
 
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
@@ -28,11 +33,17 @@ const EditProfileEstudiante = () => {
   const [universidad, setUniversidad] = useState("")
   const [telefono, setTelefono] = useState("")
   const [semestre, setSemestre] = useState(1)
-  const [uploadedImage, setUploadedImage] = useState("/images/pfp.svg")
-  const [updatedImage, setUpdatedImage] = useState("")
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typePopUp, setTypePopUp] = useState(1)
+
+  const [pfp, setPfp] = useState("")
+  const [pfpText, setPfpText] = useState("")
+  const [pfpPreview, setPfpPreview] = useState("/images/pfp.svg")
+  const [cv, setCv] = useState()
+  const [cvText, setCvText] = useState("")
+  const [oldCV, setOldCV] = useState("")
+  const [newCV, setNewCV] = useState("")
 
   const [carreras, setCarreras] = useState([])
 
@@ -58,8 +69,10 @@ const EditProfileEstudiante = () => {
   useEffect(() => {
     if (api.data) {
       const { usuario } = api.data
-      // console.log("Foto from API", usuario.foto)
-      const fotoUrl = (api.data.usuario.foto === "") ? "/images/pfp.svg" : (API_URL + "/api/uploads/" + api.data.usuario.foto)
+      const fotoUrl =
+        api.data.usuario.foto === ""
+          ? "/images/pfp.svg"
+          : API_URL + "/api/uploads/" + api.data.usuario.foto
       setNombre(usuario.nombre)
       setApellido(usuario.apellido)
       const date = new Date(usuario.nacimiento)
@@ -77,7 +90,11 @@ const EditProfileEstudiante = () => {
       setUniversidad(usuario.universidad)
       setTelefono(usuario.telefono)
       setSemestre(usuario.semestre)
-      setUploadedImage(fotoUrl)
+      setPfpPreview(fotoUrl)
+      if (usuario.cv !== "") {
+        setCvText(usuario.cv)
+        setOldCV(usuario.cv)
+      }
     }
   }, [api.data])
 
@@ -97,12 +114,7 @@ const EditProfileEstudiante = () => {
     apiCareers.handleRequest("GET", "/careers")
   }, [])
 
-  useEffect(() => {
-    if (updatedImage !== "") {
-      const fotoUrl = API_URL + "/api/uploads/" + updatedImage
-      setUploadedImage(fotoUrl)
-    }
-  }, [updatedImage])
+  //console.log("CV" , apiCV.data)
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -137,6 +149,28 @@ const EditProfileEstudiante = () => {
   }
 
   const handleButton = async () => {
+    if (cv) {
+      const data = await apiCV.updateCV(cv)
+      if (data.status === 200) {
+        console.log("CV actualizado")
+      } else {
+        setTypePopUp(2)
+        setError("Upss... No se pudo actualizar tu CV, intenta mas tarde")
+        setWarning(true)
+      }
+    }
+    if (pfp) {
+      const data = await apiImage.updateProfilePicture(pfp)
+      if (data.status === 200) {
+        console.log("Foto actualizada")
+      } else {
+        setTypePopUp(2)
+        setError(
+          "Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde"
+        )
+        setWarning(true)
+      }
+    }
     if (
       nombre === "" ||
       apellido === "" ||
@@ -164,7 +198,6 @@ const EditProfileEstudiante = () => {
           universidad,
           telefono,
           semestre,
-          cv: "",
           correo: user.id_user,
         }
       )
@@ -178,41 +211,41 @@ const EditProfileEstudiante = () => {
     }
   }
 
-  // modificaciones de la imagen
-  const [inputStyle, setInputStyle] = useState(false)
-  const [archivo, setArchivo] = useState()
-
-  const handleInputChange = (event) => {
-    const selectedFiles = event.target.files
-    if (selectedFiles.length > 0) {
-      setInputStyle(true)
-      setArchivo(event.target.files[0].name)
+  const handleCVSelect = (selectedFile) => {
+    if (selectedFile && selectedFile.type === "application/pdf") {
+      setCvText(selectedFile.name)
+      setCv(selectedFile)
+      setNewCV(URL.createObjectURL(selectedFile))
     } else {
-      setInputStyle(false)
-      setArchivo("")
+      setTypePopUp(2)
+      setError("Debes seleccionar un archivo PDF")
+      setWarning(true)
     }
   }
 
-  const uploadFile = async () => {
-    event.preventDefault()
-    const file = document.getElementById("file").files[0]
-
-    if (file) {
-      const updated = await api.updateProfilePicture(file)
-      if (updated.status === 200) {
-        setUpdatedImage(updated.data.filename)
-        window.location.reload()
-      } else {
-        setTypePopUp(2)
-        setError(
-          "Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde"
-        )
-        setWarning(true)
-      }
+  const handleImageSelect = (event) => {
+    const selectedFile = event.target.files[0]
+    if (
+      selectedFile &&
+      (selectedFile.type === "image/png" ||
+        selectedFile.type === "image/jpeg" ||
+        selectedFile.type === "image/jpg")
+    ) {
+      setPfpText(selectedFile.name)
+      setPfp(selectedFile)
+      setPfpPreview(URL.createObjectURL(selectedFile))
     } else {
       setTypePopUp(2)
-      setError("Debes seleccionar un archivo")
+      setError("Debes seleccionar un archivo PNG, JPG o JPEG")
       setWarning(true)
+    }
+  }
+
+  const handleShowCV = () => {
+    if (newCV !== "") {
+      window.open(newCV)
+    } else {
+      window.open(`${API_URL}/api/cv/${oldCV}`)
     }
   }
 
@@ -228,16 +261,22 @@ const EditProfileEstudiante = () => {
         <Header userperson="student" />
       </div>
       <div className={style.imgContainer}>
-        <img src={uploadedImage} alt="profile" />
+        <img src={pfpPreview} alt="profile picture" />
+        <div>
+          <label>
+            <TbEdit size={25} color="#fff" className={style.imageSvg} />
+            <input
+              type="file"
+              accept=".jpg, .jpeg, .png"
+              className={style.inputImage}
+              style={{ display: "none" }}
+              onChange={handleImageSelect}
+            />
+          </label>
+        </div>
       </div>
       <div className={style.editProfileContainer}>
         <div className={style.inputsContainer}>
-          <ImageDirectUploader
-            uploader={uploadFile}
-            handleInputChange={handleInputChange}
-            isSelected={inputStyle}
-            archivo={archivo}
-          />
           <div className={style.inputSubContainer}>
             <span>Nombres</span>
             <ComponentInput
@@ -352,6 +391,21 @@ const EditProfileEstudiante = () => {
                 onChange={handleSemestre}
               />
             </div>
+          </div>
+          <div className={style.cvContainer}>
+            <span className={style.titleCV}>CV</span>
+            <InputFile
+              file={cvText}
+              placeHolder={"Subir CV"}
+              onFileSelect={handleCVSelect}
+              type="pdf"
+            />
+            <AiOutlineCloudDownload
+              size={20}
+              color="#000"
+              className={style.cvSvg}
+              onClick={handleShowCV}
+            />
           </div>
           <div className={style.buttonContainer}>
             <Button label="Guardar" onClick={handleButton} />
