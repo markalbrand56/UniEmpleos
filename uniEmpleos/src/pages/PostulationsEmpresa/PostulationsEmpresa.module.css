@@ -7,8 +7,40 @@
     padding: 10px;
 }
 
+.containerinfomain{
+    display: flex;
+    flex-direction: column;
+    padding: 80px;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.buttoncreateoffer {
+    color: #a08ae5;
+    border: 2px solid #a08ae5;
+    padding: 10px 20px;
+    border-radius: 10px;
+    width: 40%;
+    font-family: "Poppins";
+}
+
+a.buttoncreateoffer {
+    color: #a08ae5 !important;
+}
+
+a.buttoncreateoffer:hover {
+    background-color: #a08ae5;
+    color: #fff !important;
+}
+
+
 @media screen and (max-width: 768px){
     .containerinfoprincipal{
         justify-content: center;
+    }
+
+    .buttoncreateoffer {
+        width: 100%;
     }
 }
