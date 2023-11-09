@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react"
 import { useStoreon } from "storeon/react"
+import { Player } from "@lottiefiles/react-lottie-player"
 import useApi from "../../Hooks/useApi"
 import Header from "../../components/Header/Header"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import styles from "./PostulationsEstudent.module.css"
 import Popup from "../../components/Popup/Popup"
+import upload from "./upload.json"
 
 const PostulationsEstudent = () => {
   const api = useApi()
@@ -69,8 +71,18 @@ const PostulationsEstudent = () => {
           ))}
         </div>
       ) : (
-        <div className={styles.mainInfoContainer}>
-          <h1>No se ha postulado a ninguna oferta</h1>
+        <div className={styles.containerinfomain}>
+          <h1 style={{ color: "#000" }}>No se ha postulado a ninguna oferta</h1>
+          <Player
+            src={upload}
+            className="player"
+            loop
+            autoplay
+            style={{ height: "400px", width: "400px" }}
+          />
+          <a href="/profile" className={styles.buttonapplyoffer}>
+            Postularme
+          </a>
         </div>
       )}
     </div>

@@ -19,7 +19,6 @@ const schema = Joi.object({
 })
 
 const PostulationsEmpresa = () => {
-  const container = useRef(null)
 
   const form = useConfig(schema, {
     token: "a",
@@ -133,7 +132,6 @@ const PostulationsEmpresa = () => {
           <a href="/newoffer" className={styles.buttoncreateoffer}>
             Crear oferta de trabajo
           </a>
-          <div className={styles.containerlottie} ref={container} />
         </div>
       )}
     </div>
