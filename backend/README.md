@@ -138,8 +138,6 @@ Crea un estudiante
 	"telefono"      : "string" 
 	"carrera"       : "int"    
 	"semestre"      : "int"    
-	"cv"            : "string" 
-	"foto"          : "string" 
 	"contra"	: "string"
 	"universidad"   : "string"
 }
@@ -148,9 +146,11 @@ Crea un estudiante
 #### Response
 ``` json
 {
-	"Status":  200,
-	"Message": "Student created successfully",
-	"Data":    "nil"
+    "status": 200,
+    "message": "Student created successfully",
+    "data": {
+        "token": "token_generado"
+    }
 }
 ```
 
@@ -170,8 +170,6 @@ Actualiza un estudiante
     "telefono"      : "string" 
     "carrera"       : "int"    
     "semestre"      : "int"    
-    "cv"            : "string" 
-    "foto"          : "string" 
     "contra"	: "string"
     "universidad"   : "string"
 }
@@ -314,7 +312,6 @@ Crea una compañia
 {
 	"nombre"        : "string" 
 	"detalles"      : "string"
-	"foto"   	: "string"
 	"correo"    	: "string"
 	"telefono"    	: "string" 
 	"contra" 	: "string"
@@ -324,9 +321,11 @@ Crea una compañia
 #### Response
 ``` json
 {
-	"Status":  200,
-	"Message": "Company created successfully",
-	"Data":    "nil"
+    "status": 200,
+    "message": "Company created successfully",
+    "data": {
+        "token": "token_generado"
+    }
 }
 ```
 
