@@ -9,6 +9,11 @@
     padding: 20px;
     box-sizing: border-box;
     width: calc(100%/3 - 20px);
+    
+}
+
+.container:hover{
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 }
 
 .containerinfomain{
@@ -17,20 +22,19 @@
     justify-content: center;
     align-content: center;
     text-align: center;
+    border-radius: 10px;
+    background-color: #f5f5f5;
 }
 
 .containerinfosecond{
-    display: flex;
-    justify-content: space-evenly;
-    align-content: center;
-    text-align: center;
-    gap: 40px;
+    padding: 10px;
 }
 
-.container p, h3{
-    color: #f5f5f5;
+.container p{
+    color: #fff;
     font-size: 16px;
     text-transform: capitalize;
+    text-align: left;
 }
 
 .containerinfomain h3{
@@ -39,6 +43,7 @@
     margin-bottom: 10px;
     border-radius: 10px;
     padding: 10px;
+    color: #000;
 }
 
 .button {
