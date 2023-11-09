@@ -91,7 +91,7 @@ const PostulationsEmpresa = () => {
   }
 
   return (
-    <div className={styles.containePostulation}>
+    <div className={styles.containerPostulation}>
       <Header />
       <Popup
         message={error}

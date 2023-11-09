@@ -22,6 +22,11 @@ a.buttonlogin {
     color: #a08ae5 !important;
 }
 
+a.buttonlogin:hover {
+  background-color: #a08ae5;
+  color: #fff !important;
+}
+
 .navelements{
     margin-left: auto;
     margin-right: 20px;
@@ -33,7 +38,7 @@ a.buttonlogin {
 
 .actionlinks {
     display: flex;
-    gap: 40px;
+    gap: 20px;
     align-items: center;
 }
 
