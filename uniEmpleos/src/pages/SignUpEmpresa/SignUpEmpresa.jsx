@@ -14,6 +14,7 @@ import Loader from "../../components/Loader/Loader"
 
 const SignUpEmpresa = () => {
   const { dispatch } = useStoreon("user")
+  const { user } = useStoreon("user")
   const api = useApi()
   const apiPfp = useApi()
 
@@ -85,6 +86,10 @@ const SignUpEmpresa = () => {
         dispatch("user/config", {
           token,
         })
+
+        const usuario = await user.token
+        console.log(usuario)
+        
         if (pfp) {
           const data = await apiPfp.updateProfilePicture(pfp)
           if (data.status === 200) {

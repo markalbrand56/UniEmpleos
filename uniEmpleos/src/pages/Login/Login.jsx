@@ -48,6 +48,10 @@ const LogIn = () => {
       } else if (role === "admin") {
         navigate("/profileadmin")
       }
+    } else if (datos.status === 403){
+      setTypePopUp(1)
+      setError("Cuenta deshabilitada. Contacte al administrador")
+      setWarning(true)
     } else {
       setTypePopUp(1)
       setError("Credenciales incorrectas. Inténtelo de nuevo")

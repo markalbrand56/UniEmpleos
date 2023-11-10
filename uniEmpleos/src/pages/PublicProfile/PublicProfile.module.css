@@ -8,7 +8,8 @@
     gap: 20px;
     padding: 25px;
 }
-.title{
+
+.title {
     font-size: 30px;
     font-weight: 700;
     color: #333333;
@@ -25,12 +26,12 @@
     height: 50%;
 }
 
-.tipoContainer{
+.tipoContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    gap:10%;
+    gap: 10%;
 }
 
 .pfp {
@@ -39,17 +40,16 @@
     height: 60%;
     border-radius: 10%;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-
 }
 
-.profileSpan{
+.profileSpan {
     font-size: 20px;
     color: #333333;
     text-align: center;
     text-transform: capitalize;
 }
 
-.correo{
+.correo {
     font-size: 20px;
     color: #333333;
     text-align: center;
@@ -64,21 +64,21 @@
     align-items: start;
 }
 
-.profileli{
+.profileli {
     justify-content: center;
     align-items: center;
     display: flex;
 }
 
-.subInfoContainer > * {
+.subInfoContainer>* {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap:10px;
+    gap: 10px;
 }
 
 
-@media screen and (max-width: 768px){
+@media screen and (max-width: 768px) {
     .pfpContainer {
         width: 100%;
         height: 100%;
@@ -91,21 +91,21 @@
         height: 100%;
     }
 
-    .profileSpan{
+    .profileSpan {
         font-size: 16px;
         color: #333333;
         text-align: center;
         text-transform: capitalize;
     }
 
-    .correo{
+    .correo {
         font-size: 16px;
         color: #333333;
         text-align: center;
     }
 
 
-    .tipoContainer{
+    .tipoContainer {
         flex-direction: column;
         gap: 10%;
     }
@@ -117,7 +117,7 @@
         margin-top: 10%;
     }
 
-    .subInfoContainer > * {
+    .subInfoContainer>* {
         gap: 10px;
     }
 }

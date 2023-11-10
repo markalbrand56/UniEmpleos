@@ -15,6 +15,7 @@ import Loader from "../../components/Loader/Loader"
 
 const SignUpEstudiante = () => {
   const { dispatch } = useStoreon("user")
+  const { user } = useStoreon("user")
   const api = useApi()
   const apiCv = useApi()
   const apiPfp = useApi()
@@ -175,6 +176,9 @@ const SignUpEstudiante = () => {
         dispatch("user/config", {
           token,
         })
+
+        const usuario = await user.token
+        console.log(usuario)
 
         if (cv) {
           const data = await apiCv.updateCV(cv)
