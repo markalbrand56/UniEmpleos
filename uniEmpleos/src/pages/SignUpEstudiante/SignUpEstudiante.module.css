@@ -1,163 +1,193 @@
 .signUpCointainer {
+  width: 100%;
+  height: 100%;
+} 
+
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.mainContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f1f1f1;
   flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-}
-
-.css-tj5bde-Svg {
-  display: none !important;
-}
-
-
-.inputsContainer div span {
-  display: flex;
-  justify-content: left;
   color: #000;
+  padding: 20px 0 50px 0;
+  height: calc(100% - 70px);
+  width: 100%;
+  gap: 20px;
 }
 
-.signUpCointainer > h1 {
-  color: #a08ae5;
+.imgContainer {
+  margin: 10px 0;
+  position: relative;
 }
 
-.signUpCointainer > div {
+.imageSvg {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+  z-index: 2;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: #000;
+}
+
+.imgContainer img {
+  height: 200px;
+  width: 200px;
+  padding: 10px;
+  object-fit: cover;
+  border-radius: 45px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+
+.dataContainer {
   z-index: 1;
   border-radius: 5px;
   display: flex;
   gap: 20px;
   flex-direction: column;
   background-color: #FFF;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   padding: 40px 20px;
+  width: calc(60% - 40px);
+  overflow: auto;
+  scrollbar-width: thin;
+  /* Para navegadores que admiten la propiedad scrollbar-width */
 }
 
-.signUpCointainer svg {
-  width: 100vw;
-  z-index: 0;
-  position: absolute;
-  bottom: 0px;
+/* Para navegadores que no admiten la propiedad scrollbar-width */
+.dataContainer::-webkit-scrollbar {
+  width: 6px;
 }
 
-.signUpCointainer div a {
-  text-decoration: none;
-  color: #333131;
+.dataContainer::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 3px;
 }
 
-.signUpCointainer div a span {
-  color: #a08ae5;
+.dataContainer:hover {
+  overflow-y: auto;
 }
 
-.signUpCointainer div a span:hover {
-  text-decoration: underline;
-  color: #977de7;
-}
-
-.usuarioContainer {
-  font-family: Arial;
-  font-size: 18px;
+.dataGroup1Container {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  user-select: none;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.usuarioContainer input {
-  padding: 10px 5px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff;
-  color: #000;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+.cvContainer {
+  text-align: start;
+  position: relative;
+  width: 99%;
 }
 
-.usuarioContainer input:focus {
-  border-color: #a08ae5;
-  box-shadow: 0 0 0 3px rgba(160, 138, 229, 0.25);
-  outline: none;
+.cvSvg {
+  position: absolute;
+  right: 30px;
+  bottom: 12px;
+  cursor: pointer;
 }
 
-.inputsContainer {
-  overflow-y: auto;
-  max-height: 50%;
-  width: 500px;
+.nameContainer {
+  text-align: start;
 }
 
-.inputsContainer::-webkit-scrollbar {
-  width: 0.5em;
-  background-color: transparent;
+.nameContainer {
+  text-align: start;
 }
 
-.inputsContainer::-webkit-scrollbar-thumb {
-  background-color: transparent;
+.lastNameContainer {
+  text-align: start;
 }
 
-.grupoDatos1 {
+.birthDateContainer {
+  text-align: start;
+}
+
+.dataGroup2Container {
   display: flex;
   flex-direction: row;
-  width: fit-content;
-  gap: 20px;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-.inputSubContainer {
-  width: 480px;
-  padding: 0 5px 0 5px;
+  gap: 20px;
 }
 
-.inputSubContainerDataGroup1 {
-  width: 230px;
+.dataGroup2Container>* {
+  flex: 1 1 calc(50% - 20px);
 }
 
-.imageUploaderContainer {
-  display: flex;
-  justify-content: center;
+.dpiContainer {
+  text-align: start;
 }
 
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 10px 0 10px;
+.phoneContainer {
+  text-align: start;
 }
 
-@media (max-width: 600px){
+.emailContainer {
+  text-align: start;
+}
 
-  .inputsContainer{
-    width: 80%;
+.passwordContainer {
+  text-align: start;
+}
 
+.careerContainer {
+  text-align: start;
+}
+
+.universityContainer {
+  text-align: start;
+}
+
+.titleSemester {
+  display: block;
+  text-align: start;
+}
+
+.backgroundSVGContainer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+}
+
+.backgroundSVG {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+
+  .dataContainer {
+    padding: 20px 10px;
+    width: calc(90% - 20px);
   }
 
-  .grupoDatos1{
-    flex-direction: column;
-    gap: 10px;
+  .cvContainer {
     width: 100%;
+  }
+
+  .cvSvg {
+    right: 15px;
+  }
+
+  .dataGroup2Container {
+    flex-direction: column;
     flex-wrap: nowrap;
   }
 
-  .inputTextArea {
-    width: 80%;
-  }
-
-  .inputSubContainer{
-    width: 100%;
-  }
-
-  .inputTextArea {
-    width: 100%;
-  }
-
-  .buttonContainer{
-    width: 100%;
-    padding: 0;
-  }
-
-  .inputSubContainerDataGroup1 {
+  .dataGroup2Container>* {
     width: 100%;
   }
 
