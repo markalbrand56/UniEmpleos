@@ -161,13 +161,16 @@ func GetOfferPreviews(c *gin.Context) {
 }
 
 type PostulationFromStudentResult struct {
-	IDPostulacion int     `json:"id_postulacion"`
-	IDOferta      int     `json:"id_oferta"`
-	IDEmpresa     string  `json:"id_empresa"`
-	Puesto        string  `json:"puesto"`
-	Descripcion   string  `json:"descripcion"`
-	Requisitos    string  `json:"requisitos"`
-	Salario       float64 `json:"salario"`
+	IDPostulacion int       `json:"id_postulacion"`
+	IDOferta      int       `json:"id_oferta"`
+	IDEmpresa     string    `json:"id_empresa"`
+	Puesto        string    `json:"puesto"`
+	Descripcion   string    `json:"descripcion"`
+	Requisitos    string    `json:"requisitos"`
+	Salario       float64   `json:"salario"`
+	Jornada       string    `json:"jornada"`
+	HoraInicio    time.Time `json:"hora_inicio"`
+	HoraFin       time.Time `json:"hora_fin"`
 }
 
 func GetPostulationFromStudent(c *gin.Context) {
@@ -185,7 +188,7 @@ func GetPostulationFromStudent(c *gin.Context) {
 		return
 	}
 
-	err = configs.DB.Raw("select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario from postulacion p join oferta o on p.id_oferta = o.id_oferta where id_estudiante = ?", idEstudiante).Scan(&results).Error
+	err = configs.DB.Raw("select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario, jornada, hora_inicio, hora_fin from postulacion p join oferta o on p.id_oferta = o.id_oferta where id_estudiante = ?", idEstudiante).Scan(&results).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
