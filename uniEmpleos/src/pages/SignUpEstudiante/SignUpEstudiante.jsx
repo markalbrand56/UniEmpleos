@@ -15,7 +15,6 @@ import Loader from "../../components/Loader/Loader"
 
 const SignUpEstudiante = () => {
   const { dispatch } = useStoreon("user")
-  const { user } = useStoreon("user")
   const api = useApi()
   const apiCv = useApi()
   const apiPfp = useApi()
