@@ -7,6 +7,7 @@ import InfoTab from "../../components/InfoTab/InfoTab"
 import styles from "./PostulationsEstudent.module.css"
 import Popup from "../../components/Popup/Popup"
 import upload from "./upload.json"
+import Loader from "../../components/Loader/Loader"
 
 const PostulationsEstudent = () => {
   const api = useApi()
@@ -16,8 +17,10 @@ const PostulationsEstudent = () => {
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [postulaciones, setPostulaciones] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const obtainPostulations = async () => {
+    setLoading(true)
     const datos = await api.handleRequest("GET", "/postulations/getFromStudent")
     if (datos.status === 200) {
       setPostulaciones(datos.data)
@@ -26,6 +29,7 @@ const PostulationsEstudent = () => {
       setError("Error al obtener las postulaciones")
       setWarning(true)
     }
+    setLoading(false) // Finaliza la carga
   }
 
   useEffect(() => {
@@ -58,7 +62,9 @@ const PostulationsEstudent = () => {
         style={typePopUp}
         close={() => setWarning(false)}
       />
-      {postulaciones.postulations && postulaciones.postulations.length > 0 ? (
+      {loading ? (
+        <Loader /> 
+      ) :postulaciones.postulations && postulaciones.postulations.length > 0 ? (
         <div className={styles.mainInfoContainer}>
           {postulaciones.postulations.map((postulation) => (
             <InfoTab

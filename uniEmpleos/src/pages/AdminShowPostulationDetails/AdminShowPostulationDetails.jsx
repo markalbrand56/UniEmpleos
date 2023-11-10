@@ -133,7 +133,7 @@ const AdminShowPostulationDetails = ({ id }) => {
           <div className={style.buttonContainer}>
             <Button
               label="Regresar"
-              backgroundColor="transparet"
+              backgroundColor="#94bd0f"
               onClick={() => {
                 handleReturn(data.company.correo)
               }}

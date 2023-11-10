@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import Select from "react-select"
 import { useStoreon } from "storeon/react"
 import { useQuill } from "react-quilljs"
+import { ca } from "date-fns/locale"
 import style from "./NewOffer.module.css"
 import { Header } from "../../components/Header/Header"
 import Button from "../../components/Button/Button"
@@ -20,6 +21,9 @@ const Postulacion = () => {
 
   const [requisitos, setRequisitos] = useState("")
   const [salario, setSalario] = useState("")
+  const [jornada, setJornada] = useState("")
+  const [horarioInicio, setHorarioInicio] = useState("")
+  const [horarioFin, setHorarioFin] = useState("")
   const [puesto, setPuesto] = useState("")
   const [carrera, setCarrera] = useState("")
   const [carreras, setCarreras] = useState([])
@@ -27,6 +31,8 @@ const Postulacion = () => {
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [typePopUp, setTypePopUp] = useState(1)
+  const formattedStartTime = `0000-01-01T${horarioInicio}:00Z`
+  const formattedEndTime = `0000-01-01T${horarioFin}:00Z`
 
   const postOffer = async () => {
     if (
@@ -47,6 +53,9 @@ const Postulacion = () => {
         descripcion: details,
         requisitos,
         id_carreras: [carrera],
+        jornada,
+        hora_inicio: formattedStartTime,
+        hora_fin: formattedEndTime,
       })
       if (apiResponse.status === 200) {
         navigate("/postulacionempresa")
@@ -62,6 +71,10 @@ const Postulacion = () => {
     setCarrera(e.value)
   }
 
+  const handleJornada = (e) => {
+    setJornada(e.value)
+  }
+
   const handleInputsValue = (e) => {
     switch (e.target.name) {
       case "salario":
@@ -72,6 +85,12 @@ const Postulacion = () => {
         break
       case "puesto":
         setPuesto(e.target.value)
+        break
+      case "horarioinicio":
+        setHorarioInicio(e.target.value)
+        break
+      case "horariofin":
+        setHorarioFin(e.target.value)
         break
       default:
         break
@@ -132,6 +151,63 @@ const Postulacion = () => {
             />
           </div>
           <div className={style.inputContainer}>
+            <span>Horario</span>
+            <div className={style.horarioContainer}>
+              <span className={style.horario}>Inicio (am)</span>
+              <ComponentInput
+                name="horarioinicio"
+                type="time"
+                onChange={handleInputsValue}
+              />
+              <span className={style.horario}>Fin (pm)</span>
+              <ComponentInput
+                name="horariofin"
+                type="time"
+                onChange={handleInputsValue}
+              />
+            </div>
+          </div>
+          <div className={style.inputContainer}>
+            <span>Jornada</span>
+            <Select
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? "#a08ae5" : "grey",
+                  color: "black",
+                }),
+                option: (baseStyles) => ({
+                  ...baseStyles,
+                  color: "black",
+                }),
+              }}
+              name="jornada"
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#94bd0f",
+                  primary: "#a08ae5",
+                },
+              })}
+              defaultValue={jornada}
+              options={
+                jornada === ""
+                  ? [
+                      { value: "Medio Tiempo", label: "Medio Tiempo" },
+                      { value: "Tiempo Completo", label: "Tiempo Completo" },
+                    ]
+                  : [
+                      { value: jornada, label: jornada },
+                      { value: "Medio Tiempo", label: "Medio Tiempo" },
+                      { value: "Tiempo Completo", label: "Tiempo Completo" },
+                    ]
+              }
+              value={carreras.find((option) => option.label === carrera)}
+              onChange={handleJornada}
+            />
+          </div>
+          <div className={style.inputContainer}>
             <span>Carrera</span>
             <Select
               styles={{
@@ -180,13 +256,15 @@ const Postulacion = () => {
         <div className={style.buttonContainer}>
           <Button
             label="Regresar"
-            backgroundColor="transparet"
+            backgroundColor="#ccc"
             onClick={handleRegresar}
+            noborder
           />
           <Button
             label="Añadir"
             backgroundColor="#a08ae5"
             onClick={handlePostularme}
+            noborder
           />
         </div>
       </div>

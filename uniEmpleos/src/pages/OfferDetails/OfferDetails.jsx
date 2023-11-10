@@ -3,6 +3,7 @@ import Select from "react-select"
 import { useStoreon } from "storeon/react"
 import Joi from "joi"
 import { useQuill } from "react-quilljs"
+import { format } from "date-fns"
 import styles from "./OfferDetails.module.css"
 import { Header } from "../../components/Header/Header"
 import Button from "../../components/Button/Button"
@@ -28,6 +29,14 @@ const OfferDetails = ({ id }) => {
 
   const [requisitos, setRequisitos] = useState("")
   const [salario, setSalario] = useState("")
+  const [jornada, setJornada] = useState("")
+  // Estados para la visualización
+  const [horarioInicioDisplay, setHorarioInicioDisplay] = useState("")
+  const [horarioFinDisplay, setHorarioFinDisplay] = useState("")
+
+  // Estados para la actualización (mantienen el valor completo ISO)
+  const [horarioInicioUpdate, setHorarioInicioUpdate] = useState("")
+  const [horarioFinUpdate, setHorarioFinUpdate] = useState("")
   const [puesto, setPuesto] = useState("")
   const [detalles, setDetalles] = useState("")
   const [carrera, setCarrera] = useState("")
@@ -36,6 +45,13 @@ const OfferDetails = ({ id }) => {
   const [warning, setWarning] = useState(false)
   const [deletejob, setdeleteJob] = useState(false)
   const [error, setError] = useState("")
+  const parseTime = (isoString) => {
+    return isoString.split("T")[1].split("Z")[0]
+  }
+  const options = [
+    { value: "Medio Tiempo", label: "Medio Tiempo" },
+    { value: "Tiempo Completo", label: "Tiempo Completo" },
+  ]
 
   useEffect(() => {
     apiCareers.handleRequest("GET", "/careers")
@@ -64,6 +80,12 @@ const OfferDetails = ({ id }) => {
           setSalario(dataa[i].salario)
           setRequisitos(dataa[i].requisitos)
           setDetalles(dataa[i].descripcion)
+          setJornada(dataa[i].jornada)
+          setHorarioInicioDisplay(parseTime(dataa[i].hora_inicio))
+          setHorarioFinDisplay(parseTime(dataa[i].hora_fin))
+          // Mantén los valores completos para la actualización
+          setHorarioInicioUpdate(dataa[i].hora_inicio)
+          setHorarioFinUpdate(dataa[i].hora_fin)
           if (
             dataa[i].id_carreras !== null &&
             dataa[i].id_carreras.length > 0
@@ -89,14 +111,19 @@ const OfferDetails = ({ id }) => {
       setError("Solamente el campo de descripción puede estar vacío")
       setWarning(true)
     } else {
+      console.log(horarioInicioUpdate)
       const details = JSON.stringify(quill.getContents())
       const apiResponse = await api.handleRequest("PUT", "/offers/", {
+        id_empresa: user.id_user,
         id_oferta: parseInt(id, 10),
         puesto,
         descripcion: details,
         requisitos,
         salario: parseFloat(salario),
         id_carreras: [carrera],
+        jornada,
+        hora_inicio: horarioInicioUpdate,
+        hora_fin: horarioFinUpdate,
       })
       if (apiResponse.status === 200) {
         navigate("/postulacionempresa")
@@ -130,14 +157,33 @@ const OfferDetails = ({ id }) => {
       case "salario":
         setSalario(e.target.value.toString())
         break
-      case "detalles":
-        setDetalles(e.target.value)
-        break
       case "requisitos":
         setRequisitos(e.target.value)
         break
+      case "detalles":
+        setDetalles(e.target.value)
+        break
       case "puesto":
         setPuesto(e.target.value)
+        break
+      default:
+        break
+    }
+  }
+
+  const handleHorarioInputChange = (e) => {
+    const { name, value } = e.target
+    const timeValue = `0000-01-01T${value}:00Z`
+    switch (name) {
+      case "horarioinicio":
+        setHorarioInicioDisplay(value)
+        setHorarioInicioUpdate(timeValue)
+        console.log(horarioInicioUpdate)
+        break
+      case "horariofin":
+        setHorarioFinDisplay(value)
+        setHorarioFinUpdate(timeValue)
+        console.log(horarioFinUpdate)
         break
       default:
         break
@@ -170,6 +216,10 @@ const OfferDetails = ({ id }) => {
       setError("Upss algo salió mal, intentalo de nuevo")
       setWarning(true)
     }
+  }
+
+  const handleJornada = (e) => {
+    setJornada(e.value)
   }
 
   return (
@@ -211,6 +261,53 @@ const OfferDetails = ({ id }) => {
               placeholder="Q5000.00"
               onChange={handleInputsValue}
               value={salario}
+            />
+          </div>
+          {horarioInicioDisplay && horarioFinDisplay && (
+            <div className={styles.inputContainer}>
+              <span>Horario</span>
+              <input
+                name="horarioinicio"
+                type="time"
+                onChange={handleHorarioInputChange}
+                value={horarioInicioDisplay}
+                className={styles.inputHorario}
+              />
+              <input
+                name="horariofin"
+                type="time"
+                onChange={handleHorarioInputChange}
+                value={horarioFinDisplay}
+                className={styles.inputHorario}
+              />
+            </div>
+          )}
+          <div className={styles.inputContainer}>
+            <span>Jornada</span>
+            <Select
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? "#a08ae5" : "grey",
+                  color: "black",
+                }),
+                option: (baseStyles) => ({
+                  ...baseStyles,
+                  color: "black",
+                }),
+              }}
+              name="jornada"
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary25: "#94bd0f",
+                  primary: "#a08ae5",
+                },
+              })}
+              options={options}
+              value={options.find((option) => option.value === jornada)}
+              onChange={handleJornada}
             />
           </div>
           <div className={styles.inputContainer}>
@@ -261,13 +358,15 @@ const OfferDetails = ({ id }) => {
         <div className={styles.buttonContainer}>
           <Button
             label="Regresar"
-            backgroundColor="transparet"
+            backgroundColor="#ccc"
             onClick={handleRegresar}
+            noborder
           />
           <Button
             label="Guardar"
             backgroundColor="#a08ae5"
             onClick={updateOffer}
+            noborder
           />
         </div>
       </div>
