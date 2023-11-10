@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import { format } from "date-fns-tz"
 import styles from "./InfoTab.module.css"
 import Button from "../Button/Button"
 
@@ -11,7 +12,17 @@ const InfoTab = ({
   labelbutton,
   onClick,
   verPostulantes,
+  horarioinicio,
+  horariofin,
+  jornada,
 }) => {
+  console.log(horarioinicio)
+  console.log(horariofin)
+
+  const parseTime = (isoString) => {
+    return isoString.split("T")[1].split("Z")[0]
+  }
+
   return (
     <div className={styles.container}>
       {title && (
@@ -19,21 +30,30 @@ const InfoTab = ({
           <h3>{title}</h3>
         </div>
       )}
-      {company && (
-        <div className={styles.containerinfosecond}>
-          <p>{company}</p>
-          {area && <p>{area}</p>}
-        </div>
-      )}
-      {salary && (
-        <div className={styles.containerinfothird}>
-          <p>{salary}</p>
-        </div>
-      )}
+      <div className={styles.containerinfosecond}>
+        {company && <p>{`Empresa: ${company}`}</p>}
+        {salary && <p>{`Salario: ${salary}`}</p>}
+        {jornada && <p>{`Jornada: ${jornada}`}</p>}
+        {horarioinicio && horariofin && (
+          <p>{`Horario: ${`${parseTime(horarioinicio)} - ${parseTime(
+            horariofin
+          )}`}`}</p>
+        )}
+      </div>
       <div className={styles.button}>
-        <Button label={labelbutton} onClick={onClick} />
+        <Button
+          label={labelbutton}
+          onClick={onClick}
+          backgroundColor="#94bd0f"
+          noborder
+        />
         {verPostulantes && (
-          <Button label="Ver postulantes" onClick={verPostulantes} backgroundColor={"#a08ae5"}/>
+          <Button
+            label="Ver postulantes"
+            onClick={verPostulantes}
+            backgroundColor="#ccc"
+            noborder
+          />
         )}
       </div>
     </div>

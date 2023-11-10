@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react"
 import { useStoreon } from "storeon/react"
+import { Player } from "@lottiefiles/react-lottie-player"
 import useApi from "../../Hooks/useApi"
 import Header from "../../components/Header/Header"
 import InfoTab from "../../components/InfoTab/InfoTab"
 import styles from "./PostulationsEstudent.module.css"
 import Popup from "../../components/Popup/Popup"
+import upload from "./upload.json"
+import Loader from "../../components/Loader/Loader"
 
 const PostulationsEstudent = () => {
   const api = useApi()
@@ -14,8 +17,10 @@ const PostulationsEstudent = () => {
   const [warning, setWarning] = useState(false)
   const [error, setError] = useState("")
   const [postulaciones, setPostulaciones] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const obtainPostulations = async () => {
+    setLoading(true)
     const datos = await api.handleRequest("GET", "/postulations/getFromStudent")
     if (datos.status === 200) {
       setPostulaciones(datos.data)
@@ -24,6 +29,7 @@ const PostulationsEstudent = () => {
       setError("Error al obtener las postulaciones")
       setWarning(true)
     }
+    setLoading(false) // Finaliza la carga
   }
 
   useEffect(() => {
@@ -56,7 +62,9 @@ const PostulationsEstudent = () => {
         style={typePopUp}
         close={() => setWarning(false)}
       />
-      {postulaciones.postulations && postulaciones.postulations.length > 0 ? (
+      {loading ? (
+        <Loader /> 
+      ) :postulaciones.postulations && postulaciones.postulations.length > 0 ? (
         <div className={styles.mainInfoContainer}>
           {postulaciones.postulations.map((postulation) => (
             <InfoTab
@@ -69,8 +77,18 @@ const PostulationsEstudent = () => {
           ))}
         </div>
       ) : (
-        <div className={styles.mainInfoContainer}>
-          <h1>No se ha postulado a ninguna oferta</h1>
+        <div className={styles.containerinfomain}>
+          <h1 style={{ color: "#000" }}>No se ha postulado a ninguna oferta</h1>
+          <Player
+            src={upload}
+            className="player"
+            loop
+            autoplay
+            style={{ height: "400px", width: "400px" }}
+          />
+          <a href="/profile" className={styles.buttonapplyoffer}>
+            Postularme
+          </a>
         </div>
       )}
     </div>

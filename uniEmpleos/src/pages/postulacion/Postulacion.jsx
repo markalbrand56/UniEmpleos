@@ -109,13 +109,15 @@ const Postulacion = ({ id }) => {
           <div className={style.buttonContainer}>
             <Button
               label="Regresar"
-              backgroundColor="transparet"
+              backgroundColor="#ccc"
               onClick={handleRegresar}
+              noborder
             />
             <Button
               label="Postularme"
               backgroundColor="#a08ae5"
               onClick={handlePostularme}
+              noborder
             />
           </div>
         </div>

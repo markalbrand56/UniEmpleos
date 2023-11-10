@@ -9,3 +9,49 @@
   gap: 20px;
   margin-top: 20px;
 }
+
+.containerinfomain{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+}
+
+.buttonapplyoffer {
+  color: #a08ae5;
+  border: 2px solid #a08ae5;
+  padding: 10px 20px;
+  border-radius: 10px;
+  width: 40%;
+  font-family: "Poppins";
+}
+
+a.buttonapplyoffer {
+  color: #a08ae5 !important;
+}
+
+a.buttonapplyoffer:hover {
+  background-color: #a08ae5;
+  color: #fff !important;
+}
+
+@media screen and (max-width: 768px){
+  .containerinfoprincipal{
+      justify-content: center;
+  }
+
+  .buttoncreateoffer {
+      width: 80%;
+  }
+
+  .containerinfomain h1{
+      font-size: 30px;
+      width: 80%;
+  }
+
+  a.buttonapplyoffer {
+      width: 80%;
+  }
+}

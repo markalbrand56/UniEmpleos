@@ -10,7 +10,6 @@
 .containerinfomain{
     display: flex;
     flex-direction: column;
-    padding: 80px;
     justify-content: center;
     align-items: center;
     gap: 20px;
@@ -41,6 +40,11 @@ a.buttoncreateoffer:hover {
     }
 
     .buttoncreateoffer {
-        width: 100%;
+        width: 80%;
+    }
+
+    .containerinfomain h1{
+        font-size: 30px;
+        width: 80%;
     }
 }

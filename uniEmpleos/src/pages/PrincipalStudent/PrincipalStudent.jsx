@@ -117,6 +117,9 @@ const PrincipalStudent = () => {
               title={postulation.puesto}
               salary={`Q.${postulation.salario}.00`}
               company={postulation.nombre_empresa}
+              jornada={postulation.jornada}
+              horarioinicio={postulation.hora_inicio}
+              horariofin={postulation.hora_fin}
               labelbutton="Postularme"
               onClick={() => saveidlocalstorage(postulation.id_oferta)}
             />
