@@ -245,7 +245,13 @@ const EditProfileEstudiante = () => {
     if (newCV !== "") {
       window.open(newCV)
     } else {
-      window.open(`${API_URL}/api/cv/${oldCV}`)
+      if (oldCV === "") {
+        setTypePopUp(2)
+        setError("No tienes un CV")
+        setWarning(true)
+      } else {
+        window.open(`${API_URL}/api/cv/${oldCV}`)
+      }
     }
   }
 
