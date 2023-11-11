@@ -179,7 +179,7 @@ const SignUpEmpresa = () => {
                 <ComponentInput
                   name="nombre"
                   type="text"
-                  placeholder="Juan"
+                  placeholder="miEmpresa.org"
                   value={nombre}
                   onChange={handleInputsValue}
                 />
@@ -190,7 +190,7 @@ const SignUpEmpresa = () => {
                   value={telefono}
                   name="telefono"
                   type="number"
-                  placeholder="34325456"
+                  placeholder="21212413"
                   onChange={handleInputsValue}
                 />
               </div>
@@ -200,7 +200,7 @@ const SignUpEmpresa = () => {
                   name="correo"
                   type="text"
                   value={correo}
-                  placeholder="uni@uni.com"
+                  placeholder="empresa@org.com"
                   onChange={handleInputsValue}
                 />
               </div>
