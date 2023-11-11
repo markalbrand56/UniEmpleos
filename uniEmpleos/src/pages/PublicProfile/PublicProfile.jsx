@@ -6,7 +6,8 @@ import { BsPhone } from "react-icons/bs"
 import { PiBooksLight } from "react-icons/pi"
 import { LiaUniversitySolid, LiaBirthdayCakeSolid } from "react-icons/lia"
 import { AiTwotoneCalendar } from "react-icons/ai"
-import { HiOutlineMailOpen } from "react-icons/hi"
+import { HiOutlineMailOpen, HiOutlineDocumentDownload } from "react-icons/hi"
+import { LuFileSpreadsheet } from "react-icons/lu"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
 import { navigate } from "../../store"
@@ -44,6 +45,7 @@ const PublicProfile = ({ params }) => {
     setEdad(edadActual)
   }
 
+  console.log("-->", usuario)
   const obtenerPostulante = async () => {
     const datos = await api.handleRequest("POST", "/users/details", {
       correo,
@@ -62,6 +64,10 @@ const PublicProfile = ({ params }) => {
         navigate(`/postulantes/${idOferta}`)
       }, 5000)
     }
+  }
+
+  const showCV = (cv) => {
+    window.open(`${API_URL}/api/cv/${cv}`)
   }
 
   useEffect(() => {
@@ -152,6 +158,16 @@ const PublicProfile = ({ params }) => {
                   <span className={style.profileSpan}>
                     Semestre: {usuario.semestre}
                   </span>
+                </div>
+              )}
+              {usuario.cv && (
+                <div className={style.profileli}>
+                  <HiOutlineDocumentDownload
+                    size={30}
+                    onClick={() => showCV(usuario.cv)}
+                    style={{ cursor: "pointer" }}
+                  />
+                  <span className={style.profileSpan}>CV</span>
                 </div>
               )}
             </div>
