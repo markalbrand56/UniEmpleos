@@ -14,7 +14,7 @@ global.fetch = fetch
 it("should call API and navigate to login page when valid form data is submitted", async () => {
   //const api = useApi()
   const fetchSpy = vi.spyOn(window, "fetch").mockResolvedValue({
-    json: () => Promise.resolve({ status: 200 }),
+    json: () => Promise.resolve({ status: 200, data: {token: "123"} }),
   })
   const navigateSpy = vi.spyOn(store, "dispatch")
 
