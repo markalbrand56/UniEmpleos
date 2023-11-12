@@ -266,6 +266,7 @@ const OfferDetails = ({ id }) => {
           {horarioInicioDisplay && horarioFinDisplay && (
             <div className={styles.inputContainer}>
               <span>Horario</span>
+              <span className={styles.horario}>Inicio</span>
               <input
                 name="horarioinicio"
                 type="time"
@@ -273,6 +274,7 @@ const OfferDetails = ({ id }) => {
                 value={horarioInicioDisplay}
                 className={styles.inputHorario}
               />
+              <span className={styles.horario}>Fin</span>
               <input
                 name="horariofin"
                 type="time"

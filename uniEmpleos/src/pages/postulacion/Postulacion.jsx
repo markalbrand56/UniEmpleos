@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { useStoreon } from "storeon/react"
+import { useQuill } from "react-quilljs"
 import style from "./Postulacion.module.css"
 import { Header } from "../../components/Header/Header"
 import OfertaInfo from "../../components/ofertaInfo/OfertaInfo"
 import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
-import { useQuill } from "react-quilljs"
 import Popup from "../../components/Popup/Popup"
 
 const Postulacion = ({ id }) => {
@@ -69,6 +69,10 @@ const Postulacion = ({ id }) => {
     navigate("/profile")
   }
 
+  const parseTime = (isoString) => {
+    return isoString.split("T")[1].split("Z")[0].slice(0, -3)
+  }
+
   return (
     <div className={style.container}>
       <Popup
@@ -101,9 +105,19 @@ const Postulacion = ({ id }) => {
               img="/images/salario.svg"
               label={api.data.offer.salario.toString()}
             />
+            <OfertaInfo
+              img="/images/jornada.svg"
+              label={api.data.offer.jornada}
+            />
+            <OfertaInfo
+              img="/images/horario.svg"
+              label={`${parseTime(api.data.offer.hora_inicio)}AM - ${parseTime(
+                api.data.offer.hora_fin
+              )}PM`}
+            />
           </div>
           <div className={style.label}>
-            Detalles
+            <span className={style.detailsText}>Detalles</span>
             <div ref={quillRef} className={style.Editor} />
           </div>
           <div className={style.buttonContainer}>

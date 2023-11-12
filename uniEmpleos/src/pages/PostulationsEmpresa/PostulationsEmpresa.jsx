@@ -108,6 +108,7 @@ const PostulationsEmpresa = () => {
               title={postulation.puesto}
               area={postulation.nombre_carreras}
               salary={`Q.${postulation.salario}.00`}
+              jornada={postulation.jornada}
               company={postulation.nombre_empresa}
               labelbutton="Ver más"
               onClick={() => {

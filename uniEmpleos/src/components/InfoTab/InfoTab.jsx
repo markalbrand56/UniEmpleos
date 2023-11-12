@@ -20,7 +20,7 @@ const InfoTab = ({
   console.log(horariofin)
 
   const parseTime = (isoString) => {
-    return isoString.split("T")[1].split("Z")[0]
+    return isoString.split("T")[1].split("Z")[0].slice(0, -3)
   }
 
   return (
@@ -35,9 +35,9 @@ const InfoTab = ({
         {salary && <p>{`Salario: ${salary}`}</p>}
         {jornada && <p>{`Jornada: ${jornada}`}</p>}
         {horarioinicio && horariofin && (
-          <p>{`Horario: ${`${parseTime(horarioinicio)} - ${parseTime(
+          <p>{`Horario: ${`${parseTime(horarioinicio)}AM - ${parseTime(
             horariofin
-          )}`}`}</p>
+          )}PM`}`}</p>
         )}
       </div>
       <div className={styles.button}>

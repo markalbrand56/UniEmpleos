@@ -6,7 +6,7 @@ const OfertaInfo = ({ img, label }) => {
   return (
     <div className={style.generalContainer}>
       <div className={style.svgContainer}>
-        <img src={img} alt={label} />
+        <img src={img} alt={label} className={style.svg} />
       </div>
       <div className={style.textContainer}>{label}</div>
     </div>
