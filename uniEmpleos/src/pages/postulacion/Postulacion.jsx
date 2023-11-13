@@ -12,6 +12,7 @@ import Popup from "../../components/Popup/Popup"
 const Postulacion = ({ id }) => {
   const { user } = useStoreon("user")
   const api = useApi()
+  const apiPostulation = useApi()
   const { quill, quillRef } = useQuill({
     readOnly: true, // Establecer el editor Quill en modo de solo lectura
     modules: {
@@ -46,7 +47,7 @@ const Postulacion = ({ id }) => {
   }, [quill, detalles])
 
   const handlePostularme = async () => {
-    const apiResponse = await api.handleRequest("POST", "/postulations/", {
+    const apiResponse = await apiPostulation.handleRequest("POST", "/postulations/", {
       id_oferta: parseInt(id, 10),
       id_estudiante: user.id_user,
       estado: "enviada",
@@ -130,7 +131,7 @@ const Postulacion = ({ id }) => {
             <Button
               label="Postularme"
               backgroundColor="#a08ae5"
-              onClick={handlePostularme}
+              onClick={() => {handlePostularme()}}
               noborder
             />
           </div>
