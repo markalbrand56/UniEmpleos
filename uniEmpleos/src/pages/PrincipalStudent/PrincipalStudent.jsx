@@ -104,6 +104,7 @@ const PrincipalStudent = () => {
     }
   }, [dataa.data, carrera, postulaciones])
 
+  console.log('-->', ofertasAMostrar)
   return (
     <div className={styles.container}>
       <Header userperson="student" />
