@@ -5,17 +5,21 @@ import style from "./LanguageButton.module.css"
 import useLanguage from "../../Hooks/useLanguage"
 
 const LanguageButton = () => {
+
   const idiom = useLanguage()
   const [language, setLanguage] = useState(idiom.getLanguage())
+
 
   const changeLanguage = () => {
     const currentLanguage = idiom.getLanguage()
     idiom.changeLanguage()
     if (currentLanguage === "es") {
       setLanguage("en")
+      console.log("en")
       i18n.changeLanguage("en")
     } else {
       setLanguage("es")
+        console.log("es")
       i18n.changeLanguage("es")
     }
   }
@@ -28,7 +32,7 @@ const LanguageButton = () => {
         onClick={changeLanguage}
       >
         <img
-          src={language === "es" ? "/images/en.svg" : "/images/es.svg"}
+          src={language === "en" ? "/images/es.svg" : "/images/en.svg"}
           alt="English"
           className={style.imgButton}
         />
