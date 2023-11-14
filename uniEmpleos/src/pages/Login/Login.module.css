@@ -18,7 +18,7 @@
   color: #a08ae5;
 }
 
-.logInCointainer>div {
+.inputsContainer {
   z-index: 1;
   border-radius: 5px;
   width: 300px;
