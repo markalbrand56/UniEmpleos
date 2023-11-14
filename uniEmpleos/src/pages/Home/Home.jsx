@@ -2,16 +2,13 @@ import React from "react"
 import { Player } from "@lottiefiles/react-lottie-player"
 import styles from "./Home.module.css"
 import Infocontainer from "../../components/Infocontainer/Infocontainer"
-import Button from "../../components/Button/Button"
-import { navigate } from "../../store"
 import HeaderHome from "../../components/HeaderHome/HeaderHome"
 import students from "./students.json"
+import LanguageButton from "../../components/LanguageButton/LanguageButton"
+import { useTranslation } from "react-i18next"
 
 const Home = () => {
-  const handleNav = (path) => {
-    navigate(path)
-  }
-
+  const { t } = useTranslation()
   return (
     <div className={styles.homeContainer}>
       <div className={styles.topcontent}>
@@ -23,7 +20,10 @@ const Home = () => {
             <h1>Uni</h1>
           </div>
           <div className={styles.lottie}>
-            <Player autoplay loop src={students}
+            <Player
+              autoplay
+              loop
+              src={students}
               style={{ height: "500px", width: "500px" }}
             />
           </div>
@@ -31,7 +31,10 @@ const Home = () => {
             <h1>UniEmpleos</h1>
           </div>
           <div className={styles.lottiephone}>
-            <Player autoplay loop src={students}
+            <Player
+              autoplay
+              loop
+              src={students}
               style={{ height: "400px", width: "400px" }}
             />
           </div>
@@ -41,20 +44,21 @@ const Home = () => {
         </div>
         <div className={styles.info}>
           <Infocontainer
-            title="¿Qué es UniEmpleos?"
-            text="UniEmpleos es una plataforma que permite a los estudiantes de distintas
-             Universidades de Guatemala encontrar ofertas de trabajo y prácticas profesionales."
+            title={t("home.title1")}
+            text={t("home.desc1")}
             backgroundColor="#A08AE5"
             textColor="#fff"
           />
           <Infocontainer
-            title="¿Cómo funciona?"
-            text="Las empresas publican sus ofertas de trabajo y los estudiantes 
-            pueden postular a ellas. Las empresas pueden ver los perfiles de los estudiantes y contactarlos."
+            title={t("home.title2")}
+            text={t("home.desc2")}
             backgroundColor="#94BD0F"
             textColor="#fff"
           />
         </div>
+      </div>
+      <div className={styles.footer}>
+        <LanguageButton />
       </div>
     </div>
   )
