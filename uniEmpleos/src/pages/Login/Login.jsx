@@ -6,8 +6,11 @@ import styles from "./Login.module.css"
 import Popup from "../../components/Popup/Popup"
 import API_URL from "../../api"
 import { useStoreon } from "storeon/react"
+import { useTranslation } from "react-i18next"
+import LanguageButton from "../../components/LanguageButton/LanguageButton"
 
 const LogIn = () => {
+  const { t } = useTranslation()
   const { dispatch } = useStoreon("user")
 
   const [emailInput, setEmailInput] = useState("")
@@ -82,7 +85,7 @@ const LogIn = () => {
       <h1>UniEmpleos</h1>
       <div className={styles.inputsContainer}>
         <div className={styles.usuarioContainer}>
-          <span>Ingrese su correo</span>
+          <span>{t("login.email")}</span>
           <ComponentInput
             name="correo"
             type="text"
@@ -91,26 +94,26 @@ const LogIn = () => {
           />
         </div>
         <div className={styles.usuarioContainer}>
-          <span>Ingrese su contraseña</span>
+          <span>{t("login.password")}</span>
           <ComponentInput
             name="password"
             type="password"
             placeholder="micontraseña123"
             onChange={handlePass}
-            eye = {true}
+            eye
             onClickButton = {handlePassword}
             isOpen={showPassword}
           />
         </div>
         <Button
-          label="Iniciar sesión"
+          label={t("login.login")}
           onClick={(event) => {
             event.preventDefault()
             logIn()
           }}
         />
         <a href="/signup">
-          ¿Eres nuevo? <span> Únete al equipo </span>
+          {t("login.new")} <span> {t("login.register")}</span>
         </a>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
@@ -122,6 +125,9 @@ const LogIn = () => {
           320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
         />
       </svg>
+      <div className={styles.footer}>
+        <LanguageButton />
+      </div>
     </div>
   )
 }

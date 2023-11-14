@@ -4,14 +4,16 @@ import i18n from "../../i18n"
 import style from "./LanguageButton.module.css"
 
 const LanguageButton = () => {
-  const [language, setLanguage] = useState("es")
+  const [language, setLanguage] = useState("en")
 
   const changeLanguage = () => {
     if (language === "es") {
       setLanguage("en")
+      console.log("en")
       i18n.changeLanguage("en")
     } else {
       setLanguage("es")
+        console.log("es")
       i18n.changeLanguage("es")
     }
   }
@@ -24,7 +26,7 @@ const LanguageButton = () => {
         onClick={changeLanguage}
       >
         <img
-          src={language === "es" ? "/images/en.svg" : "/images/es.svg"}
+          src={language === "en" ? "/images/es.svg" : "/images/en.svg"}
           alt="English"
           className={style.imgButton}
         />
