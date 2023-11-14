@@ -71,7 +71,17 @@ const Postulacion = ({ id }) => {
   }
 
   const parseTime = (isoString) => {
-    return isoString.split("T")[1].split("Z")[0].slice(0, -3)
+    const date = isoString.split("T")[1].split("Z")[0].slice(0, -3)
+    const hours = parseInt(date.split(":")[0])
+    if (hours > 12) {
+      return `${hours - 12}:${date.split(":")[1]} P.M`
+    } else if (hours === 12) {
+      return `12:${date.split(":")[1]} P.M`
+    } else if (hours === 0) {
+      return `12:${date.split(":")[1]} A.M`
+    } else {
+      return `${hours}:${date.split(":")[1]} A.M`
+    }
   }
 
   return (
@@ -112,9 +122,9 @@ const Postulacion = ({ id }) => {
             />
             <OfertaInfo
               img="/images/horario.svg"
-              label={`${parseTime(api.data.offer.hora_inicio)}AM - ${parseTime(
+              label={`${parseTime(api.data.offer.hora_inicio)} - ${parseTime(
                 api.data.offer.hora_fin
-              )}PM`}
+              )}`}
             />
           </div>
           <div className={style.label}>
