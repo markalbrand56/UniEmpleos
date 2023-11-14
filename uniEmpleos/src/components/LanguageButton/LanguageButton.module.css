@@ -1,0 +1,21 @@
+.languageButton{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+.mainButton{
+    border-radius: 10px;
+    background-color: transparent;
+    margin: 0;
+}
+
+.imgButton{
+    height: 40px;
+    width: 40px;
+}

@@ -1,0 +1,36 @@
+{
+  "home": {
+    "title1": "¿Qué es UniEmpleos?",
+    "desc1": "UniEmpleos es una plataforma que permite a los estudiantes de distintas Universidades de Guatemala encontrar ofertas de trabajo y prácticas profesionales.",
+    "title2": "¿Cómo funciona?",
+    "desc2": "Las empresas publican sus ofertas de trabajo y los estudiantes pueden postular a ellas. Las empresas pueden ver los perfiles de los estudiantes y contactarlos."
+  },
+  "intro": {
+    "description": "Abogado guatemalteco con experiencia en análisis estratégico, análisis político y asesorías a directivas. Actualmente soy Presidente Ejecutivo del Movimiento Cívico Nacional. Participé en el cohorte 2022-2023 del Millenium Leadership Program del Atlantic Council. En este website comparto reflexiones y recursos para comprender el entorno sociopolítico en el que vivimos."
+  },
+  "podcast": {
+    "title": "Podcast",
+    "listen": "Escuchar",
+    "description": "Educamos sobre el impacto que la política, relaciones sociales y economía tiene en la sociedad. Motivamos a ejercer la soberanía individual para lograr impactos positivos en la sociedad. Ser cada vez más conscientes del potencial impacto de nuestras acciones."
+  },
+  "resources": {
+    "title": "Recursos",
+    "categories": [
+      "Todo",
+      "Prensa",
+      "Noticias",
+      "Artículos"
+    ]
+  },
+  "analysis": {
+    "title": "Análisis"
+  },
+  "contact": {
+    "title": "Ponte en Contacto",
+    "subtitle": "Contacto",
+    "collaborate": "Quiero colaborar",
+    "motto": "La república sigue viva",
+    "address": "Address",
+    "media": "Redes Sociales"
+  }
+}
