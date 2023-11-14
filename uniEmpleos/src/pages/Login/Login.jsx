@@ -103,6 +103,7 @@ const LogIn = () => {
           />
         </div>
         <Button
+          testid="Iniciar sesión"
           label="Iniciar sesión"
           onClick={(event) => {
             event.preventDefault()
