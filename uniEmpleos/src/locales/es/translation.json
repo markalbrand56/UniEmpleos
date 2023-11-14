@@ -5,6 +5,7 @@
     "title2": "¿Cómo funciona?",
     "desc2": "Las empresas publican sus ofertas de trabajo y los estudiantes pueden postular a ellas. Las empresas pueden ver los perfiles de los estudiantes y contactarlos."
   },
+
   "offerPostulation": {
     "details":"Detalles",
     "button1": "Regresar",
@@ -12,6 +13,14 @@
   },
   "intro": {
     "description": "Abogado guatemalteco con experiencia en análisis estratégico, análisis político y asesorías a directivas. Actualmente soy Presidente Ejecutivo del Movimiento Cívico Nacional. Participé en el cohorte 2022-2023 del Millenium Leadership Program del Atlantic Council. En este website comparto reflexiones y recursos para comprender el entorno sociopolítico en el que vivimos."
+
+  "login": {
+    "email": "Ingrese su correo",
+    "password": "Ingrese su contraseña",
+    "new":"¿Eres nuevo?",
+    "register": "Regístrate",
+    "login": "Iniciar Sesión"
+
   },
   "podcast": {
     "title": "Podcast",

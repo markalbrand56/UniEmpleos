@@ -4,6 +4,7 @@
     "desc1": "UniEmpleos is a platform that enables students from various universities in Guatemala to find job offers and professional internships.",
     "title2": "How does it work?",
     "desc2": "Companies publish their job offers and students can apply to them. The companies can view the profiles of the students and contact them."
+
   },
   "offerPostulation": {
     "details": "Details",
@@ -12,6 +13,15 @@
   },
   "intro": {
     "description": "Guatemalan lawyer with experience in strategic analysis, political analysis and advisory to boards. Currently, I am the Executive President of the National Civic Movement. I participated in the 2022-2023 cohort of the Millennium Leadership Program at the Atlantic Council. On this website, I share reflections and resources to understand the sociopolitical environment in which we live."
+
+},
+  "login": {
+    "email": "Enter your email",
+    "password": "Enter your password",
+    "new":"New to UniEmpleos?",
+    "register": "Register",
+    "login": "Login"
+
   },
   "podcast": {
     "title": "Podcast",
