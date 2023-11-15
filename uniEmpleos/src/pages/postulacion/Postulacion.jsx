@@ -9,7 +9,6 @@ import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
 import { useTranslation } from "react-i18next"
-import LanguageButton from "../../components/LanguageButton/LanguageButton"
 
 const Postulacion = ({ id }) => {
   const { t } = useTranslation()
@@ -161,9 +160,6 @@ const Postulacion = ({ id }) => {
       ) : (
         <h1>Cargando...</h1>
       )}
-      <div className={style.footer}>
-        <LanguageButton />
-      </div>
     </div>
   )
 }

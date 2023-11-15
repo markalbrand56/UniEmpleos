@@ -4,7 +4,6 @@ import styles from "./Home.module.css"
 import Infocontainer from "../../components/Infocontainer/Infocontainer"
 import HeaderHome from "../../components/HeaderHome/HeaderHome"
 import students from "./students.json"
-import LanguageButton from "../../components/LanguageButton/LanguageButton"
 import { useTranslation } from "react-i18next"
 
 const Home = () => {
@@ -56,9 +55,6 @@ const Home = () => {
             textColor="#fff"
           />
         </div>
-      </div>
-      <div className={styles.footer}>
-        <LanguageButton />
       </div>
     </div>
   )

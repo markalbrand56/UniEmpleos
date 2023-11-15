@@ -4,6 +4,7 @@ import React from "react"
 import Page from "./pages/index"
 import "./assets/fonts/fonts.css"
 import "./App.css"
+import LanguageButton from "./components/LanguageButton/LanguageButton"
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <div className="App">
         <Page />
       </div>
+      <LanguageButton />
     </StoreContext.Provider>
   )
 }

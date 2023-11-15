@@ -4,43 +4,37 @@
     "desc1": "UniEmpleos is a platform that enables students from various universities in Guatemala to find job offers and professional internships.",
     "title2": "How does it work?",
     "desc2": "Companies publish their job offers and students can apply to them. The companies can view the profiles of the students and contact them."
-
   },
   "offerPostulation": {
     "details": "Details",
     "button1": "Back",
     "button2": "Apply"
   },
-  "intro": {
-    "description": "Guatemalan lawyer with experience in strategic analysis, political analysis and advisory to boards. Currently, I am the Executive President of the National Civic Movement. I participated in the 2022-2023 cohort of the Millennium Leadership Program at the Atlantic Council. On this website, I share reflections and resources to understand the sociopolitical environment in which we live."
 
-},
   "login": {
     "email": "Enter your email",
     "password": "Enter your password",
-    "new":"New to UniEmpleos?",
+    "new": "New to UniEmpleos?",
     "register": "Register",
     "login": "Login"
+  },
 
-  },
-  "podcast": {
-    "title": "Podcast",
-    "listen": "Listen",
-    "description": "We educate about the impact that politics, social relations, and economics have on society. We motivate to exercise individual sovereignty to achieve positive impacts on society. Being increasingly aware of the potential impact of our actions."
-  },
-  "resources": {
-    "title": "Resources",
-    "categories": ["All", "Press", "News", "Articles"]
-  },
-  "analysis": {
-    "title": "Analysis"
-  },
-  "contact": {
-    "title": "Get in Touch",
-    "subtitle": "Contact",
-    "collaborate": "I want to collaborate",
-    "motto": "The republic is still alive",
-    "address": "Address",
-    "media": "Social Media"
+  "header": {
+    "student": {
+      "profile": "Profile",
+      "offers": "Offers",
+      "postulations": "Applications",
+      "chat": "Chat"
+    },
+    "enterprise": {
+      "profile": "Profile",
+      "newOffer": "Create Job",
+      "myOffers": "My Offers",
+      "chat": "Chat"
+    },
+    "admin": {
+      "enterprises": "Enterprises",
+      "students": "Students"
+    }
   }
 }
