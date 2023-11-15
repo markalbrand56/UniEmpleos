@@ -48,5 +48,15 @@
     "type": "Jornada",
     "schedule": "Horario",
     "apply": "Postularme"
+  },
+  "profileStudent":{
+    "name": "Nombres",
+    "lastName": "Apellidos",
+    "dateBirth": "Fecha de Nacimiento",
+    "phone": "Teléfono",
+    "nameUniversity": "Universidad",
+    "career": "Carrera",
+    "semester": "Semestre",
+    "save": "Guardar"
   }
 }

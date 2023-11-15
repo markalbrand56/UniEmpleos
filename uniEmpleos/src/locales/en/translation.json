@@ -47,5 +47,15 @@
     "type": "Type",
     "schedule": "Schedule",
     "apply": "Apply"
+  },
+  "profileStudent":{
+    "name": "Name",
+    "lastName": "Last Name",
+    "dateBirth": "Date of Birth",
+    "phone": "Phone",
+    "nameUniversity": "University",
+    "career": "Career",
+    "semester": "Semester",
+    "save": "Save"
   }
 }
