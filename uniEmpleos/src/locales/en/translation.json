@@ -36,5 +36,9 @@
       "enterprises": "Enterprises",
       "students": "Students"
     }
+  },
+  "headerHome": {
+    "login": "Login",
+    "register": "Register"
   }
 }

@@ -37,5 +37,9 @@
       "enterprises": "Empresas",
       "students": "Estudiantes"
     }
+  },
+  "headerHome": {
+    "login": "Iniciar Sesión",
+    "register": "Registrarse"
   }
 }
