@@ -5,36 +5,37 @@
     "title2": "¿Cómo funciona?",
     "desc2": "Las empresas publican sus ofertas de trabajo y los estudiantes pueden postular a ellas. Las empresas pueden ver los perfiles de los estudiantes y contactarlos."
   },
+
+  "offerPostulation": {
+    "details": "Detalles",
+    "button1": "Regresar",
+    "button2": "Postularme"
+  },
+
   "login": {
     "email": "Ingrese su correo",
     "password": "Ingrese su contraseña",
-    "new":"¿Eres nuevo?",
+    "new": "¿Eres nuevo?",
     "register": "Regístrate",
     "login": "Iniciar Sesión"
   },
-  "podcast": {
-    "title": "Podcast",
-    "listen": "Escuchar",
-    "description": "Educamos sobre el impacto que la política, relaciones sociales y economía tiene en la sociedad. Motivamos a ejercer la soberanía individual para lograr impactos positivos en la sociedad. Ser cada vez más conscientes del potencial impacto de nuestras acciones."
-  },
-  "resources": {
-    "title": "Recursos",
-    "categories": [
-      "Todo",
-      "Prensa",
-      "Noticias",
-      "Artículos"
-    ]
-  },
-  "analysis": {
-    "title": "Análisis"
-  },
-  "contact": {
-    "title": "Ponte en Contacto",
-    "subtitle": "Contacto",
-    "collaborate": "Quiero colaborar",
-    "motto": "La república sigue viva",
-    "address": "Address",
-    "media": "Redes Sociales"
+
+  "header": {
+    "student": {
+      "profile": "Perfil",
+      "offers": "Ofertas",
+      "postulations": "Postulaciones",
+      "chat": "Chat"
+    },
+    "enterprise": {
+      "profile": "Perfil",
+      "newOffer": "Crear Empleo",
+      "myOffers": "Mis Ofertas",
+      "chat": "Chat"
+    },
+    "admin": {
+      "enterprises": "Empresas",
+      "students": "Estudiantes"
+    }
   }
 }

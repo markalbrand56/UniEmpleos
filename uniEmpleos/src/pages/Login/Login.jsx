@@ -7,7 +7,6 @@ import Popup from "../../components/Popup/Popup"
 import API_URL from "../../api"
 import { useStoreon } from "storeon/react"
 import { useTranslation } from "react-i18next"
-import LanguageButton from "../../components/LanguageButton/LanguageButton"
 
 const LogIn = () => {
   const { t } = useTranslation()
@@ -125,9 +124,6 @@ const LogIn = () => {
           320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
         />
       </svg>
-      <div className={styles.footer}>
-        <LanguageButton />
-      </div>
     </div>
   )
 }

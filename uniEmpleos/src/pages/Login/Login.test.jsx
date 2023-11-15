@@ -2,6 +2,7 @@ import { mount, test, describe } from "vitest"
 import { StoreContext } from "storeon/react"
 import { store } from "../../store" // Asegúrate de importar tu store
 import LogIn from "./Login"
+import { getByTestId } from "@testing-library/dom"
 
 test("LogIn component", () => {
   test("should render without crashing", () => {
@@ -41,7 +42,7 @@ test("LogIn component", () => {
 
     getByPlaceholderText("uni@gmail.com").value = "test@gmail.com"
     getByPlaceholderText("micontraseña123").value = "wrongpassword"
-    getByText("Iniciar sesión").click()
+    getByTestId("Iniciar sesión").click()
 
     await test.waitFor(() => {
       test

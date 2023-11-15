@@ -108,7 +108,7 @@ const EditProfileEmpresa = () => {
         body
       )
       if (apiResponse.status === 200) {
-        navigate("/profilecompany")
+        navigate("/postulacionempresa")
       } else {
         setTypePopUp(1)
         setError("Upss... Algo salio mal atras, intenta mas tarde")

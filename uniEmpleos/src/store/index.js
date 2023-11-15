@@ -4,12 +4,14 @@ import { routerNavigate } from "@storeon/router"
 import { persistState } from "@storeon/localstorage"
 import router from "./router"
 import user from "./user"
+import language from "./language"
 
 const store = createStoreon([
   router,
   storeonDevtools,
   user,
-  persistState(["user"]),
+  language,
+  persistState(["user", "language"])
 ])
 
 const navigate = (target) => {

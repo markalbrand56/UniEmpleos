@@ -8,11 +8,14 @@ import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
+import { useTranslation } from "react-i18next"
 
 const Postulacion = ({ id }) => {
+  const { t } = useTranslation()
   const { user } = useStoreon("user")
   const api = useApi()
   const apiPostulation = useApi()
+
   const { quill, quillRef } = useQuill({
     readOnly: true, // Establecer el editor Quill en modo de solo lectura
     modules: {
@@ -47,11 +50,15 @@ const Postulacion = ({ id }) => {
   }, [quill, detalles])
 
   const handlePostularme = async () => {
-    const apiResponse = await apiPostulation.handleRequest("POST", "/postulations/", {
-      id_oferta: parseInt(id, 10),
-      id_estudiante: user.id_user,
-      estado: "enviada",
-    })
+    const apiResponse = await apiPostulation.handleRequest(
+      "POST",
+      "/postulations/",
+      {
+        id_oferta: parseInt(id, 10),
+        id_estudiante: user.id_user,
+        estado: "enviada",
+      }
+    )
     if (apiResponse.status === 200) {
       setTypeError(3)
       setError("Postulación enviada con éxito")
@@ -128,20 +135,24 @@ const Postulacion = ({ id }) => {
             />
           </div>
           <div className={style.label}>
-            <span className={style.detailsText}>Detalles</span>
+            <span className={style.detailsText}>
+              {t("offerPostulation.details")}
+            </span>
             <div ref={quillRef} className={style.Editor} />
           </div>
           <div className={style.buttonContainer}>
             <Button
-              label="Regresar"
+              label={t("offerPostulation.button1")}
               backgroundColor="#ccc"
               onClick={handleRegresar}
               noborder
             />
             <Button
-              label="Postularme"
+              label={t("offerPostulation.button2")}
               backgroundColor="#a08ae5"
-              onClick={() => {handlePostularme()}}
+              onClick={() => {
+                handlePostularme()
+              }}
               noborder
             />
           </div>

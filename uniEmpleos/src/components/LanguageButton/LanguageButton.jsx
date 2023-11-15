@@ -2,12 +2,18 @@ import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import i18n from "../../i18n"
 import style from "./LanguageButton.module.css"
+import useLanguage from "../../Hooks/useLanguage"
 
 const LanguageButton = () => {
-  const [language, setLanguage] = useState("en")
+
+  const idiom = useLanguage()
+  const [language, setLanguage] = useState(idiom.getLanguage())
+
 
   const changeLanguage = () => {
-    if (language === "es") {
+    const currentLanguage = idiom.getLanguage()
+    idiom.changeLanguage()
+    if (currentLanguage === "es") {
       setLanguage("en")
       console.log("en")
       i18n.changeLanguage("en")

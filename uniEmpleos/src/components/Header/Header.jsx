@@ -6,12 +6,14 @@ import { LuLogOut } from "react-icons/lu"
 import Logo from "../Logo/Logo"
 import "./header.css"
 import { navigate } from "../../store"
+import { useTranslation } from "react-i18next"
 
 const handleClick = () => {
   navigate("/login")
 }
 
 export const Header = () => {
+  const { t } = useTranslation()
   const [showNavbar, setShowNavbar] = useState(false)
 
   const handleShowNavbar = () => {
@@ -41,10 +43,10 @@ export const Header = () => {
         return (
           <div className="actions">
             <div className="actionlinks">
-              <a href="/editprofileestudiante">Perfil</a>
-              <a href="/profile">Vacantes</a>
-              <a href="/postulaciones">Postulaciones</a>
-              <a href="/chat">Chat</a>
+              <a href="/editprofileestudiante">{t("header.student.profile")}</a>
+              <a href="/profile">{t("header.student.offers")}</a>
+              <a href="/postulaciones">{t("header.student.postulations")}</a>
+              <a href="/chat">{t("header.student.chat")}</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
               <LuLogOut size={30} style={{ color: "#000" }} />
@@ -55,10 +57,10 @@ export const Header = () => {
         return (
           <div className="actions">
             <div className="actionlinks">
-              <a href="/editprofileempresa">Perfil</a>
-              <a href="/newoffer">Crear Empleo</a>
-              <a href="/postulacionempresa">Mis Ofertas</a>
-              <a href="/chat">Chat</a>
+              <a href="/editprofileempresa">{t("header.enterprise.profile")}</a>
+              <a href="/newoffer">{t("header.enterprise.newOffer")}</a>
+              <a href="/postulacionempresa">{t("header.enterprise.myOffers")}</a>
+              <a href="/chat">{t("header.enterprise.chat")}</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
               <LuLogOut size={30} style={{ color: "#000" }} />
@@ -69,8 +71,8 @@ export const Header = () => {
         return (
           <div className="actions">
             <div className="actionlinks">
-              <a href="/profileadmin">Empresas</a>
-              <a href="/profileadminstudent">Estudiantes</a>
+              <a href="/profileadmin">{t("header.admin.enterprises")}</a>
+              <a href="/profileadminstudent">{t("header.admin.students")}</a>
             </div>
             <div className="buttonLogoutMobile" onClick={handleClick}>
               <LuLogOut size={30} style={{ color: "#000" }} />
