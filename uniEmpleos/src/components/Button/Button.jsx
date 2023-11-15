@@ -8,10 +8,12 @@ const Button = ({
   textColor,
   onClick,
   noborder,
+  test,
 }) => (
   <div className={style.buttonContainer}>
     <button
       type="button"
+      data-testid={test}
       style={
         noborder
           ? { backgroundColor, color: textColor, border: "none" }
@@ -30,6 +32,7 @@ Button.propTypes = {
   textColor: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   noborder: PropTypes.bool,
+  test: PropTypes.string.isRequired,
 }
 
 Button.defaultProps = {

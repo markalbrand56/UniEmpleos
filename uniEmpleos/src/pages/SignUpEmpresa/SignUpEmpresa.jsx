@@ -235,7 +235,7 @@ const SignUpEmpresa = () => {
             </div>
             <div className={style.buttonContainer}>
               <Button
-                data-testid="signup-button"
+                test="signup-button"
                 label={t("signUpEmpresa.register")}
                 onClick={signup}
               />
