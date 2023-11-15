@@ -57,5 +57,8 @@
     "career": "Career",
     "semester": "Semester",
     "save": "Save"
+  },
+  "previewPostulations":{
+    "delete": "Delete Postulation"
   }
 }
