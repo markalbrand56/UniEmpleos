@@ -71,5 +71,9 @@
     "phone": "Phone",
     "details": "Details",
     "register": "Register"
+  },
+  "signUp":{
+    "student": "Searching for a job",
+    "enterprise": "Offering a job"
   }
 }

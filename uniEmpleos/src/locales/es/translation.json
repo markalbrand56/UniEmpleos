@@ -71,6 +71,10 @@
     "phone": "Teléfono",
     "details": "Detalles",
     "register": "Registrarse"
+  },
+  "signUp":{
+    "student": "Buscando empleo",
+    "enterprise": "Soy reclutador"
   }
 
 }
