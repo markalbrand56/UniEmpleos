@@ -46,7 +46,10 @@
     "salary": "Salary",
     "type": "Type",
     "schedule": "Schedule",
-    "apply": "Apply"
+    "apply": "Apply",
+    "details": "Details",
+    "postulants": "Postulants"
+
   },
   "profileStudent":{
     "name": "Name",

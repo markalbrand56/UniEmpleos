@@ -47,7 +47,9 @@
     "salary": "Salario",
     "type": "Jornada",
     "schedule": "Horario",
-    "apply": "Postularme"
+    "apply": "Postularme",
+    "details": "Detalles",
+    "postulants": "Postulantes"
   },
   "profileStudent":{
     "name": "Nombres",
