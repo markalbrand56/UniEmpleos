@@ -11,8 +11,10 @@ import InputFile from "../../components/InputFile/InputFile"
 import { AiOutlineCloudDownload } from "react-icons/ai"
 import { TbEdit } from "react-icons/tb"
 import Loader from "../../components/Loader/Loader"
+import { useTranslation } from "react-i18next"
 
 const SignUpEmpresa = () => {
+  const { t } = useTranslation()
   const { dispatch } = useStoreon("user")
   const { user } = useStoreon("user")
   const api = useApi()
@@ -175,7 +177,7 @@ const SignUpEmpresa = () => {
           <div className={style.dataContainer}>
             <div className={style.dataGroup2Container}>
               <div className={style.nameContainer}>
-                <span>Nombre</span>
+                <span>{t("signUpEmpresa.name")}</span>
                 <ComponentInput
                   name="nombre"
                   type="text"
@@ -185,7 +187,7 @@ const SignUpEmpresa = () => {
                 />
               </div>
               <div className={style.phoneContainer}>
-                <span>Telefono</span>
+                <span>{t("signUpEmpresa.phone")}</span>
                 <ComponentInput
                   value={telefono}
                   name="telefono"
@@ -195,7 +197,7 @@ const SignUpEmpresa = () => {
                 />
               </div>
               <div className={style.emailContainer}>
-                <span>Correo</span>
+                <span>{t("signUpEmpresa.email")}</span>
                 <ComponentInput
                   name="correo"
                   type="text"
@@ -205,7 +207,7 @@ const SignUpEmpresa = () => {
                 />
               </div>
               <div className={style.passwordContainer}>
-                <span>Contraseña</span>
+                <span>{t("signUpEmpresa.password")}</span>
                 <ComponentInput
                   name="password"
                   type="password"
@@ -219,7 +221,7 @@ const SignUpEmpresa = () => {
             </div>
             <div className={style.dataGroup1Container}>
               <div className={style.inputTextArea}>
-                <span>Detalles</span>
+                <span>{t("signUpEmpresa.details")}</span>
                 <TextArea
                   name="detalles"
                   type="text"
@@ -232,7 +234,7 @@ const SignUpEmpresa = () => {
               </div>
             </div>
             <div className={style.buttonContainer}>
-              <Button label="Registrarse" onClick={signup} />
+              <Button label={t("signUpEmpresa.register")} onClick={signup} />
             </div>
           </div>
         </div>

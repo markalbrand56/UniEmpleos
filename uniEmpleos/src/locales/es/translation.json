@@ -63,6 +63,14 @@
   },
   "previewPostulations":{
     "delete": "Eliminar Postulación"
+  },
+  "signUpEmpresa":{
+    "name": "Nombre",
+    "email": "Correo",
+    "password": "Contraseña",
+    "phone": "Teléfono",
+    "details": "Detalles",
+    "register": "Registrarse"
   }
 
 }
