@@ -8,8 +8,10 @@ import styles from "./PostulationsEstudent.module.css"
 import Popup from "../../components/Popup/Popup"
 import upload from "./upload.json"
 import Loader from "../../components/Loader/Loader"
+import { useTranslation } from "react-i18next"
 
 const PostulationsEstudent = () => {
+  const { t } = useTranslation()
   const api = useApi()
   const deletePostulation = useApi()
   const { user } = useStoreon("user")
@@ -71,7 +73,7 @@ const PostulationsEstudent = () => {
               key={postulation.id_oferta}
               title={postulation.puesto}
               salary={`Q.${postulation.salario}.00`}
-              labelbutton="Eliminar Postulación"
+              labelbutton={t("previewPostulations.delete")}
               onClick={() => eliminarPostulacion(postulation.id_postulacion)}
             />
           ))}

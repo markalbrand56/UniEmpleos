@@ -3,6 +3,9 @@ import { useStoreon } from "storeon/react"
 import Select from "react-select"
 import makeAnimated, { Input } from "react-select/animated"
 import ImageDirectUploader from "@components/ImageDirectUploader/ImageDirectUploader.jsx"
+import { AiOutlineCloudDownload } from "react-icons/ai"
+import { TbEdit } from "react-icons/tb"
+import { useTranslation } from "react-i18next"
 import style from "./EditProfileEstudiante.module.css"
 import ComponentInput from "../../components/Input/Input"
 import Button from "../../components/Button/Button"
@@ -12,12 +15,11 @@ import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
 import API_URL from "@/api.js"
 import InputFile from "../../components/InputFile/InputFile"
-import { AiOutlineCloudDownload } from "react-icons/ai"
-import { TbEdit } from "react-icons/tb"
 
 const animatedComponents = makeAnimated()
 
 const EditProfileEstudiante = () => {
+  const { t } = useTranslation()
   const { user } = useStoreon("user")
   const api = useApi()
   const apiCareers = useApi()
@@ -72,7 +74,7 @@ const EditProfileEstudiante = () => {
       const fotoUrl =
         api.data.usuario.foto === ""
           ? "/images/pfp.svg"
-          : API_URL + "/api/uploads/" + api.data.usuario.foto
+          : `${API_URL}/api/uploads/${api.data.usuario.foto}`
       setNombre(usuario.nombre)
       setApellido(usuario.apellido)
       const date = new Date(usuario.nacimiento)
@@ -113,8 +115,6 @@ const EditProfileEstudiante = () => {
     api.handleRequest("GET", "/users/")
     apiCareers.handleRequest("GET", "/careers")
   }, [])
-
-  //console.log("CV" , apiCV.data)
 
   const handleInputsValue = (e) => {
     switch (e.target.name) {
@@ -244,14 +244,12 @@ const EditProfileEstudiante = () => {
   const handleShowCV = () => {
     if (newCV !== "") {
       window.open(newCV)
+    } else if (oldCV === "") {
+      setTypePopUp(2)
+      setError("No tienes un CV")
+      setWarning(true)
     } else {
-      if (oldCV === "") {
-        setTypePopUp(2)
-        setError("No tienes un CV")
-        setWarning(true)
-      } else {
-        window.open(`${API_URL}/api/cv/${oldCV}`)
-      }
+      window.open(`${API_URL}/api/cv/${oldCV}`)
     }
   }
 
@@ -284,7 +282,7 @@ const EditProfileEstudiante = () => {
       <div className={style.editProfileContainer}>
         <div className={style.inputsContainer}>
           <div className={style.inputSubContainer}>
-            <span>Nombres</span>
+            <span>{t("profileStudent.name")}</span>
             <ComponentInput
               value={nombre}
               name="nombres"
@@ -294,7 +292,7 @@ const EditProfileEstudiante = () => {
             />
           </div>
           <div className={style.inputSubContainer}>
-            <span>Apellidos</span>
+            <span>{t("profileStudent.lastName")}</span>
             <ComponentInput
               value={apellido}
               name="apellidos"
@@ -304,7 +302,7 @@ const EditProfileEstudiante = () => {
             />
           </div>
           <div className={style.inputSubContainer}>
-            <span>Fecha de nacimiento</span>
+            <span>{t("profileStudent.dateBirth")}</span>
             <ComponentInput
               value={edad}
               name="fechaNacimiento"
@@ -317,7 +315,7 @@ const EditProfileEstudiante = () => {
           </div>
           <div className={style.grupoDatos1}>
             <div className={style.inputSubContainerDataGroup1}>
-              <span>Telefono</span>
+              <span>{t("profileStudent.phone")}</span>
               <ComponentInput
                 value={telefono}
                 name="telefono"
@@ -327,7 +325,7 @@ const EditProfileEstudiante = () => {
               />
             </div>
             <div className={style.inputSubContainerDataGroup1}>
-              <span>Carrera</span>
+              <span>{t("profileStudent.career")}</span>
               <Select
                 styles={{
                   control: (baseStyles, state) => ({
@@ -358,7 +356,7 @@ const EditProfileEstudiante = () => {
               />
             </div>
             <div className={style.inputSubContainerDataGroup1}>
-              <span>Universidad</span>
+              <span>{t("profileStudent.nameUniversity")}</span>
               <ComponentInput
                 value={universidad}
                 name="universidad"
@@ -368,7 +366,7 @@ const EditProfileEstudiante = () => {
               />
             </div>
             <div className={style.inputSubContainerDataGroup1}>
-              <span>Semestre</span>
+              <span>{t("profileStudent.semester")}</span>
               <Select
                 styles={{
                   control: (baseStyles, state) => ({
@@ -402,7 +400,7 @@ const EditProfileEstudiante = () => {
             <span className={style.titleCV}>CV</span>
             <InputFile
               file={cvText}
-              placeHolder={"Subir CV"}
+              placeHolder="Subir CV"
               onFileSelect={handleCVSelect}
               type="pdf"
             />
@@ -414,7 +412,10 @@ const EditProfileEstudiante = () => {
             />
           </div>
           <div className={style.buttonContainer}>
-            <Button label="Guardar" onClick={handleButton} />
+            <Button
+              label={t("editProfileStudent.save")}
+              onClick={handleButton}
+            />
           </div>
         </div>
       </div>

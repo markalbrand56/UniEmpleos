@@ -3,8 +3,10 @@ import { FaBars, FaTimes } from "react-icons/fa"
 import { LuLogOut } from "react-icons/lu"
 import styles from "./HeaderHome.module.css"
 import { navigate } from "../../store"
+import { useTranslation } from "react-i18next"
 
 const HeaderHome = () => {
+  const { t } = useTranslation()
   const [showNavbar, setShowNavbar] = useState(false)
 
   const handleShowNavbar = () => {
@@ -16,9 +18,9 @@ const HeaderHome = () => {
       <div className="actions">
         <div className={styles.actionlinks}>
           <a href="/login" className={styles.buttonlogin}>
-            Iniciar Sesión
+            {t("headerHome.login")}
           </a>
-          <a href="/signup">Registrarse</a>
+          <a href="/signup">{t("headerHome.register")}</a>
         </div>
       </div>
     )

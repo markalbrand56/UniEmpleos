@@ -1,6 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { format } from "date-fns"
+import { useTranslation } from "react-i18next"
 import styles from "./InfoTab.module.css"
 import Button from "../Button/Button"
 
@@ -16,18 +17,20 @@ const InfoTab = ({
   horariofin,
   jornada,
 }) => {
+  const { t } = useTranslation()
   const parseTime = (isoString) => {
     const date = isoString.split("T")[1].split("Z")[0].slice(0, -3)
-    const hours = parseInt(date.split(":")[0])
+    const hours = parseInt(date.split(":")[0], 10)
     if (hours > 12) {
       return `${hours - 12}:${date.split(":")[1]} p.m.`
-    } else if (hours === 12) {
-      return `12:${date.split(":")[1]} p.m.`
-    } else if (hours === 0) {
-      return `12:${date.split(":")[1]} a.m.`
-    } else {
-      return `${hours}:${date.split(":")[1]} a.m.`
     }
+    if (hours === 12) {
+      return `12:${date.split(":")[1]} p.m.`
+    }
+    if (hours === 0) {
+      return `12:${date.split(":")[1]} a.m.`
+    }
+    return `${hours}:${date.split(":")[1]} a.m.`
   }
 
   return (
@@ -38,13 +41,26 @@ const InfoTab = ({
         </div>
       )}
       <div className={styles.containerinfosecond}>
-        {company && <p>{`Empresa: ${company}`}</p>}
-        {salary && <p>{`Salario: ${salary}`}</p>}
-        {jornada && <p>{`Jornada: ${jornada}`}</p>}
+        {company && (
+          <p>
+            {t("previewOffer.enterprise")}: {company}
+          </p>
+        )}
+        {salary && (
+          <p>
+            {t("previewOffer.salary")}: {salary}
+          </p>
+        )}
+        {jornada && (
+          <p>
+            {t("previewOffer.type")}: {jornada}
+          </p>
+        )}
         {horarioinicio && horariofin && (
-          <p>{`Horario: ${`${parseTime(horarioinicio)} - ${parseTime(
-            horariofin
-          )}`}`}</p>
+          <p>
+            {t("previewOffer.schedule")}: {parseTime(horarioinicio)} -{" "}
+            {parseTime(horariofin)}
+          </p>
         )}
       </div>
       <div className={styles.button}>
