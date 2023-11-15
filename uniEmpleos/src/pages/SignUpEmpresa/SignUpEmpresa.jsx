@@ -1,4 +1,8 @@
 import React, { useState } from "react"
+import { useStoreon } from "storeon/react"
+import { AiOutlineCloudDownload } from "react-icons/ai"
+import { TbEdit } from "react-icons/tb"
+import { useTranslation } from "react-i18next"
 import style from "./SignUpEmpresa.module.css"
 import ComponentInput from "../../components/Input/Input"
 import TextArea from "../../components/textAreaAutosize/TextAreaAuto"
@@ -6,12 +10,8 @@ import Button from "../../components/Button/Button"
 import { navigate } from "../../store"
 import Popup from "../../components/Popup/Popup"
 import useApi from "../../Hooks/useApi"
-import { useStoreon } from "storeon/react"
 import InputFile from "../../components/InputFile/InputFile"
-import { AiOutlineCloudDownload } from "react-icons/ai"
-import { TbEdit } from "react-icons/tb"
 import Loader from "../../components/Loader/Loader"
-import { useTranslation } from "react-i18next"
 
 const SignUpEmpresa = () => {
   const { t } = useTranslation()
@@ -91,7 +91,7 @@ const SignUpEmpresa = () => {
 
         const usuario = await user.token
         console.log(usuario)
-        
+
         if (pfp) {
           const data = await apiPfp.updateProfilePicture(pfp)
           if (data.status === 200) {
@@ -234,7 +234,11 @@ const SignUpEmpresa = () => {
               </div>
             </div>
             <div className={style.buttonContainer}>
-              <Button label={t("signUpEmpresa.register")} onClick={signup} />
+              <Button
+                data-testid="signup-button"
+                label={t("signUpEmpresa.register")}
+                onClick={signup}
+              />
             </div>
           </div>
         </div>
