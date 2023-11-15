@@ -41,5 +41,12 @@
   "headerHome": {
     "login": "Iniciar Sesión",
     "register": "Registrarse"
+  },
+  "previewOffer": {
+    "enterprise": "Empresa",
+    "salary": "Salario",
+    "type": "Jornada",
+    "schedule": "Horario",
+    "apply": "Postularme"
   }
 }

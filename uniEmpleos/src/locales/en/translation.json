@@ -40,5 +40,12 @@
   "headerHome": {
     "login": "Login",
     "register": "Register"
+  },
+  "previewOffer": {
+    "enterprise": "Enterprise",
+    "salary": "Salary",
+    "type": "Type",
+    "schedule": "Schedule",
+    "apply": "Apply"
   }
 }

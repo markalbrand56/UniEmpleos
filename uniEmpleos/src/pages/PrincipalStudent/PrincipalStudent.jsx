@@ -8,6 +8,7 @@ import useConfig from "../../Hooks/Useconfig"
 import API_URL from "../../api"
 import useApi from "../../Hooks/useApi"
 import Loader from "../../components/Loader/Loader"
+import { useTranslation } from "react-i18next"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -23,6 +24,7 @@ const PrincipalStudent = () => {
   const [postulaciones, setPostulaciones] = useState([])
   const [ofertasAMostrar, setOfertasAMostrar] = useState([])
   const [loading, setLoading] = useState(false)
+  const { t } = useTranslation()
 
   const form = useConfig(schema, {
     token: "a",
@@ -121,7 +123,7 @@ const PrincipalStudent = () => {
               jornada={postulation.jornada}
               horarioinicio={postulation.hora_inicio}
               horariofin={postulation.hora_fin}
-              labelbutton="Postularme"
+              labelbutton={t("previewOffer.apply")}
               onClick={() => saveidlocalstorage(postulation.id_oferta)}
             />
           ))}
