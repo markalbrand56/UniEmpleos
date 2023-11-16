@@ -3,8 +3,10 @@ import ButtonImage from "../../components/ButtonImage/ButtonImage"
 import styles from "./SignUp.module.css"
 import Logo from "../../components/Logo/Logo"
 import { navigate } from "../../store"
+import { useTranslation } from "react-i18next"
 
 const LogIn = () => {
+  const { t } = useTranslation()
   const handleCorpClick = () => {
     navigate("/signupempresa")
   }
@@ -20,14 +22,14 @@ const LogIn = () => {
         <ButtonImage
           src="/images/user.svg"
           alt="user"
-          text="Buscando empleo"
+          text={t("signUp.student")}
           textColor="#000"
           onClick={handleUserClick}
         />
         <ButtonImage
           src="/images/corp.svg"
           alt="corporation"
-          text="Soy reclutador"
+          text={t("signUp.enterprise")}
           textColor="#000"
           onClick={handleCorpClick}
         />

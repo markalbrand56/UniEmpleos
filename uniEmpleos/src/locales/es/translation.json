@@ -47,7 +47,9 @@
     "salary": "Salario",
     "type": "Jornada",
     "schedule": "Horario",
-    "apply": "Postularme"
+    "apply": "Postularme",
+    "details": "Detalles",
+    "postulants": "Postulantes"
   },
   "profileStudent":{
     "name": "Nombres",
@@ -61,6 +63,18 @@
   },
   "previewPostulations":{
     "delete": "Eliminar Postulación"
+  },
+  "signUpEmpresa":{
+    "name": "Nombre",
+    "email": "Correo",
+    "password": "Contraseña",
+    "phone": "Teléfono",
+    "details": "Detalles",
+    "register": "Registrarse"
+  },
+  "signUp":{
+    "student": "Buscando empleo",
+    "enterprise": "Soy reclutador"
   }
 
 }

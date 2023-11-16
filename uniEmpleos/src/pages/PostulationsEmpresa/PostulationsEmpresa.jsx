@@ -11,6 +11,7 @@ import Popup from "../../components/Popup/Popup"
 import Loader from "../../components/Loader/Loader"
 import { Player } from '@lottiefiles/react-lottie-player'
 import upload from './upload.json'
+import { useTranslation } from "react-i18next"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -35,6 +36,7 @@ const PostulationsEmpresa = () => {
   const [error, setError] = useState("")
   const [typeError, setTypeError] = useState(1)
   const [loading, setLoading] = useState(false)
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (api.data) {
@@ -110,7 +112,7 @@ const PostulationsEmpresa = () => {
               salary={`Q.${postulation.salario}.00`}
               jornada={postulation.jornada}
               company={postulation.nombre_empresa}
-              labelbutton="Ver más"
+              labelbutton={t("previewOffer.details")}
               onClick={() => {
                 saveidlocalstorage(postulation.id_oferta)
               }}

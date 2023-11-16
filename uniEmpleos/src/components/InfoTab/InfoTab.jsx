@@ -72,7 +72,7 @@ const InfoTab = ({
         />
         {verPostulantes && (
           <Button
-            label="Ver postulantes"
+            label={t("previewOffer.postulants")}
             onClick={verPostulantes}
             backgroundColor="#ccc"
             noborder

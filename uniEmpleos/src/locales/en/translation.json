@@ -46,7 +46,10 @@
     "salary": "Salary",
     "type": "Type",
     "schedule": "Schedule",
-    "apply": "Apply"
+    "apply": "Apply",
+    "details": "Details",
+    "postulants": "Postulants"
+
   },
   "profileStudent":{
     "name": "Name",
@@ -60,5 +63,17 @@
   },
   "previewPostulations":{
     "delete": "Delete Postulation"
+  },
+  "signUpEmpresa":{
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "phone": "Phone",
+    "details": "Details",
+    "register": "Register"
+  },
+  "signUp":{
+    "student": "Searching for a job",
+    "enterprise": "Offering a job"
   }
 }
