@@ -13,11 +13,13 @@ import { navigate } from "../../store"
 import useApi from "../../Hooks/useApi"
 import "react-quill/dist/quill.snow.css"
 import Popup from "../../components/Popup/Popup"
+import { useTranslation } from "react-i18next"
 
 const Postulacion = () => {
   const { user } = useStoreon("user")
   const api = useApi()
   const apiCareers = useApi()
+  const { t } = useTranslation()
 
   const [requisitos, setRequisitos] = useState("")
   const [salario, setSalario] = useState("")
@@ -42,7 +44,7 @@ const Postulacion = () => {
       carrera === ""
     ) {
       setTypePopUp(2)
-      setError("Solamente el campo de descripción puede estar vacío")
+      setError(t("newOffer.popUp.error1"))
       setWarning(true)
     } else {
       const details = JSON.stringify(quill.getContents())
@@ -61,7 +63,7 @@ const Postulacion = () => {
         navigate("/postulacionempresa")
       } else {
         setTypePopUp(1)
-        setError("Upss algo salió mal, intentalo de nuevo")
+        setError(t("newOffer.popUp.error2"))
         setWarning(true)
       }
     }
@@ -114,7 +116,7 @@ const Postulacion = () => {
   }, [])
 
   const handleRegresar = () => {
-    navigate("/profilecompany")
+    navigate("/postulacionempresa")
   }
   const handlePostularme = () => {
     postOffer()
@@ -130,10 +132,10 @@ const Postulacion = () => {
         close={() => setWarning(false)}
       />
       <div className={style.postulacionContainer}>
-        <div className={style.titleContainer}>Nueva oferta laboral</div>
+      <div className={style.titleContainer}>{t("newOffer.page.title")}</div>
         <div className={style.dataContainer}>
           <div className={style.inputContainer}>
-            <span>Puesto</span>
+            <span>{t("newOffer.page.position")}</span>
             <ComponentInput
               name="puesto"
               type="text"
@@ -142,7 +144,7 @@ const Postulacion = () => {
             />
           </div>
           <div className={style.inputContainer}>
-            <span>Salario</span>
+            <span>{t("newOffer.page.salary")}</span>
             <ComponentInput
               name="salario"
               type="number"
@@ -151,15 +153,15 @@ const Postulacion = () => {
             />
           </div>
           <div className={style.inputContainer}>
-            <span>Horario</span>
+            <span>{t("newOffer.page.schedule")}</span>
             <div className={style.horarioContainer}>
-              <span className={style.horario}>Inicio (am)</span>
+              <span className={style.horario}>{t("newOffer.page.startShift")} (am)</span>
               <ComponentInput
                 name="horarioinicio"
                 type="time"
                 onChange={handleInputsValue}
               />
-              <span className={style.horario}>Fin (pm)</span>
+              <span className={style.horario}>{t("newOffer.page.endShift")} (pm)</span>
               <ComponentInput
                 name="horariofin"
                 type="time"
@@ -168,7 +170,7 @@ const Postulacion = () => {
             </div>
           </div>
           <div className={style.inputContainer}>
-            <span>Jornada</span>
+            <span>{t("newOffer.page.jornada")}</span>
             <Select
               styles={{
                 control: (baseStyles, state) => ({
@@ -194,13 +196,13 @@ const Postulacion = () => {
               options={
                 jornada === ""
                   ? [
-                      { value: "Medio Tiempo", label: "Medio Tiempo" },
-                      { value: "Tiempo Completo", label: "Tiempo Completo" },
+                      { value: "Medio Tiempo", label: t("newOffer.page.partTime") },
+                      { value: "Tiempo Completo", label: t("newOffer.page.fullTime") },
                     ]
                   : [
                       { value: jornada, label: jornada },
-                      { value: "Medio Tiempo", label: "Medio Tiempo" },
-                      { value: "Tiempo Completo", label: "Tiempo Completo" },
+                      { value: "Medio Tiempo", label: t("newOffer.page.partTime") },
+                      { value: "Tiempo Completo", label: t("newOffer.page.fullTime") },
                     ]
               }
               value={carreras.find((option) => option.label === carrera)}
@@ -208,7 +210,7 @@ const Postulacion = () => {
             />
           </div>
           <div className={style.inputContainer}>
-            <span>Carrera</span>
+            <span>{t("newOffer.page.career")}</span>
             <Select
               styles={{
                 control: (baseStyles, state) => ({
@@ -238,7 +240,7 @@ const Postulacion = () => {
           </div>
 
           <div className={style.inputContainer}>
-            <span>Requisitos</span>
+            <span>{t("newOffer.page.requirements")}</span>
             <TextArea
               name="requisitos"
               type="text"
@@ -249,19 +251,19 @@ const Postulacion = () => {
             />
           </div>
           <div className={style.inputContainer}>
-            <span>Descripción</span>
+            <span>{t("newOffer.page.description")}</span>
             <div ref={quillRef} />
           </div>
         </div>
         <div className={style.buttonContainer}>
           <Button
-            label="Regresar"
+            label={t("newOffer.page.return")}
             backgroundColor="#ccc"
             onClick={handleRegresar}
             noborder
           />
           <Button
-            label="Añadir"
+            label={t("newOffer.page.create")}
             backgroundColor="#a08ae5"
             onClick={handlePostularme}
             noborder

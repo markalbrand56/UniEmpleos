@@ -12,6 +12,7 @@ import InputFile from "../../components/InputFile/InputFile"
 import { AiOutlineCloudDownload } from "react-icons/ai"
 import { TbEdit } from "react-icons/tb"
 import Loader from "../../components/Loader/Loader"
+import { useTranslation } from "react-i18next"
 
 const SignUpEstudiante = () => {
   const { dispatch } = useStoreon("user")
@@ -19,6 +20,7 @@ const SignUpEstudiante = () => {
   const api = useApi()
   const apiCv = useApi()
   const apiPfp = useApi()
+  const { t } = useTranslation()
 
   const [nombre, setNombre] = useState("")
   const [apellido, setApellido] = useState("")
@@ -149,11 +151,11 @@ const SignUpEstudiante = () => {
       universidad === ""
     ) {
       setTypeError(1)
-      setError("Todos los campos son obligatorios")
+      setError(t("signUpStudent.popUp.error1"))
       setWarning(true)
     } else if (telefono.length < 8) {
       setTypeError(1)
-      setError("Telefono invalido")
+      setError(t("signUpStudent.popUp.error2"))
       setWarning(true)
     } else {
       setIsLoading(true)
@@ -185,8 +187,8 @@ const SignUpEstudiante = () => {
           if (data.status === 200) {
             console.log("CV actualizado")
           } else {
-            setTypePopUp(2)
-            setError("Upss... No se pudo actualizar tu CV, intenta mas tarde")
+            setTypeError(2)
+            setError(t("signUpStudent.popUp.error3"))
             setWarning(true)
           }
         }
@@ -195,16 +197,14 @@ const SignUpEstudiante = () => {
           if (data.status === 200) {
             console.log("Foto actualizada")
           } else {
-            setTypePopUp(2)
-            setError(
-              "Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde"
-            )
+            setTypeError(2)
+            setError(t("signUpStudent.popUp.error4"))
             setWarning(true)
           }
         }
         
         setTypeError(3)
-        setError("Registro exitoso")
+        setError(t("signUpStudent.popUp.error5"))
         setWarning(true)
         setTimeout(() => {
           setIsLoading(false)
@@ -212,11 +212,11 @@ const SignUpEstudiante = () => {
         }, 5000)
       } else if (apiResponse.status === 409) {
         setTypeError(2)
-        setError("El correo ya esta en uso")
+        setError(t("signUpStudent.popUp.error6"))
         setWarning(true)
       } else {
         setTypeError(1)
-        setError("Upss algo salio mal")
+        setError(t("signUpStudent.popUp.error7"))
         setWarning(true)
       }
     }
@@ -234,8 +234,8 @@ const SignUpEstudiante = () => {
       setPfp(selectedFile)
       setPfpPreview(URL.createObjectURL(selectedFile))
     } else {
-      setTypePopUp(2)
-      setError("Debes seleccionar un archivo PNG, JPG o JPEG")
+      setTypeError(2)
+      setError(t("signUpStudent.popUp.error8"))
       setWarning(true)
     }
   }
@@ -246,8 +246,8 @@ const SignUpEstudiante = () => {
       setCv(selectedFile)
       setNewCV(URL.createObjectURL(selectedFile))
     } else {
-      setTypePopUp(2)
-      setError("Debes seleccionar un archivo PDF")
+      setTypeError(2)
+      setError(t("signUpStudent.popUp.error9"))
       setWarning(true)
     }
   }
@@ -258,7 +258,7 @@ const SignUpEstudiante = () => {
     } else {
       if (oldCV === "") {
         setTypeError(2)
-        setError("No tienes un CV")
+        setError(t("signUpStudent.popUp.error10"))
         setWarning(true)
       } else {
         window.open(`${API_URL}/api/cv/${oldCV}`)
@@ -298,10 +298,10 @@ const SignUpEstudiante = () => {
           <div className={style.dataContainer}>
             <div className={style.dataGroup1Container}>
               <div className={style.cvContainer}>
-                <span className={style.titleCV}>CV</span>
+                <span className={style.titleCV}>{t("signUpStudent.page.cv")}</span>
                 <InputFile
                   file={cvText}
-                  placeHolder={"Subir CV"}
+                  placeHolder={t("signUpStudent.page.placeHolderCv")}
                   onFileSelect={handleCVSelect}
                   type="pdf"
                 />
@@ -313,7 +313,7 @@ const SignUpEstudiante = () => {
                 />
               </div>
               <div className={style.nameContainer}>
-                <span>Nombres</span>
+                <span>{t("signUpStudent.page.names")}</span>
                 <ComponentInput
                   name="nombres"
                   type="text"
@@ -322,7 +322,7 @@ const SignUpEstudiante = () => {
                 />
               </div>
               <div className={style.lastNameContainer}>
-                <span>Apellidos</span>
+                <span>{t("signUpStudent.page.lastNames")}</span>
                 <ComponentInput
                   name="apellidos"
                   type="text"
@@ -331,7 +331,7 @@ const SignUpEstudiante = () => {
                 />
               </div>
               <div className={style.birthDateContainer}>
-                <span>Fecha de nacimiento</span>
+                <span>{t("signUpStudent.page.dateBirth")}</span>
                 <ComponentInput
                   name="fechaNacimiento"
                   type="date"
@@ -344,7 +344,7 @@ const SignUpEstudiante = () => {
             </div>
             <div className={style.dataGroup2Container}>
               <div className={style.dpiContainer}>
-                <span>DPI</span>
+                <span>{t("signUpStudent.page.DPI")}</span>
                 <ComponentInput
                   value={dpi}
                   name="dpi"
@@ -354,7 +354,7 @@ const SignUpEstudiante = () => {
                 />
               </div>
               <div className={style.phoneContainer}>
-                <span>Telefono</span>
+                <span>{t("signUpStudent.page.phone")}</span>
                 <ComponentInput
                   value={telefono}
                   name="telefono"
@@ -364,7 +364,7 @@ const SignUpEstudiante = () => {
                 />
               </div>
               <div className={style.emailContainer}>
-                <span>Correo</span>
+                <span>{t("signUpStudent.page.email")}</span>
                 <ComponentInput
                   name="correo"
                   type="text"
@@ -373,7 +373,7 @@ const SignUpEstudiante = () => {
                 />
               </div>
               <div className={style.passwordContainer}>
-                <span>Contraseña</span>
+                <span>{t("signUpStudent.page.password")}</span>
                 <ComponentInput
                   name="password"
                   type="password"
@@ -385,7 +385,7 @@ const SignUpEstudiante = () => {
                 />
               </div>
               <div className={style.careerContainer}>
-                <span>Carrera</span>
+                <span>{t("signUpStudent.page.career")}</span>
                 <Select
                   styles={{
                     control: (baseStyles, state) => ({
@@ -415,7 +415,7 @@ const SignUpEstudiante = () => {
                 />
               </div>
               <div className={style.universityContainer}>
-                <span>Universidad</span>
+                <span>{t("signUpStudent.page.university")}</span>
                 <ComponentInput
                   name="universidad"
                   type="text"
@@ -424,7 +424,7 @@ const SignUpEstudiante = () => {
                 />
               </div>
               <div className={style.semesterContainer}>
-                <span className={style.titleSemester}>Semestre</span>
+                <span className={style.titleSemester}>{t("signUpStudent.page.semester")}</span>
                 <Select
                   styles={{
                     control: (baseStyles, state) => ({
@@ -455,7 +455,7 @@ const SignUpEstudiante = () => {
               </div>
             </div>
             <div className={style.buttonContainer}>
-              <Button label="Registrarse" onClick={handleSignUp} />
+              <Button label={t("signUpStudent.page.register")} onClick={handleSignUp} />
             </div>
           </div>
         </div>

@@ -14,12 +14,14 @@ import ImageDirectUploader from "../../components/ImageDirectUploader/ImageDirec
 import API_URL from "@/api.js"
 import InputFile from "../../components/InputFile/InputFile"
 import { TbEdit } from "react-icons/tb"
+import { useTranslation } from "react-i18next"
 
 const EditProfileEmpresa = () => {
   const api = useApi()
   const apiImage = useApi()
   const isImage = useIsImage()
   const { user } = useStoreon("user")
+  const { t } = useTranslation()
 
   const [nombre, setNombre] = useState("")
   const [correo, setCorreo] = useState("")
@@ -87,19 +89,17 @@ const EditProfileEmpresa = () => {
         console.log("Foto actualizada")
       } else {
         setTypePopUp(2)
-        setError(
-          "Upss... No se pudo actualizar tu foto de perfil, intenta mas tarde"
-        )
+        setError(t("editProfileEnterprise.popUp.error1"))
         setWarning(true)
       }
     }
     if (nombre === "" || detalles === "" || telefono === "") {
       setTypePopUp(2)
-      setError("Todos los campos son obligatorios")
+      setError(t("editProfileEnterprise.popUp.error2"))
       setWarning(true)
     } else if (telefono.length < 8) {
       setTypePopUp(2)
-      setError("El numero de telefono no es valido")
+      setError(t("editProfileEnterprise.popUp.error3"))
       setWarning(true)
     } else {
       const apiResponse = await api.handleRequest(
@@ -111,7 +111,7 @@ const EditProfileEmpresa = () => {
         navigate("/postulacionempresa")
       } else {
         setTypePopUp(1)
-        setError("Upss... Algo salio mal atras, intenta mas tarde")
+        setError(t("editProfileEnterprise.popUp.error4"))
         setWarning(true)
       }
     }
@@ -130,7 +130,7 @@ const EditProfileEmpresa = () => {
       setPfpPreview(URL.createObjectURL(selectedFile))
     } else {
       setTypePopUp(2)
-      setError("Debes seleccionar un archivo PNG, JPG o JPEG")
+      setError(t("editProfileEnterprise.popUp.error5"))
       setWarning(true)
     }
   }
@@ -166,7 +166,7 @@ const EditProfileEmpresa = () => {
           <div className={style.inputsContainer}>
             <div className={style.grupoDatos1}>
               <div className={style.inputSubContainer}>
-                <span>Nombre</span>
+                <span>{t("editProfileEnterprise.page.name")}</span>
                 <ComponentInput
                   value={nombre}
                   name="nombre"
@@ -176,7 +176,7 @@ const EditProfileEmpresa = () => {
                 />
               </div>
               <div className={style.inputSubContainer}>
-                <span>Telefono</span>
+                <span>{t("editProfileEnterprise.page.phone")}</span>
                 <ComponentInput
                   value={telefono}
                   name="telefono"
@@ -186,7 +186,7 @@ const EditProfileEmpresa = () => {
                 />
               </div>
               <div className={style.inputTextArea}>
-                <span>Detalles</span>
+                <span>{t("editProfileEnterprise.page.details")}</span>
                 <TextArea
                   value={detalles}
                   name="detalles"
@@ -199,7 +199,7 @@ const EditProfileEmpresa = () => {
               </div>
             </div>
             <div className={style.buttonContainer}>
-              <Button label="Guardar" onClick={handleButton} />
+              <Button label={t("editProfileEnterprise.page.save")} onClick={handleButton} />
             </div>
           </div>
         </div>

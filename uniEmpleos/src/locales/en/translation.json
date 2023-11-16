@@ -44,14 +44,13 @@
   "previewOffer": {
     "enterprise": "Enterprise",
     "salary": "Salary",
-    "type": "Type",
+    "type": "Shift",
     "schedule": "Schedule",
     "apply": "Apply",
     "details": "Details",
     "postulants": "Postulants"
-
   },
-  "profileStudent":{
+  "profileStudent": {
     "name": "Name",
     "lastName": "Last Name",
     "dateBirth": "Date of Birth",
@@ -61,10 +60,10 @@
     "semester": "Semester",
     "save": "Save"
   },
-  "previewPostulations":{
+  "previewPostulations": {
     "delete": "Delete Postulation"
   },
-  "signUpEmpresa":{
+  "signUpEmpresa": {
     "name": "Name",
     "email": "Email",
     "password": "Password",
@@ -72,8 +71,81 @@
     "details": "Details",
     "register": "Register"
   },
-  "signUp":{
+  "signUp": {
     "student": "Searching for a job",
     "enterprise": "Offering a job"
+  },
+  "signUpStudent": {
+    "popUp": {
+      "error1": "All fields are mandatory",
+      "error2": "Invalid phone number",
+      "error3": "Oops... Unable to update your resume, please try again later",
+      "error4": "Oops... Unable to update your profile picture, please try again later",
+      "error5": "Successful registration",
+      "error6": "Email is already registered",
+      "error7": "Oops, something went wrong, please try again later",
+      "error8": "You must select a PNG, JPG, or JPEG file",
+      "error9": "You must select a PDF file",
+      "error10": "You don't have a resume"
+    },
+    "page": {
+      "cv": "Resume",
+      "placeHolderCv": "Upload your resume",
+      "names": "Names",
+      "lastNames": "Last Names",
+      "dateBirth": "Date of Birth",
+      "DPI": "ID",
+      "phone": "Phone",
+      "email": "Email",
+      "password": "Password",
+      "career": "Career",
+      "university": "University",
+      "semester": "Semester",
+      "register": "Register"
+    }
+  },
+  "editProfileEnterprise": {
+    "popUp": {
+      "error1": "Oops... Unable to update your profile picture, please try again later",
+      "error2": "All fields are mandatory",
+      "error3": "Invalid phone number",
+      "error4": "Oops... Something went wrong, please try again later",
+      "error5": "You must select a PNG, JPG, or JPEG file"
+    },
+    "page": {
+      "name": "Name",
+      "phone": "Phone",
+      "details": "Details",
+      "save": "Save"
+    }
+  },
+  "newOffer": {
+    "popUp": {
+      "error1": "Only the description field can be empty",
+      "error2": "Oops... Something went wrong, please try again later"
+    },
+    "page": {
+      "title1": "Offer Details",
+      "title": "New Job Offer",
+      "position": "Position",
+      "salary": "Salary",
+      "schedule": "Schedule",
+      "startShift": "Start",
+      "endShift": "End",
+      "jornada": "Work Schedule",
+      "partTime": "Part-Time",
+      "fullTime": "Full-Time",
+      "career": "Career",
+      "requirements": "Requirements",
+      "description": "Description",
+      "return": "Back",
+      "create": "Create",
+      "save": "Save"
+    }
+  },
+  "chatPage": {
+    "noChats": "You have no chats",
+    "noMessages": "You have no messages",
+    "writeAMessage": "Write a message"
   }
 }

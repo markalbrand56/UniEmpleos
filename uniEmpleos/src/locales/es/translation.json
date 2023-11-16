@@ -51,7 +51,7 @@
     "details": "Detalles",
     "postulants": "Postulantes"
   },
-  "profileStudent":{
+  "profileStudent": {
     "name": "Nombres",
     "lastName": "Apellidos",
     "dateBirth": "Fecha de Nacimiento",
@@ -61,10 +61,10 @@
     "semester": "Semestre",
     "save": "Guardar"
   },
-  "previewPostulations":{
+  "previewPostulations": {
     "delete": "Eliminar Postulación"
   },
-  "signUpEmpresa":{
+  "signUpEmpresa": {
     "name": "Nombre",
     "email": "Correo",
     "password": "Contraseña",
@@ -72,9 +72,82 @@
     "details": "Detalles",
     "register": "Registrarse"
   },
-  "signUp":{
+  "signUp": {
     "student": "Buscando empleo",
     "enterprise": "Soy reclutador"
+  },
+  "signUpStudent": {
+    "popUp": {
+      "error1": "Todos los campos son obligatorios",
+      "error2": "Teléfono inválido",
+      "error3": "Upss... No se pudo actualizar tu CV, intenta más tarde",
+      "error4": "Upss... No se pudo actualizar tu foto de perfil, intenta más tarde",
+      "error5": "Registro exitoso",
+      "error6": "El correo ya está registrado",
+      "error7": "Upss algo salió mal, intenta más tarde",
+      "error8": "Debes seleccionar un archivo PNG, JPG o JPEG",
+      "error9": "Debes seleccionar un archivo PDF",
+      "error10": "No tienes un CV"
+    },
+    "page": {
+      "cv": "CV",
+      "placeHolderCv": "Sube tu CV",
+      "names": "Nombres",
+      "lastNames": "Apellidos",
+      "dateBirth": "Fecha de Nacimiento",
+      "DPI": "DPI",
+      "phone": "Teléfono",
+      "email": "Correo",
+      "password": "Contraseña",
+      "career": "Carrera",
+      "university": "Universidad",
+      "semester": "Semestre",
+      "register": "Registrarse"
+    }
+  },
+  "editProfileEnterprise": {
+    "popUp": {
+      "error1": "Upss... No se pudo actualizar tu foto de perfil, intenta más tarde",
+      "error2": "Todos los campos son obligatorios",
+      "error3": "El número de teléfono es inválido",
+      "error4": "Upss... Algo salio mal, intenta más tarde",
+      "error5": "Debes seleccionar un archivo PNG, JPG o JPEG"
+    },
+    "page": {
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "details": "Detalles",
+      "save": "Guardar"
+    }
+  },
+  "newOffer": {
+    "popUp": {
+      "error1": "Solamente el campo de descripción puede estar vacío",
+      "error2": "Upss... Algo salio mal, intenta más tarde",
+      "error3": "Oferta eliminada con éxito"
+    },
+    "page": {
+      "title1": "Detalles de la oferta",
+      "title": "Nueva oferta laboral",
+      "position": "Puesto",
+      "salary": "Salario",
+      "schedule": "Horario",
+      "startShift": "Inicio",
+      "endShift": "Fin",
+      "jornada": "Jornada",
+      "partTime": "Medio Tiempo",
+      "fullTime": "Tiempo Completo",
+      "career": "Carrera",
+      "requirements": "Requisitos",
+      "description": "Descripción",
+      "return": "Regresar",
+      "create": "Crear",
+      "save": "Guardar"
+    }
+  },
+  "chatPage": {
+    "noChats": "No tienes chats",
+    "noMessages": "No tienes mensajes",
+    "writeAMessage": "Escribe un mensaje"
   }
-
 }
