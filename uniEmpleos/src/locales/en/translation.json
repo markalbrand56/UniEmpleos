@@ -101,7 +101,8 @@
       "career": "Career",
       "university": "University",
       "semester": "Semester",
-      "register": "Register"
+      "register": "Register",
+      "age": "Age"
     }
   },
   "editProfileEnterprise": {
