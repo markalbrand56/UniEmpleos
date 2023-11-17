@@ -73,6 +73,7 @@ Empresa
   }
 }
 ```
+-----------------
 ### [POST] api/users/details
 Obtener los detalles públicos de un usuario, dado su correo
 > **Note**
@@ -121,7 +122,8 @@ Obtener los detalles públicos de un usuario, dado su correo
     }
 }
 ```
----
+
+-----------------
 ## Estudiante
 ### [POST] api/students
 Crea un estudiante
