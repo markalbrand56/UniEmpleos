@@ -10,6 +10,7 @@ func (Carrera) TableName() string {
 	return "carrera"
 }
 
+// CarreraGet es la estructura de la tabla carrera en la base de datos
 type CarreraGet struct {
 	Id_Carrera  int    `json:"id_carrera"`
 	Nombre      string `json:"nombre"`

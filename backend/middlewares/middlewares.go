@@ -7,12 +7,13 @@ import (
 	"net/http"
 )
 
+// JwtAuthentication Middleware usado para verificar si el token es válido
 func JwtAuthentication() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := utils.TokenValid(c)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, responses.StandardResponse{
-				Status:  401,
+				Status:  http.StatusUnauthorized,
 				Message: "Unauthorized, token is invalid: " + err.Error(),
 				Data:    nil,
 			})
