@@ -131,7 +131,6 @@ const PrincipalStudent = () => {
         </div>
       ) : (
         <div className={styles.containerinfomain}>
-          <h1 style={{color: "#000"}}>No hay postulaciones</h1>
           <Player
           src={upload}
           className="player"
