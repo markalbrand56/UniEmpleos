@@ -73,6 +73,7 @@ Empresa
   }
 }
 ```
+-----------------
 ### [POST] api/users/details
 Obtener los detalles públicos de un usuario, dado su correo
 > **Note**
@@ -121,7 +122,8 @@ Obtener los detalles públicos de un usuario, dado su correo
     }
 }
 ```
----
+
+-----------------
 ## Estudiante
 ### [POST] api/students
 Crea un estudiante
@@ -184,7 +186,8 @@ Actualiza un estudiante
     "data": null
 }
 ```
----
+-----------------
+
 ## Mensajes
 ### [POST] api/messages/send
 Crea un mensaje
@@ -301,7 +304,8 @@ Devuelve los mensajes de un chat dado el emisor y el receptor
     }
 }
 ```
----
+-----------------
+
 ## Empresas
 ### [POST] api/companies
 Crea una compañia
@@ -642,7 +646,8 @@ Retorna los estudiantes que se han postulado a una oferta
 }
 ```
 
----
+-----------------
+
 ## Carreras
 ### [GET] api/careers
 Devuelve todas las carreras
@@ -678,27 +683,7 @@ Devuelve todas las carreras
     }
 }
 ```
-
-### [POST] api/careers
-Crea una carrera
-
-## Params
-``` json
-{
-	"nombre"    	: string
-	"descripcion"   : string
-}
-```
-
-#### Response
-``` json
-{
-    "status": 200,
-    "message": "Career created successfully",
-    "data": nil
-}
-```
----
+-----
 ## Postulaciones
 ### [POST] api/postulation
 Crea una postulacíón de trabajo, cuando un estudiante se postula a una oferta
@@ -749,7 +734,6 @@ Devuelve las postulaciones de un Estudiante.
         ]
     }
 }
-
 ```
 
 ### [DELETE] api/postulations/?id_postulacion=1
@@ -766,7 +750,7 @@ Elimina una postulación. El usuario se obtiene del token. Se pasa el id de la p
 }
 ```
 
----
+-----------------
 ## Administradores
 ### [GET] api/admins/students
 Retorna información de estudiantes para el panel de administradores
