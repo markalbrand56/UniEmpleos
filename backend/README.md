@@ -683,7 +683,8 @@ Devuelve todas las carreras
     }
 }
 ```
----
+-----------------
+
 ## Postulaciones
 ### [POST] api/postulation
 Crea una postulacíón de trabajo, cuando un estudiante se postula a una oferta
@@ -734,7 +735,6 @@ Devuelve las postulaciones de un Estudiante.
         ]
     }
 }
-
 ```
 
 ### [DELETE] api/postulations/?id_postulacion=1
@@ -751,7 +751,7 @@ Elimina una postulación. El usuario se obtiene del token. Se pasa el id de la p
 }
 ```
 
----
+-----------------
 ## Administradores
 ### [GET] api/admins/students
 Retorna información de estudiantes para el panel de administradores
