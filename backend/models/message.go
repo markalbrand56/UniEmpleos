@@ -14,7 +14,7 @@ type Mensaje struct {
 	Tiempo        time.Time `json:"tiempo"`
 }
 
-// mensajeGet es la estructura de la tabla mensaje en la base de datos
+// MensajeGet es la estructura de la tabla mensaje en la base de datos
 type MensajeGet struct {
 	ID_mensaje     int       `json:"id_mensaje"`
 	IdEmisor       string    `json:"id_emisor"`

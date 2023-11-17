@@ -4,8 +4,6 @@ import (
 	"time"
 )
 
-// Mensaje es la estructura de la tabla estudiante en la base de datos
-
 type Estudiante struct {
 	IdEstudiante string    `json:"id_estudiante"`
 	Dpi          string    `json:"dpi"`

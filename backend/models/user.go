@@ -20,6 +20,7 @@ func (Usuario) TableName() string {
 	return "usuario"
 }
 
+// SaveUser guarda un usuario en la base de datos
 func (u *Usuario) SaveUser() (*Usuario, error) {
 	err := configs.DB.Create(&u).Error
 
@@ -30,6 +31,7 @@ func (u *Usuario) SaveUser() (*Usuario, error) {
 	return u, nil
 }
 
+// BeforeSave se llama antes de guardar un usuario en la base de datos, se encripta la contraseña
 func (u *Usuario) BeforeSave() error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Contra), bcrypt.DefaultCost)
 
@@ -43,6 +45,7 @@ func (u *Usuario) BeforeSave() error {
 	return nil
 }
 
+// GetUserByUsername busca un usuario por su nombre de usuario
 func GetUserByUsername(username string) (Usuario, error) {
 	var user Usuario
 
