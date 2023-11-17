@@ -186,7 +186,8 @@ Actualiza un estudiante
     "data": null
 }
 ```
----
+-----------------
+
 ## Mensajes
 ### [POST] api/messages/send
 Crea un mensaje
