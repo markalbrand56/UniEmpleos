@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+// Offer as they arrive from frontend
 type OfferInput struct {
 	IDEmpresa   string    `json:"id_empresa"`
 	Puesto      string    `json:"puesto"`
@@ -24,6 +25,7 @@ type OfferInput struct {
 	HoraFin     time.Time `json:"hora_fin"`
 }
 
+// Processing offer (backend)
 type AfterInsert struct {
 	IdOferta    int       `json:"id_oferta"`
 	IDEmpresa   string    `json:"id_empresa"`
@@ -36,15 +38,17 @@ type AfterInsert struct {
 	HoraFin     time.Time `json:"hora_fin"`
 }
 
+// Processing offer_carrera (backend)
 type AfterInsert2 struct {
 	IdOferta  int `json:"id_oferta"`
 	IdCarrera int `json:"id_carrera"`
 }
 
+// Creates a new offer in the database
 func NewOffer(c *gin.Context) {
 	var input OfferInput
 
-	if err := c.BindJSON(&input); err != nil {
+	if err := c.BindJSON(&input); err != nil { // If the input is not valid, return an error
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Invalid input: " + err.Error(),
@@ -53,9 +57,10 @@ func NewOffer(c *gin.Context) {
 		return
 	}
 
+	// extract the username from the token
 	user, err := utils.TokenExtractUsername(c)
 
-	if err != nil {
+	if err != nil { // If the token is not valid, return an error
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Error extracting information from token: " + err.Error(),
@@ -64,7 +69,7 @@ func NewOffer(c *gin.Context) {
 		return
 	}
 
-	if user != input.IDEmpresa {
+	if user != input.IDEmpresa { // If the user in the token does not match the one in the request body, return an error
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
 			Message: "The user in the token does not match the one in the request body",
@@ -73,6 +78,7 @@ func NewOffer(c *gin.Context) {
 		return
 	}
 
+	// Create the offer object
 	offer := models.Oferta{
 		IDEmpresa:   input.IDEmpresa,
 		Puesto:      input.Puesto,
@@ -84,10 +90,11 @@ func NewOffer(c *gin.Context) {
 		HoraFin:     input.HoraFin,
 	}
 
+	// Insert into oferta table
 	var inserted AfterInsert
 	err = configs.DB.Raw("INSERT INTO oferta (id_empresa, puesto, descripcion, requisitos, salario, jornada, hora_inicio, hora_fin) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id_oferta, id_empresa, puesto, descripcion, requisitos, salario, jornada, hora_inicio, hora_fin", offer.IDEmpresa, offer.Puesto, offer.Descripcion, offer.Requisitos, offer.Salario, offer.Jornada, offer.HoraInicio, offer.HoraFin).Scan(&inserted).Error
 
-	if err != nil {
+	if err != nil { // If the insertion fails, return an error
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Error creating offer: " + err.Error(),
@@ -110,6 +117,7 @@ func NewOffer(c *gin.Context) {
 		}
 	}
 
+	// Return a success response
 	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  http.StatusOK,
 		Message: "Offer created successfully",
@@ -118,6 +126,7 @@ func NewOffer(c *gin.Context) {
 
 }
 
+// Stores the offer as arrived from frontend
 type OfferUpdateInput struct {
 	Id_Oferta   int       `json:"id_oferta"`
 	IDEmpresa   string    `json:"id_empresa"`
@@ -127,13 +136,14 @@ type OfferUpdateInput struct {
 	Salario     float64   `json:"salario"`
 	IdCarreras  []string  `json:"id_carreras"`
 	Jornada     string    `json:"jornada"`
-	HoraInicio  time.Time `json:"hora_inicio"`
+	HoraInicio  time.Time `json:"hora_inicio"` // this parameters are new.
 	HoraFin     time.Time `json:"hora_fin"`
 }
 
+// Updates an offer in the database
 func UpdateOffer(c *gin.Context) {
-	var input OfferUpdateInput
-	var updatedOffer models.Oferta
+	var input OfferUpdateInput     // Stores the offer as arrived from frontend
+	var updatedOffer models.Oferta // Stores the object to be updated
 
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -144,6 +154,7 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
+	// extract the username from the token
 	user, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
@@ -155,6 +166,7 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
+	// Verificación con el token para que no se pueda editar ofertas de otras empresas
 	originalOffer := models.Oferta{}
 	err = configs.DB.Where("id_oferta = ? AND id_empresa = ?", input.Id_Oferta, input.IDEmpresa).First(&originalOffer).Error
 
@@ -167,6 +179,7 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
+	// Verificación con el token para que no se pueda editar ofertas de otras empresas
 	if originalOffer.IDEmpresa != user {
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
@@ -176,6 +189,7 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
+	// Verificación con el token para que no se pueda editar ofertas de otras empresas
 	if user != input.IDEmpresa {
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
@@ -185,6 +199,7 @@ func UpdateOffer(c *gin.Context) {
 		return
 	}
 
+	// Create the offer object
 	updatedOffer = models.Oferta{
 		Puesto:      input.Puesto,
 		Descripcion: input.Descripcion,
@@ -195,6 +210,7 @@ func UpdateOffer(c *gin.Context) {
 		HoraFin:     input.HoraFin,
 	}
 
+	// Update oferta table
 	err = configs.DB.Model(&updatedOffer).Where("id_oferta = ? AND id_empresa = ?", input.Id_Oferta, input.IDEmpresa).Updates(updatedOffer).Error
 
 	if err != nil {
@@ -248,6 +264,7 @@ func UpdateOffer(c *gin.Context) {
 		}
 	}
 
+	// Return a success response
 	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  http.StatusOK,
 		Message: "Offer updated successfully",
@@ -255,10 +272,12 @@ func UpdateOffer(c *gin.Context) {
 	})
 }
 
+// stores only the ID of the offer. Was developed in early stages of the project and should be deprecated, but we wont.
 type OfferGet struct {
 	Id_Oferta string `json:"id_oferta"`
 }
 
+// Returns the offer with the given ID
 func GetOffer(c *gin.Context) {
 	var offer models.OfertaGet
 	var Company models.Empresa
@@ -274,6 +293,7 @@ func GetOffer(c *gin.Context) {
 		return
 	}
 
+	// gets the offer id from the input
 	err := configs.DB.Where("id_oferta = ?", input.Id_Oferta).First(&offer).Error
 
 	if err != nil {
@@ -285,6 +305,7 @@ func GetOffer(c *gin.Context) {
 		return
 	}
 
+	// gets the company id from the offer
 	err = configs.DB.Where("id_empresa = ?", offer.IDEmpresa).First(&Company).Error
 
 	if err != nil {
@@ -308,6 +329,7 @@ func GetOffer(c *gin.Context) {
 	})
 }
 
+// stores the ID of the offer and the ID of the company.
 type GetOfferByCompanyInput struct {
 	Id_Empresa string `json:"id_empresa"`
 }
@@ -325,6 +347,7 @@ type GetOfferByCompanyResponse struct {
 	HoraFin     time.Time `json:"hora_fin"`
 }
 
+// Returns all the offers from the company with the given ID
 func GetOfferByCompany(c *gin.Context) {
 	var offersResponse []GetOfferByCompanyResponse
 	var data map[string]interface{}
@@ -339,6 +362,7 @@ func GetOfferByCompany(c *gin.Context) {
 		return
 	}
 
+	// gets a lot of information from the database
 	query := `
 	SELECT
 		o.id_oferta,
@@ -360,7 +384,7 @@ func GetOfferByCompany(c *gin.Context) {
 
 	`
 
-	rows, err := configs.DB.Raw(query, input.Id_Empresa).Rows()
+	rows, err := configs.DB.Raw(query, input.Id_Empresa).Rows() // Execute the query
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
@@ -369,7 +393,7 @@ func GetOfferByCompany(c *gin.Context) {
 		})
 		return
 	}
-	defer func(rows *sql.Rows) {
+	defer func(rows *sql.Rows) { // Close the rows when the function returns
 		err := rows.Close()
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -386,6 +410,7 @@ func GetOfferByCompany(c *gin.Context) {
 
 	// ...
 
+	// Iterate over the rows
 	for rows.Next() {
 		var offer GetOfferByCompanyResponse
 		var idOferta int
@@ -446,10 +471,12 @@ func GetOfferByCompany(c *gin.Context) {
 	})
 }
 
+// stores the ID of the offer and the ID of the company.
 type DeleteOfferInput struct {
 	Id_Oferta string `json:"id_oferta"`
 }
 
+// Deletes the offer with the given ID
 func DeleteOffer(c *gin.Context) {
 	// Obtén el valor del parámetro "id_oferta" desde los query parameters
 	idOferta := c.Query("id_oferta")
@@ -514,11 +541,12 @@ func DeleteOffer(c *gin.Context) {
 	})
 }
 
+// get aplicants from an offer
 func GetApplicants(c *gin.Context) {
-	var input GetPostulationInput
-	var tokenUsername string
+	var input GetPostulationInput // Stores the offer as arrived from frontend
+	var tokenUsername string      // Stores the username extracted from the token
 
-	if err := c.ShouldBindJSON(&input); err != nil {
+	if err := c.ShouldBindJSON(&input); err != nil { // If the input is not valid, return an error
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
 			Message: "Invalid input. " + err.Error(),
@@ -527,6 +555,7 @@ func GetApplicants(c *gin.Context) {
 		return
 	}
 
+	// extract the username from the token
 	tokenUsername, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
@@ -543,6 +572,7 @@ func GetApplicants(c *gin.Context) {
 	err = configs.DB.Where("id_oferta = ?", input.IdOferta).First(&offer).Error
 
 	if err != nil {
+		// If the offer does not exist, return an error
 		c.JSON(http.StatusNotFound, responses.StandardResponse{
 			Status:  http.StatusNotFound,
 			Message: "Error getting offer. " + err.Error(),
@@ -560,6 +590,7 @@ func GetApplicants(c *gin.Context) {
 		return
 	}
 
+	// Get the postulations and maps them to a slice of maps
 	var results []map[string]interface{}
 
 	rows, err := configs.DB.Raw("SELECT p.id_estudiante, p.estado, e.nombre, e.apellido, e.nacimiento, e.foto, e.carrera, e.universidad FROM postulacion p JOIN estudiante e ON p.id_estudiante = e.id_estudiante WHERE id_oferta = ?", input.IdOferta).Rows()
@@ -572,6 +603,7 @@ func GetApplicants(c *gin.Context) {
 		})
 		return
 	}
+	// Close the rows when the function returns
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
@@ -584,6 +616,7 @@ func GetApplicants(c *gin.Context) {
 		}
 	}(rows)
 
+	// Iterate over the rows
 	for rows.Next() {
 		var idEstudiante string
 		var estado string
@@ -605,7 +638,7 @@ func GetApplicants(c *gin.Context) {
 			return
 		}
 
-		result := map[string]interface{}{
+		result := map[string]interface{}{ // Create a map to store the postulation details
 			"id_estudiante": idEstudiante,
 			"estado":        estado,
 			"nombre":        nombre,
