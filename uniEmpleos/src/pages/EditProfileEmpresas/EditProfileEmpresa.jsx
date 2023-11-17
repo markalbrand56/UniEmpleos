@@ -199,7 +199,12 @@ const EditProfileEmpresa = () => {
               </div>
             </div>
             <div className={style.buttonContainer}>
-              <Button label={t("editProfileEnterprise.page.save")} onClick={handleButton} />
+              <Button
+                label={t("editProfileEnterprise.page.save")}
+                onClick={handleButton}
+                backgroundColor="#a08ae5"
+                noborder
+              />
             </div>
           </div>
         </div>

@@ -13,6 +13,7 @@ import Popup from "../../components/Popup/Popup"
 import { navigate } from "../../store"
 import style from "./PublicProfile.module.css"
 import API_URL from "../../api"
+import Loader from "../../components/Loader/Loader"
 
 const PublicProfile = ({ params }) => {
   const { t } = useTranslation()
@@ -26,6 +27,7 @@ const PublicProfile = ({ params }) => {
   const [usuario, setUsuario] = useState([])
   const [carrera, setCarrera] = useState("")
   const [edad, setEdad] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const obtenerCarrera = async () => {
     const datos = await carreraApi.handleRequest("GET", "/careers")
@@ -46,8 +48,8 @@ const PublicProfile = ({ params }) => {
     setEdad(edadActual)
   }
 
-  console.log("-->", usuario)
   const obtenerPostulante = async () => {
+    setLoading(true)
     const datos = await api.handleRequest("POST", "/users/details", {
       correo,
     })
@@ -57,6 +59,7 @@ const PublicProfile = ({ params }) => {
       } else {
         setUsuario(datos.data.company)
       }
+      setLoading(false)
     } else {
       setTypeError(1)
       setError("Ups, algo salio mal al obtener el perfil")
@@ -101,7 +104,9 @@ const PublicProfile = ({ params }) => {
         }}
         onClick={() => navigate(`/postulantes/${idOferta}`)}
       />
-      {usuario ? (
+      {loading ? (
+        <Loader size={100} />
+      ) : (
         <div className={style.infoContainer}>
           <h1 className={style.title}>
             {usuario.nombre} {usuario.apellido}
@@ -174,8 +179,6 @@ const PublicProfile = ({ params }) => {
             </div>
           </div>
         </div>
-      ) : (
-        <div>Cargando</div>
       )}
     </div>
   )
