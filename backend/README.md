@@ -683,8 +683,7 @@ Devuelve todas las carreras
     }
 }
 ```
------------------
-
+-----
 ## Postulaciones
 ### [POST] api/postulation
 Crea una postulacíón de trabajo, cuando un estudiante se postula a una oferta

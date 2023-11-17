@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+// EnvPG carga las variables de entorno, primero desde el sistema operativo, y si no están, desde un archivo .env
 func EnvPG() map[string]string {
 	envs := make(map[string]string)
 
@@ -32,6 +33,7 @@ func EnvPG() map[string]string {
 	return envs
 }
 
+// loadSystemEnv carga las variables de entorno desde el sistema operativo, en vez de un archivo .env
 func loadSystemEnv() (map[string]string, error) {
 	envs := make(map[string]string)
 

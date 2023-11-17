@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 )
 
+// Contains verifica si un string está en un slice de strings
 func Contains(slice []string, item string) bool {
 	for _, s := range slice {
 		if s == item {
@@ -19,6 +20,7 @@ func Contains(slice []string, item string) bool {
 	return false
 }
 
+// UploadFileToServer sube un archivo al File Server
 func UploadFileToServer(url string, bearer string, fileHeader *multipart.FileHeader, dst string) error {
 	// Abrir el archivo
 	f, err := fileHeader.Open()

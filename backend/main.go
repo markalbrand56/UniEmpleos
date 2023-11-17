@@ -7,11 +7,12 @@ import (
 )
 
 func main() {
-	// create directory for uploads
+	// create directory for profile pictures
 	if _, err := configs.CreateDirIfNotExist("./uploads"); err != nil {
 		panic(err)
 	}
 
+	// create directory for pdf files
 	if _, err := configs.CreateDirIfNotExist("./uploads/pdf"); err != nil {
 		panic(err)
 	}
@@ -23,9 +24,13 @@ func main() {
 	routes.Routes(router)
 	configs.SetupDB()
 
-	router.Run(":8080")
+	err := router.Run(":8080")
+	if err != nil {
+		return
+	}
 }
 
+// CORS permite el acceso a la API desde cualquier origen
 func CORS() gin.HandlerFunc {
 	// Reference: https://github.com/gin-contrib/cors/issues/29
 	return func(c *gin.Context) {
