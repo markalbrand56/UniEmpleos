@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// stores the input from frontend (Estudiante, JSON)
 type EstudianteInput struct {
 	Dpi         string `json:"dpi"`
 	Nombre      string `json:"nombre"`
@@ -24,6 +25,7 @@ type EstudianteInput struct {
 	Universidad string `json:"universidad"`
 }
 
+// Creates a new user (type Estudiante).
 func NewStudent(c *gin.Context) {
 	var input EstudianteInput
 
@@ -36,8 +38,10 @@ func NewStudent(c *gin.Context) {
 		return
 	}
 
+	// parsing of the date (SQL format)
 	t, _ := time.Parse("2006-01-02", input.Nacimiento)
 
+	// Creates a new instance of Estudiante with the input data (local)
 	e := models.Estudiante{
 		IdEstudiante: input.Correo,
 		Dpi:          input.Dpi,
@@ -53,10 +57,13 @@ func NewStudent(c *gin.Context) {
 		Universidad:  input.Universidad,
 	}
 
+	// Creates a new instance of Usuario with the input data (local)
 	u := models.Usuario{
 		Usuario: input.Correo,
 		Contra:  input.Contra,
 	}
+
+	// Both a new user and a new student are created in the database (they are the same)
 
 	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
 
@@ -99,6 +106,7 @@ func NewStudent(c *gin.Context) {
 	})
 }
 
+// stores the input from frontend.
 type EstudianteUpdateInput struct {
 	Nombre      string `json:"nombre"`
 	Apellido    string `json:"apellido"`
@@ -111,6 +119,7 @@ type EstudianteUpdateInput struct {
 	Universidad string `json:"universidad"`
 }
 
+// Updates the information of a student.
 func UpdateStudent(c *gin.Context) {
 	var input EstudianteUpdateInput
 
@@ -123,6 +132,7 @@ func UpdateStudent(c *gin.Context) {
 		return
 	}
 
+	// Gets the original student from the database
 	var originalStudent models.Estudiante
 	err := configs.DB.Where("id_estudiante = ?", input.Correo).First(&originalStudent).Error
 
@@ -135,6 +145,7 @@ func UpdateStudent(c *gin.Context) {
 		return
 	}
 
+	// gets the user from the token
 	user, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
@@ -156,6 +167,7 @@ func UpdateStudent(c *gin.Context) {
 		return
 	}
 
+	// Parsing of the date (SQL format)
 	nacimiento, _ := time.Parse("2006-01-02", input.Nacimiento)
 
 	// Crear una instancia del modelo Estudiante con los datos actualizados
@@ -169,6 +181,7 @@ func UpdateStudent(c *gin.Context) {
 		Universidad: input.Universidad,
 	}
 
+	// DB query where ALL of the fields are updated.
 	err = configs.DB.Model(&models.Estudiante{}).Where("id_estudiante = ?", input.Correo).Updates(updatedStudent).Error
 
 	if err != nil {
