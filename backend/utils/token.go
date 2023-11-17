@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// GenerateToken genera un token JWT
 func GenerateToken(username string, userType string) (string, error) {
 	tokenLifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
 
@@ -27,6 +28,7 @@ func GenerateToken(username string, userType string) (string, error) {
 	return token.SignedString([]byte(os.Getenv("API_SECRET")))
 }
 
+// TokenValid verifica si un token es válido
 func TokenValid(c *gin.Context) error {
 	tokenString := ExtractTokenFromRequest(c)
 	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -41,6 +43,7 @@ func TokenValid(c *gin.Context) error {
 	return nil
 }
 
+// ExtractTokenFromRequest extrae el token de una request
 func ExtractTokenFromRequest(c *gin.Context) string {
 	token := c.Query("token")
 	if token != "" {
@@ -53,6 +56,7 @@ func ExtractTokenFromRequest(c *gin.Context) string {
 	return ""
 }
 
+// TokenExtractUsername extrae el username de un token
 func TokenExtractUsername(c *gin.Context) (string, error) {
 
 	tokenString := ExtractTokenFromRequest(c)
@@ -74,6 +78,7 @@ func TokenExtractUsername(c *gin.Context) (string, error) {
 	return "", nil
 }
 
+// TokenExtractRole extrae el rol de un token
 func TokenExtractRole(c *gin.Context) (string, error) {
 
 	tokenString := ExtractTokenFromRequest(c)
