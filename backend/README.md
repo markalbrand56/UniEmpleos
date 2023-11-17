@@ -304,7 +304,8 @@ Devuelve los mensajes de un chat dado el emisor y el receptor
     }
 }
 ```
----
+-----------------
+
 ## Empresas
 ### [POST] api/companies
 Crea una compañia
@@ -645,7 +646,8 @@ Retorna los estudiantes que se han postulado a una oferta
 }
 ```
 
----
+-----------------
+
 ## Carreras
 ### [GET] api/careers
 Devuelve todas las carreras
