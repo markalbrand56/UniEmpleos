@@ -14,12 +14,14 @@ import Popup from "../../components/Popup/Popup"
 import useIsImage from "../../Hooks/useIsImage"
 import { formatDuration } from "date-fns"
 import API_URL from "@/api.js"
+import { useTranslation } from "react-i18next"
 
 const ChatPage = () => {
   const { user } = useStoreon("user")
   const apiLastChats = useApi()
   const apiMessages = useApi()
   const apiSendMessage = useApi()
+  const { t } = useTranslation()
   const isImage = useIsImage()
 
   const [currentChat, setCurrentChat] = useState("")
@@ -153,7 +155,7 @@ const ChatPage = () => {
               )
             )
           ) : (
-            <div className={style.noUsersMessage}>No hay chats recientes.</div>
+            <div className={style.noUsersMessage}>{t("chatPage.noChats")}</div>
           )}
         </div>
         <div
@@ -183,7 +185,7 @@ const ChatPage = () => {
               )
             })
           ) : (
-            <div className={style.noMessagesMessage}>No hay mensajes.</div>
+            <div className={style.noMessagesMessage}>{t("chatPage.noMessages")}</div>
           )}
           <div className={style.inputContainer}>
             <div className={style.inputBar}>
@@ -191,7 +193,7 @@ const ChatPage = () => {
                 name="message"
                 type="text"
                 value={textMessage}
-                placeholder="Escribe un mensaje"
+                placeholder={t("chatPage.writeAMessage")}
                 onChange={handleInputChange}
               />
             </div>

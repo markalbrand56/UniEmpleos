@@ -15,6 +15,7 @@ import useApi from "../../Hooks/useApi"
 import "react-quill/dist/quill.snow.css"
 import useConfig from "../../Hooks/Useconfig"
 import Popup from "../../components/Popup/Popup"
+import { useTranslation } from "react-i18next"
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -26,6 +27,7 @@ const OfferDetails = ({ id }) => {
   const { user } = useStoreon("user")
   const api = useApi()
   const apiCareers = useApi()
+  const { t } = useTranslation()
 
   const [requisitos, setRequisitos] = useState("")
   const [salario, setSalario] = useState("")
@@ -49,8 +51,8 @@ const OfferDetails = ({ id }) => {
     return isoString.split("T")[1].split("Z")[0]
   }
   const options = [
-    { value: "Medio Tiempo", label: "Medio Tiempo" },
-    { value: "Tiempo Completo", label: "Tiempo Completo" },
+    { value: "Medio Tiempo", label: t("newOffer.page.partTime") },
+    { value: "Tiempo Completo", label: t("newOffer.page.fullTime") },
   ]
 
   useEffect(() => {
@@ -108,7 +110,7 @@ const OfferDetails = ({ id }) => {
       requisitos === "" ||
       carrera === ""
     ) {
-      setError("Solamente el campo de descripción puede estar vacío")
+      setError(t("newOffer.popUp.error1"))
       setWarning(true)
     } else {
       console.log(horarioInicioUpdate)
@@ -128,7 +130,7 @@ const OfferDetails = ({ id }) => {
       if (apiResponse.status === 200) {
         navigate("/postulacionempresa")
       } else {
-        setError("Upss algo salió mal, intentalo de nuevo")
+        setError(t("newOffer.popUp.error2"))
         setWarning(true)
       }
     }
@@ -200,7 +202,7 @@ const OfferDetails = ({ id }) => {
 
   const succcessJobOffer = () => {
     setdeleteJob(false)
-    setError("Oferta eliminada con éxito")
+    setError(t("newOffer.popUp.error3"))
     setWarning(true)
     setTimeout(() => {
       navigate("/postulacionempresa")
@@ -213,7 +215,7 @@ const OfferDetails = ({ id }) => {
     if (apiResponse.status === 200) {
       succcessJobOffer()
     } else {
-      setError("Upss algo salió mal, intentalo de nuevo")
+      setError(t("newOffer.popUp.error2"))
       setWarning(true)
     }
   }
@@ -235,7 +237,7 @@ const OfferDetails = ({ id }) => {
       <div className={styles.postulacionContainer}>
         <div className={styles.headertittlecontainer}>
           <div className={styles.titleContainer}>
-            <h4>Detalles de la oferta</h4>
+            <h4>{t("newOffer.page.title1")}</h4>
             <button onClick={onclickAccept} type="button">
               <img src="/images/delete.svg" alt="trash" />
             </button>
@@ -244,7 +246,7 @@ const OfferDetails = ({ id }) => {
 
         <div className={styles.dataContainer}>
           <div className={styles.inputContainer}>
-            <span>Puesto</span>
+            <span>{t("newOffer.page.position")}</span>
             <ComponentInput
               name="puesto"
               type="text"
@@ -254,7 +256,7 @@ const OfferDetails = ({ id }) => {
             />
           </div>
           <div className={styles.inputContainer}>
-            <span>Salario</span>
+            <span>{t("newOffer.page.salary")}</span>
             <ComponentInput
               name="salario"
               type="number"
@@ -265,8 +267,8 @@ const OfferDetails = ({ id }) => {
           </div>
           {horarioInicioDisplay && horarioFinDisplay && (
             <div className={styles.inputContainer}>
-              <span>Horario</span>
-              <span className={styles.horario}>Inicio</span>
+              <span>{t("newOffer.page.schedule")}</span>
+              <span className={styles.horario}>{t("newOffer.page.startShift")}</span>
               <input
                 name="horarioinicio"
                 type="time"
@@ -274,7 +276,7 @@ const OfferDetails = ({ id }) => {
                 value={horarioInicioDisplay}
                 className={styles.inputHorario}
               />
-              <span className={styles.horario}>Fin</span>
+              <span className={styles.horario}>{t("newOffer.page.endShift")}</span>
               <input
                 name="horariofin"
                 type="time"
@@ -285,7 +287,7 @@ const OfferDetails = ({ id }) => {
             </div>
           )}
           <div className={styles.inputContainer}>
-            <span>Jornada</span>
+            <span>{t("newOffer.page.jornada")}</span>
             <Select
               styles={{
                 control: (baseStyles, state) => ({
@@ -313,7 +315,7 @@ const OfferDetails = ({ id }) => {
             />
           </div>
           <div className={styles.inputContainer}>
-            <span>Carrera</span>
+            <span>{t("newOffer.page.career")}</span>
             <Select
               styles={{
                 control: (baseStyles, state) => ({
@@ -341,7 +343,7 @@ const OfferDetails = ({ id }) => {
             />
           </div>
           <div className={styles.inputContainer}>
-            <span>Requisitos</span>
+            <span>{t("newOffer.page.requirements")}</span>
             <TextArea
               name="requisitos"
               type="text"
@@ -353,19 +355,19 @@ const OfferDetails = ({ id }) => {
             />
           </div>
           <div className={styles.inputContainer}>
-            <span>Descripción</span>
+            <span>{t("newOffer.page.description")}</span>
             <div ref={quillRef} />
           </div>
         </div>
         <div className={styles.buttonContainer}>
           <Button
-            label="Regresar"
+            label={t("newOffer.page.return")}
             backgroundColor="#ccc"
             onClick={handleRegresar}
             noborder
           />
           <Button
-            label="Guardar"
+            label={t("newOffer.page.save")}
             backgroundColor="#a08ae5"
             onClick={updateOffer}
             noborder
