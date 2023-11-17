@@ -27,10 +27,10 @@ export const Header = () => {
         navigate("/profile")
         break
       case "enterprise":
-        navigate("/profilecompany")
+        navigate("/postulacionempresa")
         break
       case "admin":
-        navigate("/profile")
+        navigate("/profileadmin")
         break
       default:
         navigate("/jobs")

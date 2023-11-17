@@ -51,30 +51,32 @@ const PostulantesPage = ({ id }) => {
         close={() => setWarning(false)}
       />
       <h1>Postulantes</h1>
-      {loading ? (
-        <Loader size={100} />
-      ) : (
-        <div className={style.infoStudentContainer}>
-          {response.data ? (
-            response.data.map((postulante) => (
-              <InfoStudent
-                key={postulante.id_estudiante}
-                nombre={postulante.nombre}
-                apellido={postulante.apellido}
-                universidad={postulante.universidad}
-                pfp={
-                  postulante.foto === ""
-                    ? fotoPFP
-                    : `${API_URL}/api/uploads/${postulante.foto}`
-                }
-                onClick={() => handleClickUsuario(postulante.id_estudiante)}
-              />
-            ))
-          ) : (
-            <span className={style.sinPostulantes}>No hay postulantes</span>
-          )}
-        </div>
-      )}
+      <div className={style.containerPostulants}>
+        {loading ? (
+          <Loader size={100} />
+        ) : (
+          <div className={style.infoStudentContainer}>
+            {response.data ? (
+              response.data.map((postulante) => (
+                <InfoStudent
+                  key={postulante.id_estudiante}
+                  nombre={postulante.nombre}
+                  apellido={postulante.apellido}
+                  universidad={postulante.universidad}
+                  pfp={
+                    postulante.foto === ""
+                      ? fotoPFP
+                      : `${API_URL}/api/uploads/${postulante.foto}`
+                  }
+                  onClick={() => handleClickUsuario(postulante.id_estudiante)}
+                />
+              ))
+            ) : (
+              <span className={style.sinPostulantes}>No hay postulantes</span>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

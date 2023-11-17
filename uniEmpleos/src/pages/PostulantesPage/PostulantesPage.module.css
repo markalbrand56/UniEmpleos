@@ -9,14 +9,14 @@
     font-weight: 700;
     margin-bottom: 20px;
     color: #333333;
-    text-align: left;
+    text-align: center;
     padding: 20px;
 }
 
 .infoStudentContainer {
     display: flex;
     flex-wrap: wrap;
-    justify-content: start;
+    justify-content: center;
     gap: 30px;
     margin-top: 20px;
     padding: 10px;

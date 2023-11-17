@@ -7,14 +7,16 @@ import { PiBooksLight } from "react-icons/pi"
 import { LiaUniversitySolid, LiaBirthdayCakeSolid } from "react-icons/lia"
 import { AiTwotoneCalendar } from "react-icons/ai"
 import { HiOutlineMailOpen, HiOutlineDocumentDownload } from "react-icons/hi"
-import { LuFileSpreadsheet } from "react-icons/lu"
+import { useTranslation } from "react-i18next"
 import useApi from "../../Hooks/useApi"
 import Popup from "../../components/Popup/Popup"
 import { navigate } from "../../store"
 import style from "./PublicProfile.module.css"
 import API_URL from "../../api"
+import Loader from "../../components/Loader/Loader"
 
 const PublicProfile = ({ params }) => {
+  const { t } = useTranslation()
   const correo = params.split("-")[0]
   const idOferta = params.split("-")[1]
   const api = useApi()
@@ -25,6 +27,7 @@ const PublicProfile = ({ params }) => {
   const [usuario, setUsuario] = useState([])
   const [carrera, setCarrera] = useState("")
   const [edad, setEdad] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const obtenerCarrera = async () => {
     const datos = await carreraApi.handleRequest("GET", "/careers")
@@ -45,8 +48,8 @@ const PublicProfile = ({ params }) => {
     setEdad(edadActual)
   }
 
-  console.log("-->", usuario)
   const obtenerPostulante = async () => {
+    setLoading(true)
     const datos = await api.handleRequest("POST", "/users/details", {
       correo,
     })
@@ -56,6 +59,7 @@ const PublicProfile = ({ params }) => {
       } else {
         setUsuario(datos.data.company)
       }
+      setLoading(false)
     } else {
       setTypeError(1)
       setError("Ups, algo salio mal al obtener el perfil")
@@ -100,10 +104,12 @@ const PublicProfile = ({ params }) => {
         }}
         onClick={() => navigate(`/postulantes/${idOferta}`)}
       />
-      {usuario ? (
+      {loading ? (
+        <Loader size={100} />
+      ) : (
         <div className={style.infoContainer}>
           <h1 className={style.title}>
-            Perfil de {usuario.nombre} {usuario.apellido}
+            {usuario.nombre} {usuario.apellido}
           </h1>
           <div className={style.tipoContainer}>
             {usuario.foto && (
@@ -117,46 +123,46 @@ const PublicProfile = ({ params }) => {
             )}
             <div className={style.subInfoContainer}>
               <div className={style.profileli}>
-                <BiUser size={30} />
-                <span className={style.profileSpan}>
-                  Nombre: {`${usuario.nombre} ${usuario.apellido}`}
-                </span>
-              </div>
-              <div className={style.profileli}>
                 <HiOutlineMailOpen size={30} />
-                <span className={style.correo}>Correo: {usuario.correo}</span>
+                <span className={style.correo}>
+                  {t("signUpStudent.page.email")}: {usuario.correo}
+                </span>
               </div>
               <div className={style.profileli}>
                 <BsPhone size={30} />
                 <span className={style.profileSpan}>
-                  Telefono: {usuario.telefono}
+                  {t("signUpStudent.page.phone")}: {usuario.telefono}
                 </span>
               </div>
               {usuario.universidad && (
                 <div className={style.profileli}>
                   <LiaUniversitySolid size={30} />
                   <span className={style.profileSpan}>
-                    Universidad: {usuario.universidad}
+                    {t("signUpStudent.page.university")}: {usuario.universidad}
                   </span>
                 </div>
               )}
               {usuario.carrera && (
                 <div className={style.profileli}>
                   <PiBooksLight size={30} />
-                  <span className={style.profileSpan}>Carrera: {carrera}</span>
+                  <span className={style.profileSpan}>
+                    {t("signUpStudent.page.career")}: {carrera}
+                  </span>
                 </div>
               )}
               {usuario.nacimiento && (
                 <div className={style.profileli}>
                   <LiaBirthdayCakeSolid size={30} />
-                  <span className={style.profileSpan}>Edad: {edad}</span>
+                  <span className={style.profileSpan}>
+                    {t("signUpStudent.page.age")}: {edad}
+                  </span>
                 </div>
               )}
               {usuario.semestre && (
                 <div className={style.profileli}>
                   <AiTwotoneCalendar size={30} />
                   <span className={style.profileSpan}>
-                    Semestre: {usuario.semestre}
+                    {t("signUpStudent.page.semester")}: {usuario.semestre}
                   </span>
                 </div>
               )}
@@ -173,8 +179,6 @@ const PublicProfile = ({ params }) => {
             </div>
           </div>
         </div>
-      ) : (
-        <div>Cargando</div>
       )}
     </div>
   )

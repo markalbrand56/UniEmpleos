@@ -23,7 +23,6 @@
     justify-content: end;
     align-items: end;
     width: 50%;
-    height: 50%;
 }
 
 .tipoContainer {
@@ -36,8 +35,9 @@
 
 .pfp {
     display: flex;
-    width: 60%;
-    height: 60%;
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
     border-radius: 10%;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
@@ -77,6 +77,15 @@
     gap: 10px;
 }
 
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
 
 @media screen and (max-width: 768px) {
     .pfpContainer {
@@ -87,8 +96,8 @@
     }
 
     .pfp {
-        width: 100%;
-        height: 100%;
+        width: 300px;
+        height: 300px;
     }
 
     .profileSpan {
@@ -114,10 +123,16 @@
         width: 100%;
         gap: 0;
         align-items: start;
-        margin-top: 10%;
+        margin-top: 5%;
+        gap: 10px;
     }
 
     .subInfoContainer>* {
         gap: 10px;
     }
+
+    .mainContainer{
+        justify-content: center;
+    }
+
 }
