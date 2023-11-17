@@ -679,6 +679,25 @@ Devuelve todas las carreras
     }
 }
 ```
+### [POST] api/careers
+Crea una carrera
+
+## Params
+``` json
+{
+	"nombre"    	: string
+	"descripcion"   : string
+}
+```
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Career created successfully",
+    "data": nil
+}
+```
 ---
 ## Postulaciones
 ### [POST] api/postulation
