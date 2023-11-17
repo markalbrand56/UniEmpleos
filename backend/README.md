@@ -304,6 +304,20 @@ Devuelve los mensajes de un chat dado el emisor y el receptor
     }
 }
 ```
+
+### [DELETE] api/messages/?id_postulacion=579
+Elimina los chats de una postulación dada
+> **Note**
+> Auth required
+
+#### Response
+``` json
+{
+    "status": 200,
+    "message": "Chat deleted successfully",
+    "data": null
+}
+
 -----------------
 
 ## Empresas
