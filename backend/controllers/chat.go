@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Input para enviar un mensaje
 type MessageInput struct {
 	ID_postulacion int    `json:"id_postulacion"`
 	ID_emisor      string `json:"id_emisor"`
@@ -15,6 +16,7 @@ type MessageInput struct {
 	Mensaje        string `json:"mensaje"`
 }
 
+// Funcion para enviar un mensaje
 func SendMessage(c *gin.Context) {
 	var input MessageInput
 
@@ -27,6 +29,7 @@ func SendMessage(c *gin.Context) {
 		return
 	}
 
+	// Parseamos el tiempo actual
 	t, _ := time.Parse("2006-01-02 15:04:05", time.Now().Format("2006-01-02 15:04:05"))
 
 	m := models.Mensaje{
@@ -37,6 +40,7 @@ func SendMessage(c *gin.Context) {
 		Tiempo:        t,
 	}
 
+	// Insertamos el mensaje en la base de datos
 	err := configs.DB.Create(&m).Error
 
 	if err != nil {
@@ -55,11 +59,13 @@ func SendMessage(c *gin.Context) {
 	})
 }
 
+// Input para obtener los mensajes
 type MessageOutput struct {
 	ID_emisor   string `json:"id_emisor"`
 	ID_receptor string `json:"id_receptor"`
 }
 
+// Funcion para obtener los mensajes
 func GetMessages(c *gin.Context) {
 	var inputID MessageOutput
 
@@ -69,6 +75,8 @@ func GetMessages(c *gin.Context) {
 	}
 
 	var messages []models.MensajeGet
+
+	// Consulta SQL raw ya que no se puede hacer con GORM por la complejidad de la consulta
 	query := `Select CASE WHEN (m.id_emisor = ? AND es.id_estudiante = ?) OR (m.id_emisor = ? AND es.id_estudiante = ?) THEN es.nombre
        WHEN (m.id_emisor = ? AND em.id_empresa = ?) OR (m.id_emisor = ? AND em.id_empresa = ?) THEN em.nombre END as emisor_nombre,
        CASE WHEN (m.id_receptor = ? AND es.id_estudiante = ?) OR (m.id_receptor = ? AND es.id_estudiante = ?) THEN es.nombre
@@ -83,7 +91,7 @@ func GetMessages(c *gin.Context) {
          or (id_emisor = ? and id_receptor = ?)
 		 order by m.tiempo asc;`
 
-	// Ejecutamos la consulta SQL pura con parámetros inputID.ID_usuario
+	// Ejecutamos la consulta SQL con parámetros inputID.ID_usuario
 	err := configs.DB.Raw(query, inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
 		inputID.ID_emisor, inputID.ID_emisor, inputID.ID_receptor, inputID.ID_receptor,
 		inputID.ID_receptor, inputID.ID_receptor, inputID.ID_emisor, inputID.ID_emisor,
@@ -113,10 +121,12 @@ func GetMessages(c *gin.Context) {
 	})
 }
 
+// Input para obtener los previews de los chats
 type MessageOutputLastChat struct {
 	ID_usuario string `json:"id_usuario"`
 }
 
+// Funcion para obtener los previews de los chats
 func GetLastChat(c *gin.Context) {
 	var inputID MessageOutputLastChat
 
@@ -139,7 +149,7 @@ func GetLastChat(c *gin.Context) {
 
 	var chats []models.ChatInfo
 
-	// Consulta SQL pura con alias y parámetro ?
+	// Consulta SQL raw ya que no se puede hacer con GORM por la complejidad de la consulta
 	query := `SELECT p.id_postulacion as postulation_id,
        				CASE WHEN p.id_estudiante = ? THEN e2.id_empresa ELSE e.id_estudiante END as user_id,
 					CASE WHEN p.id_estudiante = ? THEN e2.nombre ELSE e.nombre END as user_name,
@@ -181,6 +191,7 @@ func GetLastChat(c *gin.Context) {
 	})
 }
 
+// Input para eliminar un chat
 type DeleteChatInput struct {
 	Id_Postulacion string `json:"id_postulacion"`
 }
@@ -200,6 +211,7 @@ func DeleteChat(c *gin.Context) {
 		return
 	}
 
+	// Eliminar el chat de la base de datos
 	err := configs.DB.Where("id_postulacion = ?", idPostulacion).Delete(&models.Mensaje{}).Error
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{

@@ -10,6 +10,7 @@ import (
 	"net/http"
 )
 
+// Input para crear una nueva empresa
 type EmpresaInput struct {
 	Nombre   string `json:"nombre"`
 	Detalles string `json:"detalles"`
@@ -18,6 +19,7 @@ type EmpresaInput struct {
 	Contra   string `json:"contra"`
 }
 
+// Funcion para crear una nueva empresa
 func NewCompany(c *gin.Context) {
 	var input EmpresaInput
 
@@ -45,6 +47,7 @@ func NewCompany(c *gin.Context) {
 
 	err := configs.DB.Create(&u).Error // Se agrega el usuario a la base de datos
 
+	// Si el usuario ya existe, se retorna un error
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
 			c.JSON(http.StatusConflict, responses.StandardResponse{
@@ -74,13 +77,17 @@ func NewCompany(c *gin.Context) {
 		return
 	}
 
+	// Se crea el token
+	token, err := utils.GenerateToken(input.Correo, configs.Company)
+
 	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  http.StatusOK,
 		Message: "Company created successfully",
-		Data:    nil,
+		Data:    map[string]interface{}{"token": token},
 	})
 }
 
+// Funcion para actualizar los datos de una empresa
 func UpdateCompanies(c *gin.Context) {
 	var input EmpresaInput
 
@@ -93,6 +100,7 @@ func UpdateCompanies(c *gin.Context) {
 		return
 	}
 
+	// Se obtiene el usuario del token
 	user, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
@@ -114,6 +122,7 @@ func UpdateCompanies(c *gin.Context) {
 		return
 	}
 
+	// Se actualizan los datos de la empresa
 	// No se puede actualizar el correo/id de la empresa
 	err = configs.DB.Model(&models.Empresa{}).Where("id_empresa = ?", input.Correo).Updates(models.Empresa{
 		Nombre:   input.Nombre,

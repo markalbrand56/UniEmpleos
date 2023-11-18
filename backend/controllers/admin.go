@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// Input para la función AdminGetStudents
 type EstudianteGetAdmin struct {
 	IdEstudiante string    `json:"id_estudiante"`
 	Nombre       string    `json:"nombre"`
@@ -20,6 +21,7 @@ type EstudianteGetAdmin struct {
 	Suspendido   bool      `json:"suspendido"`
 }
 
+// funcion para determinar si el usuario es administador
 func IsAdmin(c *gin.Context) error {
 	// Solo retorna un error si el usuario no es un administrador
 	role, err := utils.TokenExtractRole(c)
@@ -41,9 +43,11 @@ func IsAdmin(c *gin.Context) error {
 	return nil
 }
 
+// funcion para obtener a los estudiantes para el admin
 func AdminGetStudents(c *gin.Context) {
 	var estudiantes []EstudianteGetAdmin
 
+	//verifica si el usuario es administrador
 	err := IsAdmin(c)
 
 	if err != nil {
@@ -80,6 +84,7 @@ func AdminGetStudents(c *gin.Context) {
 	})
 }
 
+// Input para la función AdminGetCompanies
 type EmpresaGetAdmin struct {
 	IdEmpresa  string `json:"id_empresa"`
 	Nombre     string `json:"nombre"`
@@ -92,6 +97,7 @@ type EmpresaGetAdmin struct {
 func AdminGetCompanies(c *gin.Context) {
 	var empresas []EmpresaGetAdmin
 
+	//verifica si el usuario es administrador
 	err := IsAdmin(c)
 
 	if err != nil {
@@ -128,6 +134,7 @@ func AdminGetCompanies(c *gin.Context) {
 	})
 }
 
+// Input para la función AdminSuspendAccount
 type SuspendAccountInput struct {
 	IdUsuario string `json:"id_usuario"`
 	Suspender bool   `json:"suspender"` // True para suspender, false para reactivar
@@ -136,6 +143,7 @@ type SuspendAccountInput struct {
 func AdminSuspendAccount(c *gin.Context) {
 	var input SuspendAccountInput
 
+	//verifica si el usuario es administrador
 	err := IsAdmin(c)
 
 	if err != nil {
@@ -147,6 +155,7 @@ func AdminSuspendAccount(c *gin.Context) {
 		return
 	}
 
+	// Obtiene el input del JSON
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
@@ -156,6 +165,7 @@ func AdminSuspendAccount(c *gin.Context) {
 		return
 	}
 
+	// Obtiene el rol del usuario a suspender
 	roleToBeSuspended, err := RoleFromUser(models.Usuario{Usuario: input.IdUsuario})
 
 	if err != nil {
@@ -167,6 +177,7 @@ func AdminSuspendAccount(c *gin.Context) {
 		return
 	}
 
+	// Verifica que el rol a suspender no sea admin
 	if roleToBeSuspended == "admin" {
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
@@ -204,20 +215,11 @@ func AdminSuspendAccount(c *gin.Context) {
 	})
 }
 
-type Offer struct {
-	IDOferta    int      `json:"id_oferta"`
-	IDEmpresa   string   `json:"id_empresa"`
-	Puesto      string   `json:"puesto"`
-	Descripcion string   `json:"descripcion"`
-	Requisitos  string   `json:"requisitos"`
-	Salario     float64  `json:"salario"`
-	IdCarreras  []string `json:"id_carreras"`
-}
-
 func AdminDeleteOffer(c *gin.Context) {
 	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
 	idOferta := c.Query("id_oferta")
 
+	//verifica si el usuario es administrador
 	err := IsAdmin(c)
 
 	if err != nil {
@@ -229,6 +231,7 @@ func AdminDeleteOffer(c *gin.Context) {
 		return
 	}
 
+	// Query para eliminar la oferta
 	err = configs.DB.Where("id_oferta = ?", idOferta).Delete(&models.Oferta{}).Error
 
 	if err != nil {
@@ -252,6 +255,7 @@ func AdminDeletePostulation(c *gin.Context) {
 	// con IDOferta del struct Offer, se elimina la oferta por medio de un query.
 	idPostulacion := c.Query("id_postulacion")
 
+	//verifica si el usuario es administrador
 	err := IsAdmin(c)
 
 	if err != nil {
@@ -263,6 +267,7 @@ func AdminDeletePostulation(c *gin.Context) {
 		return
 	}
 
+	// Query para eliminar la postulación
 	err = configs.DB.Where("id_postulacion = ?", idPostulacion).Delete(&models.Postulacion{}).Error
 
 	if err != nil {
@@ -281,8 +286,10 @@ func AdminDeletePostulation(c *gin.Context) {
 }
 
 func AdminDeleteUser(c *gin.Context) {
+	// Se busca el id del usuario ingresado en la ruta
 	idUsuario := c.Query("usuario")
 
+	// verifica si el usuario es administrador
 	err := IsAdmin(c)
 
 	if err != nil {
@@ -294,6 +301,7 @@ func AdminDeleteUser(c *gin.Context) {
 		return
 	}
 
+	// Se busca el rol del usuario a eliminar
 	roleToBeDeleted, err := RoleFromUser(models.Usuario{Usuario: idUsuario})
 
 	if err != nil {
@@ -305,8 +313,7 @@ func AdminDeleteUser(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(roleToBeDeleted)
-
+	// Verifica que el rol a eliminar no sea admin
 	if roleToBeDeleted == "admin" {
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
@@ -316,6 +323,7 @@ func AdminDeleteUser(c *gin.Context) {
 		return
 	}
 
+	// Query para eliminar el usuario
 	err = configs.DB.Where("usuario = ?", idUsuario).Delete(&models.Usuario{}).Error
 
 	if err != nil {
@@ -335,6 +343,7 @@ func AdminDeleteUser(c *gin.Context) {
 
 }
 
+// Input para la función AdminGetUserDetails (estudiante)
 type AdminDetailsStudent struct {
 	Correo      string    `json:"correo"`
 	Nombre      string    `json:"nombre"`
@@ -349,6 +358,7 @@ type AdminDetailsStudent struct {
 	Suspendido  bool      `json:"suspendido"`
 }
 
+// Input para la función AdminGetUserDetails (empresa)
 type AdminDetailsEnterprise struct {
 	Correo     string `json:"correo"`
 	Nombre     string `json:"nombre"`
@@ -369,6 +379,7 @@ func AdminGetUserDetails(c *gin.Context) {
 		return
 	}
 
+	//verifica si el usuario es administrador
 	err := IsAdmin(c)
 
 	if err != nil {
@@ -380,6 +391,7 @@ func AdminGetUserDetails(c *gin.Context) {
 		return
 	}
 
+	// Obtiene el rol del usuario a suspender
 	userType, err := RoleFromUser(models.Usuario{Usuario: input.Correo})
 
 	if err != nil {
@@ -391,11 +403,13 @@ func AdminGetUserDetails(c *gin.Context) {
 		return
 	}
 
+	// Dependiendo del rol, se obtiene la información del usuario
 	switch userType {
 	case "student":
 		var usuario models.Usuario
 		var estudiante models.Estudiante
 
+		// Query para obtener la información del usuario
 		err = configs.DB.Where("usuario = ?", input.Correo).First(&usuario).Error
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -406,6 +420,7 @@ func AdminGetUserDetails(c *gin.Context) {
 			return
 		}
 
+		// Query para obtener la información del estudiante
 		err = configs.DB.Where("id_estudiante = ?", input.Correo).First(&estudiante).Error
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -437,6 +452,8 @@ func AdminGetUserDetails(c *gin.Context) {
 		})
 	case "enterprise":
 		var usuario models.Usuario
+
+		// Query para obtener la información del usuario
 		err = configs.DB.Where("usuario = ?", input.Correo).First(&usuario).Error
 
 		if err != nil {
@@ -449,6 +466,8 @@ func AdminGetUserDetails(c *gin.Context) {
 		}
 
 		var empresa models.Empresa
+
+		// Query para obtener la información de la empresa
 		err = configs.DB.Where("id_empresa = ?", input.Correo).First(&empresa).Error
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -472,7 +491,7 @@ func AdminGetUserDetails(c *gin.Context) {
 				},
 			},
 		})
-	case "admin":
+	case "admin": // No se puede ver la información de un administrador
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
 			Message: "Admins cannot be viewed",
@@ -487,6 +506,7 @@ func AdminGetUserDetails(c *gin.Context) {
 	}
 }
 
+// Input para la función GetPostulationsOfStudentAsAdmin
 type PostulationsResults struct {
 	IdUsuario     string `json:"id_usuario"`
 	Nombre        string `json:"nombre"`
@@ -505,6 +525,7 @@ func GetPostulationsOfStudentAsAdmin(c *gin.Context) {
 	// id del estudiante como query.
 	idEstudiante := c.Query("id_estudiante")
 
+	//verifica si el usuario es administrador
 	err := IsAdmin(c)
 
 	if err != nil {
@@ -516,6 +537,7 @@ func GetPostulationsOfStudentAsAdmin(c *gin.Context) {
 		return
 	}
 
+	// Query para obtener las postulaciones del estudiante
 	err = configs.DB.Raw("select u.usuario, e.nombre, e.apellido, p.id_postulacion, p.id_oferta, p.estado from usuario u join estudiante e on u.usuario = e.id_estudiante join postulacion p on e.id_estudiante = p.id_estudiante where u.usuario = ?", idEstudiante).Scan(&results).Error
 	fmt.Println(err)
 	fmt.Println(results)

@@ -11,11 +11,13 @@ import (
 	"time"
 )
 
+// Input para login
 type LoginInput struct {
 	Usuario string `json:"usuario"`
 	Contra  string `json:"contra"`
 }
 
+// Funcion para hacer login
 func Login(c *gin.Context) {
 	var input LoginInput
 
@@ -33,6 +35,7 @@ func Login(c *gin.Context) {
 		Contra:  input.Contra,
 	}
 
+	// Verificar token de login
 	token, err := verifyLogin(u)
 
 	if err != nil {
@@ -44,6 +47,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	// Verificar rol del usuario
 	role, err := RoleFromUser(u)
 
 	if err != nil {
@@ -55,6 +59,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	// Verificar si el usuario esta suspendido
 	suspended, err := verifySuspended(u)
 
 	if err != nil {
@@ -85,24 +90,30 @@ func Login(c *gin.Context) {
 	})
 }
 
+// Funcion para verificar el login
 func verifyLogin(usuario models.Usuario) (string, error) {
 	var err error
 
 	found := models.Usuario{}
+
+	// Buscar usuario en la base de datos
 	err = configs.DB.Where("usuario = ?", usuario.Usuario).First(&found).Error
 
 	if err != nil {
 		return "", err
 	}
 
+	// Comparar contrasenas encriptada y sin encriptar
 	err = bcrypt.CompareHashAndPassword([]byte(found.Contra), []byte(usuario.Contra))
 
 	if err != nil {
 		return "", err
 	}
 
+	// Buscar rol del usuario
 	role, err := RoleFromUser(found)
 
+	// Generar token
 	token, err := utils.GenerateToken(found.Usuario, role)
 
 	if err != nil {
@@ -112,10 +123,13 @@ func verifyLogin(usuario models.Usuario) (string, error) {
 	return token, nil
 }
 
+// Funcion para verificar si el usuario esta suspendido
 func verifySuspended(usuario models.Usuario) (bool, error) {
 	var err error
 
 	found := models.Usuario{}
+
+	// Buscar usuario en la base de datos
 	err = configs.DB.Where("usuario = ?", usuario.Usuario).First(&found).Error
 
 	if err != nil {
@@ -125,11 +139,14 @@ func verifySuspended(usuario models.Usuario) (bool, error) {
 	return found.Suspendido, nil
 }
 
+// Funcion para buscar el rol del usuario
 func RoleFromUser(usuario models.Usuario) (string, error) {
 	var err error
 	var role string
 
 	student := models.Estudiante{}
+
+	// Buscar si es estudiante
 	err = configs.DB.Where("id_estudiante = ?", usuario.Usuario).First(&student).Error
 	if err == nil {
 		role = "student"
@@ -137,6 +154,8 @@ func RoleFromUser(usuario models.Usuario) (string, error) {
 	}
 
 	enterprise := models.Empresa{}
+
+	// Buscar si es empresa
 	err = configs.DB.Where("id_empresa = ?", usuario.Usuario).First(&enterprise).Error
 	if err == nil {
 		role = "enterprise"
@@ -144,6 +163,8 @@ func RoleFromUser(usuario models.Usuario) (string, error) {
 	}
 
 	admin := models.Administrador{}
+
+	// Buscar si es administrador
 	err = configs.DB.Where("id_admin = ?", usuario.Usuario).First(&admin).Error
 	if err == nil {
 		role = "admin"
@@ -170,6 +191,7 @@ func RoleFromToken(c *gin.Context) (string, error) {
 	return role, nil
 }
 
+// Funcion para ver los detalles del usuario
 func GetCurrentUserDetails(c *gin.Context) {
 	username, err := utils.TokenExtractUsername(c)
 
@@ -182,6 +204,7 @@ func GetCurrentUserDetails(c *gin.Context) {
 		return
 	}
 
+	// Buscar usuario en la base de datos
 	u, err := models.GetUserByUsername(username)
 
 	if err != nil {
@@ -197,6 +220,7 @@ func GetCurrentUserDetails(c *gin.Context) {
 	var empresa models.Empresa
 	var administrador models.Administrador
 
+	// Buscar si es estudiante
 	err = configs.DB.Where("id_estudiante = ?", u.Usuario).First(&estudiante).Error
 	if err == nil {
 		c.JSON(http.StatusOK, responses.StandardResponse{
@@ -210,6 +234,7 @@ func GetCurrentUserDetails(c *gin.Context) {
 		return
 	}
 
+	// Buscar si es empresa
 	err = configs.DB.Where("id_empresa = ?", u.Usuario).First(&empresa).Error
 
 	if err == nil {
@@ -224,6 +249,7 @@ func GetCurrentUserDetails(c *gin.Context) {
 		return
 	}
 
+	// Buscar si es administrador
 	err = configs.DB.Where("id_admin = ?", u.Usuario).First(&administrador).Error
 
 	if err == nil {
@@ -255,6 +281,7 @@ func GetCurrentUserDetails(c *gin.Context) {
 	)
 }
 
+// Input para GetUserDetails (estudiante)
 type PublicDetailsStudent struct {
 	Correo      string    `json:"correo"`
 	Nombre      string    `json:"nombre"`
@@ -268,6 +295,7 @@ type PublicDetailsStudent struct {
 	Universidad string    `json:"universidad"`
 }
 
+// Input para GetUserDetails (empresa)
 type PublicDetailsEnterprise struct {
 	Correo   string `json:"correo"`
 	Nombre   string `json:"nombre"`
@@ -275,6 +303,7 @@ type PublicDetailsEnterprise struct {
 	Detalles string `json:"detalles"`
 }
 
+// Input para GetUserDetails
 type UserDetailsInput struct {
 	Correo string `json:"correo"`
 }
@@ -294,6 +323,7 @@ func GetUserDetails(c *gin.Context) {
 	var estudiante models.Estudiante
 	var empresa models.Empresa
 
+	// Buscar rol del usuario
 	userType, err := RoleFromUser(models.Usuario{Usuario: input.Correo})
 
 	if err != nil {
@@ -305,8 +335,10 @@ func GetUserDetails(c *gin.Context) {
 		return
 	}
 
+	// Buscar detalles del usuario
 	switch userType {
 	case "student":
+		// Buscar estudiante
 		err = configs.DB.Where("id_estudiante = ?", input.Correo).First(&estudiante).Error
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -336,6 +368,7 @@ func GetUserDetails(c *gin.Context) {
 			},
 		})
 	case "enterprise":
+		// Buscar empresa
 		err = configs.DB.Where("id_empresa = ?", input.Correo).First(&empresa).Error
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.StandardResponse{
@@ -358,7 +391,7 @@ func GetUserDetails(c *gin.Context) {
 				},
 			},
 		})
-	case "admin":
+	case "admin": // Admins cannot be viewed
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
 			Message: "Admins cannot be viewed",

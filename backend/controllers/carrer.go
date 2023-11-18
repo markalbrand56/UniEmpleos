@@ -8,14 +8,17 @@ import (
 	"net/http"
 )
 
+// Input para crear una nueva carrera
 type CareerInput struct {
 	Nombre      string `json:"nombre"`
 	Descripcion string `json:"descripcion"`
 }
 
+// Funcion para crear una nueva carrera
 func NewCareer(c *gin.Context) {
 	var input CareerInput
 
+	// Verificar que el usuario sea administrador
 	err := IsAdmin(c)
 
 	if err != nil {
@@ -41,12 +44,13 @@ func NewCareer(c *gin.Context) {
 		Descripcion: input.Descripcion,
 	}
 
-	err = configs.DB.Create(&carrera).Error
+	// Insertar carrera en la base de datos
+	err = configs.DB.Raw("INSERT INTO carrera (nombre, descripcion) VALUES (?, ?)", carrera.Nombre, carrera.Descripcion).Error
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responses.StandardResponse{
 			Status:  http.StatusBadRequest,
-			Message: "Error creating career" + err.Error(),
+			Message: "Error creating career: " + err.Error(),
 			Data:    nil,
 		})
 		return
@@ -59,9 +63,11 @@ func NewCareer(c *gin.Context) {
 	})
 }
 
+// Funcion para obtener todas las carreras
 func GetCareers(c *gin.Context) {
 	var careers []models.CarreraGet
 
+	// Buscar todas las carreras en la base de datos
 	err := configs.DB.Find(&careers).Error
 
 	if err != nil {
@@ -75,6 +81,7 @@ func GetCareers(c *gin.Context) {
 
 	var data map[string]interface{}
 
+	// Crear mapa para enviar los datos
 	data = map[string]interface{}{
 		"careers": careers,
 	}

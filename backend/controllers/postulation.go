@@ -12,16 +12,19 @@ import (
 	"time"
 )
 
+// stores the input from frontend
 type PostulationInput struct {
 	IdOferta     int    `json:"id_oferta"`
 	IdEstudiante string `json:"id_estudiante"`
 	Estado       string `json:"estado"`
 }
 
+// Postulation Input stores the input from frontend
 type GetPostulationInput struct {
 	IdOferta int `json:"id_oferta"`
 }
 
+// Puesto Result stores the result from the query
 type PuestoResult struct {
 	Puesto string
 }
@@ -38,6 +41,7 @@ func NewPostulation(c *gin.Context) {
 		return
 	}
 
+	// gets the user from the token
 	user, err := utils.TokenExtractUsername(c)
 
 	if err != nil {
@@ -49,6 +53,7 @@ func NewPostulation(c *gin.Context) {
 		return
 	}
 
+	// verify that the token user is the same as the input user
 	if user != input.IdEstudiante {
 		c.JSON(http.StatusForbidden, responses.StandardResponse{
 			Status:  http.StatusForbidden,
@@ -58,14 +63,17 @@ func NewPostulation(c *gin.Context) {
 		return
 	}
 
+	// store the postulation
 	postulation := models.Postulacion{
 		IdOferta:     input.IdOferta,
 		IdEstudiante: input.IdEstudiante,
 		Estado:       input.Estado,
 	}
 
+	// insert the postulation
 	var inserted models.PostulacionGet
 
+	// query to insert the postulation
 	err = configs.DB.Raw("INSERT INTO postulacion (id_oferta, id_estudiante, estado) VALUES (?, ?, ?) RETURNING id_postulacion, id_oferta, id_estudiante, estado", postulation.IdOferta, postulation.IdEstudiante, postulation.Estado).Scan(&inserted).Error
 
 	if err != nil {
@@ -86,6 +94,7 @@ func NewPostulation(c *gin.Context) {
 		return
 	}
 
+	// Obtener el valor de "puesto" de la oferta
 	var resultado PuestoResult
 
 	// Obtener el valor de "puesto" de la oferta
@@ -122,6 +131,7 @@ func NewPostulation(c *gin.Context) {
 	})
 }
 
+// postulation result stores the result from the query
 type PostulationResult struct {
 	IDEstudiante string `json:"id_estudiante"`
 	Estado       string `json:"estado"`
@@ -139,6 +149,7 @@ type PostulationResult struct {
 	Universidad  string `json:"universidad"`
 }
 
+// GetOfferPreviews retrieves the previews of the offers
 func GetOfferPreviews(c *gin.Context) {
 	var postulations []models.ViewPrevPostulaciones
 
@@ -156,20 +167,25 @@ func GetOfferPreviews(c *gin.Context) {
 	c.JSON(http.StatusOK, responses.StandardResponse{
 		Status:  http.StatusOK,
 		Message: "Previews of offers retrieved successfully",
-		Data:    map[string]interface{}{"postulations": postulations},
+		Data:    map[string]interface{}{"postulations": postulations}, // map[string]interface{}{"postulations": postulations},
 	})
 }
 
+// Stores the retrieval of all the postulations of a single student.
 type PostulationFromStudentResult struct {
-	IDPostulacion int     `json:"id_postulacion"`
-	IDOferta      int     `json:"id_oferta"`
-	IDEmpresa     string  `json:"id_empresa"`
-	Puesto        string  `json:"puesto"`
-	Descripcion   string  `json:"descripcion"`
-	Requisitos    string  `json:"requisitos"`
-	Salario       float64 `json:"salario"`
+	IDPostulacion int       `json:"id_postulacion"`
+	IDOferta      int       `json:"id_oferta"`
+	IDEmpresa     string    `json:"id_empresa"`
+	Puesto        string    `json:"puesto"`
+	Descripcion   string    `json:"descripcion"`
+	Requisitos    string    `json:"requisitos"`
+	Salario       float64   `json:"salario"`
+	Jornada       string    `json:"jornada"`
+	HoraInicio    time.Time `json:"hora_inicio"`
+	HoraFin       time.Time `json:"hora_fin"`
 }
 
+// GetPostulationFromStudent retrieves all the postulations of a single student
 func GetPostulationFromStudent(c *gin.Context) {
 	var results []PostulationFromStudentResult
 	var data map[string]interface{}
@@ -185,7 +201,8 @@ func GetPostulationFromStudent(c *gin.Context) {
 		return
 	}
 
-	err = configs.DB.Raw("select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario from postulacion p join oferta o on p.id_oferta = o.id_oferta where id_estudiante = ?", idEstudiante).Scan(&results).Error
+	// query to get the postulations
+	err = configs.DB.Raw("select id_postulacion, o.id_oferta, id_empresa, puesto, descripcion, requisitos, salario, jornada, hora_inicio, hora_fin from postulacion p join oferta o on p.id_oferta = o.id_oferta where id_estudiante = ?", idEstudiante).Scan(&results).Error
 
 	if err != nil {
 		c.JSON(400, responses.StandardResponse{
@@ -208,6 +225,7 @@ func GetPostulationFromStudent(c *gin.Context) {
 
 }
 
+// deletes the postulation.
 func RetirePostulation(c *gin.Context) {
 	input := c.Query("id_postulacion")
 	user, err := utils.TokenExtractUsername(c)

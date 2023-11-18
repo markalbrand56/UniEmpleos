@@ -10,6 +10,13 @@ import (
 var DB *gorm.DB
 var FileServer = "http://ec2-13-57-42-212.us-west-1.compute.amazonaws.com/files/"
 
+const (
+	Student = "student"
+	Company = "enterprise"
+	Admin   = "admin"
+)
+
+// SetupDB configura la conexión a la base de datos
 func SetupDB() {
 	envs := EnvPG()
 
@@ -22,6 +29,7 @@ func SetupDB() {
 	DB = db
 }
 
+// CreateDirIfNotExist crea un directorio si no existe
 func CreateDirIfNotExist(path string) (bool, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		fmt.Println("Directory " + path + " does not exist. Creating...")
