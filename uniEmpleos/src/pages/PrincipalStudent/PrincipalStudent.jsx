@@ -9,6 +9,8 @@ import API_URL from "../../api"
 import useApi from "../../Hooks/useApi"
 import Loader from "../../components/Loader/Loader"
 import { useTranslation } from "react-i18next"
+import { Player } from '@lottiefiles/react-lottie-player'
+import upload from './upload.json'
 
 const schema = Joi.object({
   token: Joi.string().required(),
@@ -106,7 +108,6 @@ const PrincipalStudent = () => {
     }
   }, [dataa.data, carrera, postulaciones])
 
-  console.log('-->', ofertasAMostrar)
   return (
     <div className={styles.container}>
       <Header userperson="student" />
@@ -130,7 +131,13 @@ const PrincipalStudent = () => {
         </div>
       ) : (
         <div className={styles.containerinfomain}>
-          <h1>No hay postulaciones</h1>
+          <Player
+          src={upload}
+          className="player"
+          loop
+          autoplay
+          style={{ height: '400px', width: '400px' }}
+        />
         </div>
       )}
     </div>
