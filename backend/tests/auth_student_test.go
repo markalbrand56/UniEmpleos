@@ -84,7 +84,7 @@ func TestNewStudent(t *testing.T) {
 
 	w := httptest.NewRecorder()
 
-	jsonData := `{"dpi": "101010101010", "nombre": "Estudiante", "apellido": "Prueba", "nacimiento": "01/01/2001", "correo": "estudiante@prueba.com", "telefono": "12345678", "carrera": 1, "semestre": 4, "contra": "estudianteprueba", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
+	jsonData := `{"dpi": "1010101010101", "nombre": "Estudiante", "apellido": "Prueba", "nacimiento": "01/01/2001", "correo": "estudiante@prueba.com", "telefono": "12345678", "carrera": 1, "semestre": 4, "contra": "estudianteprueba", "CV": "", "foto": "", "universidad": "Universidad del Valle de Guatemala"}`
 
 	body := bytes.NewBufferString(jsonData)
 
