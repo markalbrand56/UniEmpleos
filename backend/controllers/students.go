@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-// stores the input from frontend (Estudiante, JSON)
+// EstudianteInput stores the input from frontend (Estudiante, JSON)
 type EstudianteInput struct {
 	Dpi         string `json:"dpi"`
 	Nombre      string `json:"nombre"`
@@ -25,7 +25,7 @@ type EstudianteInput struct {
 	Universidad string `json:"universidad"`
 }
 
-// Creates a new user (type Estudiante).
+// NewStudent Creates a new user (type Estudiante).
 func NewStudent(c *gin.Context) {
 	var input EstudianteInput
 
@@ -40,6 +40,16 @@ func NewStudent(c *gin.Context) {
 
 	// parsing of the date (SQL format)
 	t, _ := time.Parse("2006-01-02", input.Nacimiento)
+
+	// revisar que el DPI tenga 13 caracteres
+	if len(input.Dpi) != 13 {
+		c.JSON(http.StatusBadRequest, responses.StandardResponse{
+			Status:  http.StatusBadRequest,
+			Message: "DPI must have 13 characters",
+			Data:    nil,
+		})
+		return
+	}
 
 	// Creates a new instance of Estudiante with the input data (local)
 	e := models.Estudiante{
