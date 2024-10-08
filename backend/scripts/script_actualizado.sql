@@ -89,7 +89,7 @@ create table oferta_carrera
 );
 
 alter table oferta_carrera
-    owner to postgres;
+    owner to "koyeb-admn";
 
 create table postulacion
 (

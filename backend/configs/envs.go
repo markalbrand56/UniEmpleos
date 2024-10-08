@@ -29,6 +29,8 @@ func EnvPG() map[string]string {
 	envs["PG_PASSWORD"] = os.Getenv("PG_PASSWORD")
 	envs["PG_RDS_HOST"] = os.Getenv("PG_RDS_HOST")
 	envs["PG_RDS_PORT"] = os.Getenv("PG_RDS_PORT")
+	envs["PG_DATABASE"] = os.Getenv("PG_DATABASE")
+	envs["DATABASE_ENDPOINT"] = os.Getenv("DATABASE_ENDPOINT")
 
 	return envs
 }
