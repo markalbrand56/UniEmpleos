@@ -44,6 +44,8 @@ func loadSystemEnv() (map[string]string, error) {
 	envs["PG_PASSWORD"] = os.Getenv("PG_PASSWORD")
 	envs["PG_RDS_HOST"] = os.Getenv("PG_RDS_HOST")
 	envs["PG_RDS_PORT"] = os.Getenv("PG_RDS_PORT")
+	envs["PG_DATABASE"] = os.Getenv("PG_DATABASE")
+	envs["DATABASE_ENDPOINT"] = os.Getenv("DATABASE_ENDPOINT")
 
 	if envs["PG_USER"] == "" {
 		return envs, errors.New("PG_USER is not set")
@@ -56,6 +58,12 @@ func loadSystemEnv() (map[string]string, error) {
 	}
 	if envs["PG_RDS_PORT"] == "" {
 		return envs, errors.New("PG_RDS_PORT is not set")
+	}
+	if envs["PG_DATABASE"] == "" {
+		return envs, errors.New("PG_DATABASE is not set")
+	}
+	if envs["DATABASE_ENDPOINT"] == "" {
+		return envs, errors.New("DATABASE_ENDPOINT is not set")
 	}
 
 	return envs, nil
